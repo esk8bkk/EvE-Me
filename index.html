@@ -7,7 +7,7 @@
 <style>
 :root{--a:#F5B83D;--bg:#07080a;--g:rgba(255,255,255,.055);--b:rgba(255,255,255,.09);--t:#f2f2f0;--m:#8b8d93}
 *{box-sizing:border-box;margin:0}
-html,body{height:100%;background:var(--bg);color:var(--t);overflow:hidden;
+html,body{height:100%;background:var(--bg);color:var(--t);overflow:hidden;-webkit-tap-highlight-color:transparent;
 font-family:Inter,-apple-system,"SF Pro Display","Noto Sans Thai",Sarabun,"Thonburi",system-ui,sans-serif;font-size:34px;line-height:1.4}
 body{background:radial-gradient(1200px 800px at 15% 10%,rgba(245,184,61,.07),transparent 60%),var(--bg);transition:filter 2s}
 body.dim{filter:brightness(.35)}
@@ -37,48 +37,110 @@ header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-be
 .tm div{font-size:28px;color:var(--m)}.tm b{display:block;font-size:96px;color:var(--t);font-variant-numeric:tabular-nums}
 .tm div:last-child{text-align:right}
 .empty{color:var(--m);font-size:44px;margin:auto}
-.clock{display:flex;align-items:center;gap:36px}
-.mascot{width:130px;height:130px;flex:none;animation:float 4s ease-in-out infinite;border-radius:50%;transition:filter .6s,opacity .6s}
-.mascot svg{width:100%;height:100%;overflow:visible}
-.mascot .eye{transform-box:fill-box;transform-origin:center;animation:blink 5s infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
-.mascot.speak{animation:float 4s ease-in-out infinite,glow 1s ease-in-out 2}
-.mascot.speak .eye{animation:bounce .33s ease-in-out 6}
-@keyframes glow{0%,100%{filter:drop-shadow(0 0 0 rgba(245,184,61,0))}50%{filter:drop-shadow(0 0 28px #F5B83D)}}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px) scaleY(1.1)}}
-.mascot.sleep{opacity:.45;animation:none}
-.mascot.sleep img{filter:grayscale(1)}
-@media (prefers-reduced-motion:reduce){.mascot,.mascot .eye,.mascot.speak,.mascot.speak .eye{animation:none!important}}
+/* roaming mascot */
+#eve{position:fixed;left:0;top:0;width:150px;height:150px;z-index:20;pointer-events:none;will-change:transform;transition:filter .8s,opacity .8s}
+#eve img{width:100%;height:100%;display:block}
+#eve.sleep{opacity:.45;filter:grayscale(1)}
+#eve.perk img{filter:drop-shadow(0 0 26px #F5B83D)}
+/* question bubble */
+#bub{position:fixed;left:0;top:0;z-index:30;width:860px;max-width:calc(100vw - 80px);padding:44px 48px;display:none;will-change:transform;
+background:rgba(22,23,27,.78);border:1px solid rgba(245,184,61,.45);border-radius:40px;backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 30px 80px rgba(0,0,0,.55)}
+#bub.show{display:block}
+#bub .tail{position:absolute;width:44px;height:44px;background:rgba(22,23,27,.95);border-left:1px solid rgba(245,184,61,.45);border-bottom:1px solid rgba(245,184,61,.45);transform:rotate(45deg);left:-23px;top:var(--ty,60px)}
+#bub.flip .tail{left:auto;right:-23px;transform:rotate(225deg)}
+#bub .q{font-size:56px;font-weight:800;line-height:1.2;margin:14px 0 32px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px}
+.opt{min-height:96px;padding:18px 26px;border-radius:28px;border:2px solid rgba(245,184,61,.6);background:rgba(245,184,61,.08);color:var(--t);
+font:800 46px/1.1 Inter,-apple-system,"SF Pro Display","Noto Sans Thai",system-ui,sans-serif;cursor:pointer;font-variant-numeric:tabular-nums}
+.opt:active,.opt.sel{background:var(--a);color:#111;border-color:var(--a)}
+.opt:disabled{opacity:.5}.opt.sel:disabled{opacity:1}
+.conf{font-size:44px;font-weight:800;color:var(--a);margin-top:8px}
+.conf small{display:block;color:var(--m);font-size:28px;font-weight:600;margin-top:10px}
+.err{color:#ff7b7b;font-size:28px;margin-top:18px}
 </style></head><body>
 <div class="app">
-<header><div class="brand">EvE <span>Me</span></div><div class="status"><span id="st">connecting…</span><div class="dot" id="dot"></div></div></header>
+<header><div class="brand">EvE <span>Me</span></div><div class="status"><span id="st">กำลังเชื่อมต่อ…</span><div class="dot" id="dot"></div></div></header>
 <section class="glass main" id="main"><div class="empty">รอข้อความจาก Grok Bot…</div></section>
 <aside class="side">
-<div class="glass clock"><div class="mascot sleep" id="mascot"><img src="eve-blob-white.svg" alt="EvE" style="width:100%;height:100%"></div><div><div class="time" id="time">--:--</div><div class="date" id="date"></div></div></div>
-<div class="glass hist"><h3>HISTORY</h3><div id="hist"></div></div>
+<div class="glass clock"><div class="time" id="time">--:--</div><div class="date" id="date"></div></div>
+<div class="glass hist"><h3>ล่าสุด</h3><div id="hist"></div></div>
 </aside></div>
+<div id="eve" class="sleep"><img src="eve-blob-white.svg" alt="EvE"></div>
+<div id="bub"><div class="tail"></div><div id="bubIn"></div></div>
 <script>
-const k=new URLSearchParams(location.search).get('k')||'';let items=[],poll=null,lastAct=Date.now();
+const k=new URLSearchParams(location.search).get('k')||'';const KQ=k?'?k='+encodeURIComponent(k):'';
+let items=[],poll=null,lastAct=Date.now(),sleeping=true,shownQ=null,confUntil=0;
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function speak(){const m=$('mascot');m.classList.remove('speak');void m.offsetWidth;m.classList.add('speak');clearTimeout(speak.t);speak.t=setTimeout(()=>m.classList.remove('speak'),2000)}
-function setConn(on,txt){$('mascot').classList.toggle('sleep',!on);$('dot').className='dot'+(on?' on':'');$('st').textContent=txt}
+const KIND={message:'ข้อความ',card:'การ์ด',flight:'เที่ยวบิน',question:'คำถาม'};
+// drop ?k from the address bar once cookie is set (cookie now carries auth)
+if(k&&history.replaceState)setTimeout(()=>history.replaceState(null,'',location.pathname),1500);
+
+/* ---------- roaming EvE ---------- */
+const E=$('eve'),B=$('bub'),S=150;
+let px=innerWidth-260,py=innerHeight-260,vx=0,vy=0,tx=px,ty=py,nextT=0,hop=0,perkT=0;
+function avoidRect(){return['main','time'].map(id=>{const r=$(id).getBoundingClientRect();return{l:r.left+30,t:r.top+30,r:r.right-30,b:r.bottom-30}})}
+function hit(x,y,A){return A.some(a=>x+S>a.l&&x<a.r&&y+S>a.t&&y<a.b)}
+function pickTarget(){const W=innerWidth,H=innerHeight,a=avoidRect();
+ for(let i=0;i<25;i++){const x=20+Math.random()*(W-S-40),y=20+Math.random()*(H-S-40);if(!hit(x,y,a)){tx=x;ty=y;return}}
+ tx=W-S-40;ty=H-S-40}
+function qPending(){return items.find(i=>i.type==='question'&&(!i.answer||i.id===shownQ&&Date.now()<confUntil))}
+function frame(t){
+ const q=$('bub').classList.contains('show');
+ if(q){tx=70;ty=innerHeight-S-70}            // park bottom-left; bubble sits up-right of it
+ else if(sleeping){tx=innerWidth-S-60;ty=innerHeight-S-50}
+ else if(t>nextT||Math.hypot(tx-px,ty-py)<8){pickTarget();nextT=t+6000+Math.random()*6000}
+ const acc=sleeping?.004:q?.03:.012,damp=q?.82:.94,maxV=sleeping?.8:q?14:2.6;
+ vx=(vx+(tx-px)*acc)*damp;vy=(vy+(ty-py)*acc)*damp;const sp=Math.hypot(vx,vy);if(sp>maxV){vx*=maxV/sp;vy*=maxV/sp}
+ px+=vx;py+=vy;
+ const bob=sleeping?Math.sin(t/1400)*3:Math.sin(t/650)*9;
+ let hy=0,sx=1,sy=1;
+ if(hop>0){const p=1-hop;hy=-Math.abs(Math.sin(p*Math.PI*3))*70*hop;const s=Math.cos(p*Math.PI*6)*.12*hop;sx=1+s;sy=1-s;hop=Math.max(0,hop-.012)}
+ else{const br=Math.sin(t/(sleeping?2200:900))*.035;sx=1+br;sy=1-br}
+ const tilt=Math.max(-12,Math.min(12,vx*4));
+ E.style.transform=`translate3d(${px}px,${py+bob+hy}px,0) rotate(${tilt}deg) scale(${sx},${sy})`;
+ if(q)placeBubble(px,py+bob+hy);
+ requestAnimationFrame(frame)}
+function placeBubble(x,y){const w=B.offsetWidth,h=B.offsetHeight,W=innerWidth,H=innerHeight;let bx=x+S+30,flip=false;
+ if(bx+w>W-20){bx=x-w-30;flip=true}let by=Math.max(20,Math.min(H-h-20,y+S/2-h+90));
+ B.classList.toggle('flip',flip);B.style.setProperty('--ty',Math.max(30,Math.min(h-70,y+S/2-by-22))+'px');B.style.transform=`translate3d(${bx}px,${by}px,0)`}
+function perk(){hop=1;E.classList.add('perk');clearTimeout(perk.t);perk.t=setTimeout(()=>E.classList.remove('perk'),2200);nextT=0}
+requestAnimationFrame(frame);addEventListener('resize',()=>{nextT=0});
+
+/* ---------- questions ---------- */
+function renderQ(){const q=qPending();
+ if(!q){B.classList.remove('show');shownQ=null;return}
+ if(q.id!==shownQ||B.dataset.state!==(q.answer?'a':'q')){shownQ=q.id;B.dataset.state=q.answer?'a':'q';
+  $('bubIn').innerHTML=`<div class="kind">คำถามจาก EvE</div><div class="q">${esc(q.title)}</div>`+
+   (q.answer?`<div class="conf">✓ บันทึกคำตอบแล้ว: ${esc(q.answer)}<small>ส่งให้ Grok Bot เรียบร้อย</small></div>`
+   :`<div class="opts">${q.options.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o)}</button>`).join('')}</div><div class="err" id="qerr"></div>`);
+  B.classList.add('show')}}
+$('bubIn').addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b||b.disabled)return;const q=items.find(i=>i.id===shownQ);if(!q)return;
+ const ans=q.options[+b.dataset.i];document.querySelectorAll('.opt').forEach(x=>x.disabled=true);b.classList.add('sel');
+ fetch('/api/answer'+KQ,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({id:q.id,answer:ans})})
+  .then(r=>{if(!r.ok)throw 0;return r.json()}).then(a=>applyAnswer(a))
+  .catch(()=>{document.querySelectorAll('.opt').forEach(x=>x.disabled=false);b.classList.remove('sel');const er=$('qerr');if(er)er.textContent='ส่งไม่สำเร็จ ลองแตะอีกครั้ง'})});
+function applyAnswer(a){const q=items.find(i=>i.id===a.id);if(!q)return;q.answer=a.answer;if(a.id===shownQ||!shownQ){shownQ=a.id;confUntil=Date.now()+8000;setTimeout(renderQ,8100)}perk();renderQ()}
+
+/* ---------- main card ---------- */
+function setConn(on,txt){sleeping=!on;E.classList.toggle('sleep',!on);$('dot').className='dot'+(on?' on':'');$('st').textContent=txt}
 function ago(ts){const s=Math.round((Date.now()-ts)/1000);return s<60?'เมื่อสักครู่':s<3600?Math.floor(s/60)+' นาทีที่แล้ว':Math.floor(s/3600)+' ชม.ที่แล้ว'}
-function render(){const it=items[0];
- if(it){const m=it.meta||{};let h=`<div class="kind">${esc(it.type)}</div><div class="title">${esc(it.title)}</div>`;
+function render(){const it=items.find(i=>i.type!=='question');
+ if(it){const m=it.meta||{};let h=`<div class="kind">${esc(KIND[it.type]||it.type)}</div><div class="title">${esc(it.title)}</div>`;
   if(it.type==='flight')h+=`<div class="fl"><div class="ap">${esc(m.from||'')}</div><div class="arr">✈</div><div class="ap r">${esc(m.to||'')}</div></div>
-   <div class="tm"><div>DEPART<b>${esc(m.dep||'--:--')}</b></div><div>ARRIVE<b>${esc(m.arr||'--:--')}</b></div></div>${it.body?`<div class="body" style="margin-top:28px">${esc(it.body)}</div>`:''}`;
+   <div class="tm"><div>ออกเดินทาง<b>${esc(m.dep||'--:--')}</b></div><div>ถึง<b>${esc(m.arr||'--:--')}</b></div></div>${it.body?`<div class="body" style="margin-top:28px">${esc(it.body)}</div>`:''}`;
   else h+=`<div class="body">${esc(it.body)}</div>`;
   $('main').innerHTML=h+`<div class="ago">${ago(it.ts)}</div>`}
- $('hist').innerHTML=items.slice(1,9).map(i=>`<div class="hi"><small>${new Date(i.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</small>${esc(i.title||i.body)}</div>`).join('')}
+ $('hist').innerHTML=items.filter(i=>i!==it).slice(0,8).map(i=>`<div class="hi"><small>${new Date(i.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</small>${i.type==='question'?(i.answer?'✓ ':'? '):''}${esc(i.title||i.body)}</div>`).join('');
+ renderQ()}
 function setItems(a){if(a.length&&(!items[0]||a[0].id!==items[0].id)){lastAct=Date.now();document.body.classList.remove('dim')}items=a;render()}
-function startPoll(){if(poll)return;const f=()=>fetch('/api/latest?k='+encodeURIComponent(k)).then(r=>r.json()).then(d=>{setItems(d.items);setConn(true,'polling')}).catch(()=>setConn(false,'offline'));f();poll=setInterval(f,5000)}
-function startSSE(){if(!window.EventSource)return startPoll();const es=new EventSource('/api/stream?k='+encodeURIComponent(k));let fails=0;
- es.addEventListener('init',e=>{fails=0;if(poll){clearInterval(poll);poll=null}setConn(true,'live');setItems(JSON.parse(e.data).items)});
- es.addEventListener('item',e=>{setItems([JSON.parse(e.data),...items].slice(0,20));speak()});
- es.onerror=()=>{setConn(false,'reconnecting…');if(++fails>=3)startPoll()}}
+function startPoll(){if(poll)return;const f=()=>fetch('/api/latest'+KQ,{credentials:'same-origin'}).then(r=>r.json()).then(d=>{setItems(d.items);setConn(true,'ดึงข้อมูลเป็นระยะ')}).catch(()=>setConn(false,'ออฟไลน์'));f();poll=setInterval(f,5000)}
+function startSSE(){if(!window.EventSource)return startPoll();const es=new EventSource('/api/stream'+KQ,{withCredentials:true});let fails=0;
+ es.addEventListener('init',e=>{fails=0;if(poll){clearInterval(poll);poll=null}setConn(true,'ออนไลน์');setItems(JSON.parse(e.data).items)});
+ es.addEventListener('item',e=>{setItems([JSON.parse(e.data),...items].slice(0,20));perk()});
+ es.addEventListener('answer',e=>applyAnswer(JSON.parse(e.data)));
+ es.onerror=()=>{setConn(false,'กำลังเชื่อมต่อใหม่…');if(++fails>=3)startPoll()}}
 function tick(){const d=new Date();$('time').textContent=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
  $('date').textContent=d.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long'});
- if(Date.now()-lastAct>10*60*1000)document.body.classList.add('dim');if(items[0])render()}
+ if(Date.now()-lastAct>10*60*1000&&!qPending())document.body.classList.add('dim');if(items.length)render()}
 tick();setInterval(tick,15000);startSSE();
 </script></body></html>
