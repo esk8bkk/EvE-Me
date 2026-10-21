@@ -1,6 +1,7 @@
 # EvE Me + Tesla signing proxy in one Render service (free tier).
-FROM golang:1.23-bookworm AS proxy
-RUN go install github.com/teslamotors/vehicle-command/cmd/tesla-http-proxy@latest
+FROM golang:bookworm AS proxy
+ENV GOTOOLCHAIN=auto CGO_ENABLED=0
+RUN go install github.com/teslamotors/vehicle-command/cmd/tesla-http-proxy@v0.4.1
 
 FROM node:20-bookworm-slim
 RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
