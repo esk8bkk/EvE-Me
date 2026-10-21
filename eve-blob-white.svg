@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#E8B24A" stop-opacity="0.55"/>
+      <stop offset="60%" stop-color="#E8B24A" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#E8B24A" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="body" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E9E6DF"/>
+    </radialGradient>
+  </defs>
+  <circle cx="100" cy="100" r="95" fill="url(#glow)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 4;0 -4;0 4" dur="3s" repeatCount="indefinite"/>
+    <path fill="url(#body)" stroke="#E8B24A" stroke-opacity="0.35" stroke-width="1.5">
+      <animate attributeName="d" dur="6s" repeatCount="indefinite"
+        values="M100 40 C140 40 160 70 158 105 C156 140 135 160 100 160 C65 160 42 140 42 105 C42 70 60 40 100 40Z;
+                M100 44 C145 42 162 75 156 108 C150 142 130 158 98 158 C62 158 40 136 44 102 C48 68 62 46 100 44Z;
+                M100 40 C140 40 160 70 158 105 C156 140 135 160 100 160 C65 160 42 140 42 105 C42 70 60 40 100 40Z"/>
+    </path>
+    <g fill="#111114">
+      <ellipse cx="82" cy="98" rx="9" ry="13">
+        <animate attributeName="ry" values="13;13;1;13;13" keyTimes="0;0.9;0.94;0.98;1" dur="4s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="118" cy="98" rx="9" ry="13">
+        <animate attributeName="ry" values="13;13;1;13;13" keyTimes="0;0.9;0.94;0.98;1" dur="4s" repeatCount="indefinite"/>
+      </ellipse>
+    </g>
+  </g>
+</svg>
