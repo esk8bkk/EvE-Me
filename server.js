@@ -233,6 +233,13 @@ async function readCar(vin) {
   if (status !== 200) { const e = new Error('vehicle_data ' + status); e.status = status; throw e; }
   return condense(v, j.response || {});
 }
+app.get('/api/tesla/scopes', pushOk, async (req, res) => {
+  try {
+    const t = await accessToken();
+    const c = JSON.parse(Buffer.from(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/'), 'base64').toString());
+    res.json({ scopes: c.scp || c.scope || null, expires: c.exp ? new Date(c.exp * 1000).toISOString() : null, refresh_tail: (tTok.refresh || '').slice(-4) });
+  } catch (e) { tErr(res, e); }
+});
 app.get('/api/tesla/state', pushOk, async (req, res) => {
   try { res.json(await readCar(req.query.vin)); } catch (e) { tErr(res, e); }
 });
