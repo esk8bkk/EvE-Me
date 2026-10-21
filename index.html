@@ -5,15 +5,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+Thai:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root{--a:#F5B83D;--bg:#07080a;--g:rgba(255,255,255,.055);--b:rgba(255,255,255,.09);--t:#f2f2f0;--m:#8b8d93}
+:root{--a:#8B5CF6;--a2:#6D28D9;--rim:#C4B5FD;--bg:#07080a;--g:rgba(255,255,255,.055);--b:rgba(255,255,255,.09);--t:#f2f2f0;--m:#8b8d93}
 *{box-sizing:border-box;margin:0}
 html,body{height:100%;background:var(--bg);color:var(--t);overflow:hidden;-webkit-tap-highlight-color:transparent;
 font-family:Inter,-apple-system,"SF Pro Display","Noto Sans Thai",Sarabun,"Thonburi",system-ui,sans-serif;font-size:34px;line-height:1.4}
-body{background:radial-gradient(900px 900px at 28% 55%,rgba(245,184,61,.10),transparent 65%),var(--bg);transition:filter 2s}
+body{background:radial-gradient(900px 900px at 28% 55%,rgba(139,92,246,.10),transparent 65%),var(--bg);transition:filter 2s}
 body.dim{filter:brightness(.35)}
 .glass{background:var(--g);border:1px solid var(--b);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
 header{position:fixed;top:0;left:0;right:0;height:150px;padding:40px 56px;display:flex;align-items:flex-start;justify-content:space-between;z-index:5}
-.brand{font-weight:800;font-size:40px;letter-spacing:.5px}.brand span{color:var(--a)}
 .status{display:flex;align-items:center;gap:12px;color:var(--m);font-size:24px;margin-top:8px}
 .dot{width:16px;height:16px;border-radius:50%;background:#c44;box-shadow:0 0 12px #c44}
 .dot.on{background:var(--a);box-shadow:0 0 16px var(--a)}
@@ -27,19 +26,19 @@ body.m-q{--hero:640px}body.m-msg{--hero:500px}
 .slot{width:100%;aspect-ratio:1;max-height:100%}
 #panel{min-width:0;max-height:100%;overflow:hidden;position:relative;z-index:2}
 #eve{position:fixed;left:0;top:0;width:100px;height:100px;z-index:3;pointer-events:none;will-change:transform;transform-origin:50% 100%;transition:filter .8s,opacity .8s}
-#eve img{width:100%;height:100%;display:block;filter:drop-shadow(0 0 60px rgba(245,184,61,.35))}
+#eve img{width:100%;height:100%;display:block;filter:drop-shadow(0 0 60px rgba(139,92,246,.35))}
 #eve.sleep{opacity:.45;filter:grayscale(1)}
-#eve.perk img{filter:drop-shadow(0 0 110px rgba(245,184,61,.9))}
-.bub{position:relative;background:rgba(255,255,255,.07);border:1px solid rgba(245,184,61,.4);border-radius:48px;padding:56px 64px;backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 30px 90px rgba(0,0,0,.5)}
-.bub:before{content:"";position:absolute;left:-26px;top:50%;margin-top:-25px;width:50px;height:50px;background:#1b1c1f;border-left:1px solid rgba(245,184,61,.4);border-bottom:1px solid rgba(245,184,61,.4);transform:rotate(45deg)}
+#eve.perk img{filter:drop-shadow(0 0 110px rgba(139,92,246,.9))}
+.bub{position:relative;background:rgba(255,255,255,.07);border:1px solid rgba(139,92,246,.4);border-radius:48px;padding:56px 64px;backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 30px 90px rgba(0,0,0,.5)}
+
 .kind{color:var(--a);font-size:28px;font-weight:700;letter-spacing:3px}
 .greet{font-size:96px;font-weight:800;line-height:1.12}
 .greet small{display:block;color:#cfcfcf;font-size:52px;font-weight:600;margin-top:22px;line-height:1.25}
 .q{font-size:72px;font-weight:800;line-height:1.18;margin:16px 0 40px}
 .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
-.opt{min-height:120px;padding:18px 26px;border-radius:32px;border:2px solid rgba(245,184,61,.6);background:rgba(245,184,61,.08);color:var(--t);
+.opt{min-height:120px;padding:18px 26px;border-radius:32px;border:2px solid rgba(139,92,246,.6);background:rgba(139,92,246,.08);color:var(--t);
 font:800 58px/1.1 Inter,-apple-system,"SF Pro Display","Noto Sans Thai",system-ui,sans-serif;cursor:pointer;font-variant-numeric:tabular-nums}
-.opt:active,.opt.sel{background:var(--a);color:#111;border-color:var(--a);box-shadow:0 0 50px rgba(245,184,61,.5)}
+.opt:active,.opt.sel{background:var(--a);color:#111;border-color:var(--a);box-shadow:0 0 50px rgba(139,92,246,.5)}
 .opt:disabled{opacity:.3}.opt.sel:disabled{opacity:1}
 .conf{margin-top:32px;font-size:42px;font-weight:800;color:var(--a)}
 .err{color:#ff7b7b;font-size:30px;margin-top:20px}
@@ -61,19 +60,114 @@ body.m-idle #hist{opacity:0}
 .hdl{display:flex;align-items:flex-start;gap:28px}
 .loc{min-height:64px;margin-top:2px;padding:0 28px;border-radius:32px;display:flex;align-items:center;gap:14px;color:var(--t);font:700 26px/1 Inter,-apple-system,"Noto Sans Thai",system-ui,sans-serif;cursor:pointer}
 .loc .ld{width:14px;height:14px;border-radius:50%;background:var(--m)}
-.loc.on .ld{background:var(--a);box-shadow:0 0 14px var(--a)}.loc.on{border-color:rgba(245,184,61,.5)}
+.loc.on .ld{background:var(--a);box-shadow:0 0 14px var(--a)}.loc.on{border-color:rgba(139,92,246,.5)}
 .loc.err{color:#ff9b9b}.loc.err .ld{background:#c44}
-</style></head><body class="m-idle">
-<header><div class="hdl"><div><div class="brand">EvE <span>Me</span></div><div class="status"><div class="dot" id="dot"></div><span id="st">กำลังเชื่อมต่อ…</span></div></div><button class="glass loc" id="loc"><span class="ld"></span><span id="locT">แชร์ตำแหน่ง</span></button></div>
-<div class="right"><div class="glass clock"><div class="time" id="time">--:--</div><div class="date" id="date"></div></div></div></header>
-<div id="stage"><div class="slot" id="slot"></div><div id="panel"></div></div>
+/* ===== responsive overrides ===== */
+:root{--px:clamp(20px,2.9vw,56px);--hh:clamp(96px,11vh,150px);--hb:clamp(96px,10.8vh,130px)}
+*{word-break:normal;overflow-wrap:break-word;line-break:auto}
+header{height:var(--hh);padding:0 var(--px);align-items:center;justify-content:flex-start;gap:clamp(14px,1.6vw,28px);white-space:nowrap;flex-wrap:nowrap}
+header>*{flex:none}.sp{flex:1 1 0;min-width:0}
+.status{margin:0;font-size:clamp(18px,1.25vw,24px)}
+.loc{margin:0;font-size:clamp(20px,1.4vw,26px);padding:0 clamp(18px,1.5vw,28px)}
+.clock{padding:clamp(10px,1vh,18px) clamp(18px,1.6vw,30px);gap:clamp(12px,1.1vw,22px);white-space:nowrap}
+.time{font-size:clamp(34px,3.3vw,64px)}.date{font-size:clamp(17px,1.35vw,26px)}
+#stage{inset:var(--hh) var(--px) var(--hb) var(--px);gap:clamp(28px,2.9vw,56px);--hero:min(720px,60vh,40vw)}
+body.m-q #stage{--hero:min(640px,52vh,34vw)}body.m-msg #stage{--hero:min(500px,42vh,30vw)}
+#stage{grid-template-columns:var(--hero) minmax(0,1fr)}
+.slot{width:var(--hero);height:var(--hero);max-height:none;aspect-ratio:auto}
+.bub{padding:clamp(28px,4vh,56px) clamp(30px,3.4vw,64px);border-radius:clamp(30px,3vw,48px)}
+.kind{font-size:clamp(18px,1.5vw,28px)}
+.greet{font-size:clamp(40px,min(5vw,8vh),96px)}.greet small{font-size:clamp(24px,min(2.7vw,4.4vh),52px);margin-top:clamp(10px,1.8vh,22px)}
+.q{font-size:clamp(34px,min(3.8vw,6vh),72px);margin:clamp(8px,1.3vh,16px) 0 clamp(20px,3.3vh,40px)}
+.opts{grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:clamp(12px,1.3vw,24px)}
+.opt{min-height:clamp(72px,10vh,120px);font-size:clamp(30px,min(3vw,4.8vh),58px);white-space:nowrap}
+.conf{font-size:clamp(24px,min(2.2vw,3.5vh),42px);margin-top:clamp(16px,2.7vh,32px)}
+.title{font-size:clamp(38px,min(4.6vw,7.4vh),88px);margin:clamp(8px,1.5vh,18px) 0 clamp(12px,2.3vh,28px)}
+.body{font-size:clamp(26px,min(2.6vw,4.2vh),50px);-webkit-line-clamp:6}
+.ago{font-size:clamp(18px,1.35vw,26px);margin-top:clamp(12px,2.3vh,28px)}
+.ap{font-size:clamp(60px,min(7.3vw,11.5vh),140px)}.arr{font-size:clamp(40px,min(4.2vw,6.6vh),80px);padding:0 clamp(12px,1.4vw,26px)}
+.tm div{font-size:clamp(18px,1.45vw,28px)}.tm b{font-size:clamp(44px,min(4.8vw,7.6vh),92px)}
+#hist{left:var(--px);right:var(--px);bottom:clamp(16px,3vh,36px);height:clamp(54px,5.8vh,70px);gap:clamp(18px,2vw,40px)}
+.hi{font-size:clamp(18px,1.35vw,26px);max-width:min(520px,40vw)}
+/* stacked layout for near-square viewports (Tesla half screen ~1100x900) */
+@media (max-aspect-ratio:7/5){
+ #stage{grid-template-columns:minmax(0,1fr);grid-template-rows:var(--heroH) minmax(0,1fr);align-items:start;justify-items:stretch;--heroH:min(40vh,46vw);gap:clamp(18px,2.4vh,32px)}
+ body.m-q #stage{--heroH:min(23vh,30vw)}body.m-msg #stage{--heroH:min(22vh,28vw)}
+ .slot{width:var(--heroH);height:var(--heroH);justify-self:center}
+ body.m-msg .slot{justify-self:start}
+ #panel{align-self:stretch;display:flex;flex-direction:column;justify-content:flex-start}
+ body.m-idle #panel{justify-content:flex-start;align-items:center}
+ 
+ .greet{text-align:center;font-size:clamp(40px,min(6vw,7.4vh),96px)}
+ .q{font-size:clamp(34px,min(4.6vw,5.6vh),72px)}
+ .title{font-size:clamp(38px,min(5.6vw,6.6vh),88px)}
+ .body{font-size:clamp(26px,min(3.2vw,3.9vh),50px)}
+ .hi{max-width:min(420px,44vw)}
+}
+@media (max-width:1040px){.date{display:none}}
+.title,.q,.greet{text-wrap:balance}
+/* ===== talk to EvE ===== */
+#stage{z-index:4}
+.slot{position:relative}
+
+
+
+#mouth{position:absolute;left:50%;top:63%;width:13%;height:7%;border-radius:50%;background:#111114;transform:translate(-50%,-50%) scaleY(.15);opacity:0;transition:opacity .2s}
+body.speaking #mouth{opacity:1}
+.spk{min-height:64px;min-width:64px;border-radius:32px;color:var(--t);font-size:28px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.spk.off{color:var(--m)}
+.said{font-size:clamp(34px,min(3.8vw,6vh),68px);font-weight:800;line-height:1.2;margin-top:12px}
+.said.ph{color:var(--m)}
+.dots span{display:inline-block;width:.32em;height:.32em;margin:0 .12em;border-radius:50%;background:var(--a);animation:dt 1.2s infinite}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+@keyframes dt{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-.25em)}}
+.vsub{color:var(--m);font-size:clamp(20px,1.6vw,30px);margin-top:18px}
+body.m-v #stage{--hero:min(640px,52vh,34vw)}
+@media (max-aspect-ratio:7/5){
+ body.m-v #stage{--heroH:min(23vh,30vw)}
+}
+@media (prefers-reduced-motion:reduce){.dots span{animation:none}}
+
+/* ===== purple aura + mic variants ===== */
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.clock{align-items:center}
+.clock .dot{width:10px;height:10px;flex:none;align-self:center;box-shadow:0 0 8px #c44}
+.clock .dot.on{background:var(--a);box-shadow:0 0 10px var(--a)}
+#eve img{filter:none;position:relative;z-index:1}
+#eve.perk img{filter:none}
+#eve.perk #aura,body.listening #aura{opacity:1;filter:brightness(1.35);animation-duration:1.4s}
+#aura{position:absolute;inset:-38%;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.55) 0%,rgba(109,40,217,.20) 45%,transparent 70%);animation:aura 3s ease-in-out infinite;pointer-events:none}
+#aura:after{content:"";position:absolute;inset:22%;border-radius:50%;border:1px solid rgba(196,181,253,.35)}
+@keyframes aura{0%,100%{opacity:.7}50%{opacity:1}}
+#eve.sleep #aura{animation-play-state:paused;opacity:.5}
+#trace{position:absolute;inset:-4%;width:108%;height:108%;opacity:0;pointer-events:none;overflow:visible}
+#trace circle{fill:none;stroke:var(--a);stroke-width:1.2;stroke-linecap:round;stroke-dasharray:28 72;filter:drop-shadow(0 0 2px var(--a))}
+body.mic-c.listening #trace{opacity:1;animation:spin 1.6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* C blob is the button */
+.micbadge{display:none}
+.micbadge .ic-stop{display:none}body.listening .micbadge .ic-stop{display:block}body.listening .micbadge .ic-mic{display:none}
+body.mic-c .slot{cursor:pointer}
+body.mic-c .micbadge{display:flex;position:absolute;right:6%;bottom:6%;width:56px;height:56px;border-radius:50%;border:0;background:linear-gradient(135deg,#8B5CF6,#6D28D9);color:#fff;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(0,0,0,.45),0 0 20px rgba(139,92,246,.5);z-index:5;cursor:pointer;padding:0}
+body.mic-c .micbadge svg{width:28px;height:28px}
+body.mic-c.listening .micbadge{box-shadow:0 0 0 4px rgba(196,181,253,.35),0 0 30px rgba(139,92,246,.8)}
+@media (prefers-reduced-motion:reduce){#aura,#trace{animation:none!important}}
+.ico{width:1.1em;height:1.1em;flex:none;display:inline-block;vertical-align:-.15em}
+.spk{width:64px;padding:0;color:#fff;border-color:rgba(139,92,246,.5);box-shadow:0 0 0 1px rgba(139,92,246,.25),0 0 14px rgba(139,92,246,.25);transition:opacity .3s,box-shadow .3s,border-color .3s}
+.spk .ico{width:30px;height:30px}
+.spk.off{color:#fff;opacity:.5;border-color:var(--b);box-shadow:none}
+.loc .ico{width:26px;height:26px;margin-left:-4px}
+.arr .ico{width:.8em;height:.8em;vertical-align:middle}
+</style></head><body class="m-idle mic-c">
+<header><button class="glass loc" id="loc"><span class="ld"></span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span id="locT">แชร์ตำแหน่ง</span></button><button class="glass spk" id="spk" aria-label="เสียงพูด"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.5a8 8 0 0 1 0 11"/></svg></button><div class="sp"></div><div class="glass clock"><div class="dot" id="dot" role="img" aria-label="สถานะ"></div><span id="st" class="vh">กำลังเชื่อมต่อ…</span><div class="time" id="time">--:--</div><div class="date" id="date"></div></div></header>
+<div id="stage"><div class="slot" id="slot"><button class="micbadge" id="micC" aria-label="คุยกับ EvE" tabindex="-1"><svg class="ic-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><svg class="ic-stop" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg></button></div><div id="panel"></div></div>
 <div class="glass" id="hist"></div>
-<div id="eve" class="sleep"><img src="eve-blob-white.svg" alt="EvE"></div>
+<div id="eve" class="sleep"><div id="aura"></div><svg id="trace" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" pathLength="100"/></svg><img src="eve-blob-white.svg" alt="EvE"><div id="mouth"></div></div>
 <script>
 const k=new URLSearchParams(location.search).get('k')||'';const KQ=k?'?k='+encodeURIComponent(k):'';
 let items=[],poll=null,lastAct=Date.now(),sleeping=true,hold=null,holdUntil=0,mode='',modeKey='';
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const KIND={message:'ข้อความ',card:'การ์ด',flight:'เที่ยวบิน',question:'คำถาม'};
+const KIND={message:'ข้อความ',card:'การ์ด',flight:'เที่ยวบิน',question:'คำถาม',reply:'EvE ตอบ'};
 const HOLD=15000;
 if(k&&history.replaceState)setTimeout(()=>history.replaceState(null,'',location.pathname),1500);
 
@@ -88,9 +182,12 @@ function frame(t){const r=SL.getBoundingClientRect(),sz=Math.min(r.width,r.heigh
  let hy=0,sx=1,sy=1;
  if(hop>0){const p=1-hop;hy=-Math.abs(Math.sin(p*Math.PI*3))*s*.12*hop;const q=Math.cos(p*Math.PI*6)*.1*hop;sx=1+q;sy=1-q;hop=Math.max(0,hop-.01)}
  else{const br=Math.sin(t/(1300*slow))*.025;sx=1+br;sy=1-br}
+ if(vmode==='listen'){const g=1+lvl*.12;sx*=g;sy*=g}
+ else if(vmode==='speak'){const mo=Math.abs(Math.sin(t/105))*(.55+.45*Math.sin(t/330));sy*=1-mo*.06;sx*=1+mo*.04;MO.style.transform=`translate(-50%,-50%) scaleY(${.2+mo*.9})`}
+ EI.style.transform=vmode==='think'?`rotate(${Math.sin(t/650)*8}deg)`:vmode==='listen'?`rotate(-5deg) translateY(2%)`:'';
  E.style.transform=`translate3d(${x+dx}px,${y+dy+hy}px,0) scale(${s/100*sx},${s/100*sy})`;
  requestAnimationFrame(frame)}
-E.style.transformOrigin='0 0';
+E.style.transformOrigin='0 0';const EI=E.querySelector('img'),MO=$('mouth');let vmode='',lvl=0;
 function perk(){hop=1;E.classList.add('perk');clearTimeout(perk.t);perk.t=setTimeout(()=>E.classList.remove('perk'),2400)}
 requestAnimationFrame(frame);
 
@@ -101,26 +198,30 @@ function greeting(){const h=new Date().getHours();
  if(h>=17&&h<21)return['สวัสดีตอนเย็น','ขับขี่ปลอดภัยนะ กลับบ้านกันไหม?'];
  return['ดึกแล้วนะ','ขับช้า ๆ พักสายตาด้วยนะ']}
 function pickView(){
+ if(voice&&Date.now()<voice.until)return{m:'v'};
  if(hold&&Date.now()<holdUntil)return{m:'q',it:hold};
  const q=items.find(i=>i.type==='question'&&!i.answer);if(q)return{m:'q',it:q};
  const it=items.find(i=>i.type!=='question');if(it)return{m:'msg',it};
  return{m:'idle'}}
 function ago(ts){const s=Math.round((Date.now()-ts)/1000);return s<60?'เมื่อสักครู่':s<3600?Math.floor(s/60)+' นาทีที่แล้ว':Math.floor(s/3600)+' ชม.ที่แล้ว'}
 function render(){const v=pickView(),P=$('panel');
- const key=v.m+':'+(v.it?v.it.id+(v.it.answer||'')+(v.m==='msg'?ago(v.it.ts):''):greeting()[0]);
+ const key=(v.m==='v'?'v:'+voice.phase+voice.text:'')+v.m+':'+(v.it?v.it.id+(v.it.answer||'')+(v.m==='msg'?ago(v.it.ts):''):greeting()[0]);
  if(key!==modeKey){modeKey=key;mode=v.m;document.body.className=document.body.className.replace(/\bm-\w+/g,'').trim()+' m-'+v.m;
-  if(v.m==='idle'){const g=greeting();P.innerHTML=`<div class="bub"><div class="greet">${g[0]}<small>${g[1]}</small></div></div>`}
+  if(v.m==='v'){const ph={listen:'กำลังฟัง…',think:'EvE กำลังคิด…',err:'อุ๊ย'}[voice.phase];
+   P.innerHTML=`<div class="bub"><div class="kind">${ph}</div><div class="said${voice.text?'':' ph'}">${voice.text?'“'+esc(voice.text)+'”':(voice.phase==='listen'?'พูดได้เลย…':'')}</div>`+
+    (voice.phase==='think'?`<div class="said dots" style="margin-top:20px"><span></span><span></span><span></span></div>`:'')+(voice.sub?`<div class="vsub">${esc(voice.sub)}</div>`:'')+`</div>`}
+  else if(v.m==='idle'){const g=greeting();P.innerHTML=`<div class="bub"><div class="greet">${g[0]}<small>${g[1]}</small></div></div>`}
   else if(v.m==='q'){const q=v.it;
    P.innerHTML=`<div class="bub"><div class="kind">คำถามจาก EvE</div><div class="q">${esc(q.title)}</div>
    <div class="opts">${q.options.map((o,i)=>`<button class="opt${q.answer===o?' sel':''}" data-i="${i}"${q.answer?' disabled':''}>${esc(o)}</button>`).join('')}</div>
-   ${q.answer?`<div class="conf">✓ บันทึกคำตอบแล้ว: ${esc(q.answer)}</div>`:'<div class="err" id="qerr"></div>'}</div>`}
-  else{const it=v.it,m=it.meta||{};let h=`<div class="kind">${esc(KIND[it.type]||it.type)}</div><div class="title">${esc(it.title)}</div>`;
-   if(it.type==='flight')h+=`<div class="fl"><div class="ap">${esc(m.from||'')}</div><div class="arr">✈</div><div class="ap r">${esc(m.to||'')}</div></div>
+   ${q.answer?`<div class="conf"><svg class='ico i-chk' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12.5l4.5 4.5L19 7.5'/></svg> บันทึกคำตอบแล้ว: ${esc(q.answer)}</div>`:'<div class="err" id="qerr"></div>'}</div>`}
+  else{const it0=v.it,it=(it0.type==='reply'&&!it0.title)?{...it0,title:it0.body,body:''}:it0,m=it.meta||{};let h=`<div class="kind">${esc(KIND[it.type]||it.type)}</div><div class="title">${esc(it.title)}</div>`;
+   if(it.type==='flight')h+=`<div class="fl"><div class="ap">${esc(m.from||'')}</div><div class="arr"><svg class='ico' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'><path d='M10.5 13.5L3 11l1.5-1.5 8 .5 4-4a2 2 0 0 1 3 3l-4 4 .5 8L14.5 22l-2.5-7.5-3.5 3.5V20L7 21l-1-3-3-1 1-1.5h2l3.5-3.5'/></svg></div><div class="ap r">${esc(m.to||'')}</div></div>
     <div class="tm"><div>ออกเดินทาง<b>${esc(m.dep||'--:--')}</b></div><div>ถึง<b>${esc(m.arr||'--:--')}</b></div></div>${it.body?`<div class="body" style="margin-top:24px">${esc(it.body)}</div>`:''}`;
    else h+=`<div class="body">${esc(it.body)}</div>`;
    P.innerHTML=h+`<div class="ago">${ago(it.ts)}</div>`}}
  const cur=v.it,hs=items.filter(i=>i!==cur).slice(0,4);
- $('hist').innerHTML=hs.length?`<h3>ล่าสุด</h3>`+hs.map(i=>`<div class="hi"><small>${new Date(i.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</small>${i.type==='question'?(i.answer?'✓ ':'? '):''}${esc(i.title||i.body)}${i.answer?` <b style="color:var(--a)">${esc(i.answer)}</b>`:''}</div>`).join(''):'';
+ $('hist').innerHTML=hs.length?`<h3>ล่าสุด</h3>`+hs.map(i=>`<div class="hi"><small>${new Date(i.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</small>${i.type==='question'?(i.answer?"<svg class='ico i-chk' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12.5l4.5 4.5L19 7.5'/></svg> ":'? '):''}${esc(i.title||i.body)}${i.answer?` <b style="color:var(--a)">${esc(i.answer)}</b>`:''}</div>`).join(''):'';
  $('hist').style.visibility=hs.length?'visible':'hidden'}
 $('panel').addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b||b.disabled)return;const q=pickView().it;if(!q||q.answer)return;
  const ans=q.options[+b.dataset.i];document.querySelectorAll('.opt').forEach(x=>x.disabled=true);b.classList.add('sel');
@@ -134,7 +235,7 @@ function setItems(a){if(a.length&&(!items[0]||a[0].id!==items[0].id)){lastAct=Da
 function startPoll(){if(poll)return;const f=()=>fetch('/api/latest'+KQ,{credentials:'same-origin'}).then(r=>r.json()).then(d=>{setItems(d.items);setConn(true,'ดึงข้อมูลเป็นระยะ')}).catch(()=>setConn(false,'ออฟไลน์'));f();poll=setInterval(f,5000)}
 function startSSE(){if(!window.EventSource)return startPoll();const es=new EventSource('/api/stream'+KQ,{withCredentials:true});let fails=0;
  es.addEventListener('init',e=>{fails=0;if(poll){clearInterval(poll);poll=null}setConn(true,'ออนไลน์');setItems(JSON.parse(e.data).items)});
- es.addEventListener('item',e=>{hold=null;setItems([JSON.parse(e.data),...items].slice(0,20));perk()});
+ es.addEventListener('item',e=>{const it=JSON.parse(e.data);hold=null;if(voice&&voice.phase!=='listen')setVoice(null);setItems([it,...items].slice(0,20));perk();if(it.speak||it.type==='reply')say(it)});
  es.addEventListener('answer',e=>applyAnswer(JSON.parse(e.data)));
  es.onerror=()=>{setConn(false,'กำลังเชื่อมต่อใหม่…');if(++fails>=3)startPoll()}}
 function tick(){const d=new Date();$('time').textContent=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
@@ -157,5 +258,73 @@ function startLoc(){if(!navigator.geolocation){locUI('err','ไม่รอง�
   {enableHighAccuracy:true,maximumAge:10000,timeout:30000})}
 $('loc').addEventListener('click',()=>{if(watchId===null)startLoc()});
 try{if(localStorage.getItem('eveLoc')==='1')startLoc()}catch(e){}
+/* ---------- talk to EvE ---------- */
+let voice=null,spkOn=true,unlocked=false,listening=false,micStream=null,actx=null,an=null,srcN=null,rec=null,mr=null,heard='',lastLoud=0,startedAt=0,gotSpeech=false,usedFallback=false;
+try{spkOn=localStorage.getItem('eveSpk')!=='0'}catch(e){}
+const SPK_ON=`<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.5a8 8 0 0 1 0 11"/></svg>`,SPK_OFF=`<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>`;
+function spkUI(){const b=$('spk');b.innerHTML=spkOn?SPK_ON:SPK_OFF;b.setAttribute('aria-label',spkOn?'ปิดเสียงพูด':'เปิดเสียงพูด');b.setAttribute('aria-pressed',spkOn);b.classList.toggle('off',!spkOn)}spkUI();
+$('spk').addEventListener('click',()=>{spkOn=!spkOn;try{localStorage.setItem('eveSpk',spkOn?'1':'0')}catch(e){}if(!spkOn&&window.speechSynthesis)speechSynthesis.cancel();spkUI()});
+function setV(m){vmode=m;document.body.classList.toggle('listening',m==='listen');document.body.classList.toggle('thinking',m==='think');document.body.classList.toggle('speaking',m==='speak')}
+function setVoice(v){voice=v?{until:Date.now()+(v.phase==='think'?90000:v.phase==='err'?6000:60000),...v}:null;
+ if(vmode!=='speak'||v)setV(v&&v.phase==='listen'?'listen':v&&v.phase==='think'?'think':'');
+ render();clearTimeout(setVoice.t);if(voice)setVoice.t=setTimeout(()=>{if(voice&&voice.phase==='think')setV('');render()},voice.until-Date.now()+50)}
+function unlock(){if(unlocked)return;unlocked=true;try{if(window.speechSynthesis){const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u)}}catch(e){}
+ try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){actx=actx||new AC();actx.resume&&actx.resume()}}catch(e){}}
+addEventListener('pointerdown',unlock,{once:true,capture:true});
+function thVoice(){const vs=window.speechSynthesis?speechSynthesis.getVoices():[];return vs.find(v=>/^th/i.test(v.lang))||null}
+function say(it){if(!spkOn||!window.speechSynthesis||!window.SpeechSynthesisUtterance)return;const text=[it.title,it.body].filter(Boolean).join('. ');if(!text)return;
+ try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='th-TH';const v=thVoice();if(v)u.voice=v;u.rate=1;
+  u.onstart=()=>setV('speak');u.onend=u.onerror=()=>{if(vmode==='speak')setV('')};setV('speak');speechSynthesis.speak(u)}catch(e){setV('')}}
+if(window.speechSynthesis&&speechSynthesis.addEventListener)speechSynthesis.addEventListener('voiceschanged',()=>{});
+function sendSay(text){text=String(text||'').trim();if(!text){setVoice({phase:'err',text:'',sub:'ไม่ได้ยินเลย ลองอีกครั้งนะ'});return Promise.resolve(false)}
+ setVoice({phase:'think',text});
+ return fetch('/api/say'+KQ,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({text})})
+  .then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>d.id).catch(()=>{setVoice({phase:'err',text,sub:'ส่งไม่สำเร็จ ลองอีกครั้งนะ'});return false})}
+function sendAudio(blob){setVoice({phase:'think',text:'',sub:'ส่งเสียงให้ EvE แล้ว'});
+ return fetch('/api/voice'+KQ,{method:'POST',headers:{'Content-Type':blob.type||'audio/webm'},credentials:'same-origin',body:blob})
+  .then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>d.id).catch(()=>{setVoice({phase:'err',text:'',sub:'ส่งเสียงไม่สำเร็จ'});return false})}
+// silence detection (only runs while listening)
+let wbuf=null;
+function meter(){if(!listening)return;let rms=0;
+ if(an){an.getByteTimeDomainData(wbuf);for(let i=0;i<wbuf.length;i++){const d=(wbuf[i]-128)/128;rms+=d*d}rms=Math.sqrt(rms/wbuf.length)}
+ lvl=lvl*.7+Math.min(1,rms*6)*.3;document.body.style.setProperty('--lv',lvl.toFixed(2));const now=Date.now();if(rms>.045){lastLoud=now;gotSpeech=true}
+
+ if(gotSpeech&&now-lastLoud>1500)return stopMic();if(now-startedAt>30000)return stopMic();
+ requestAnimationFrame(meter)}
+function micUI(on){const l=on?'แตะเพื่อหยุด':'คุยกับ EvE';$('micC').setAttribute('aria-label',l)}
+function cleanupStream(){try{srcN&&srcN.disconnect()}catch(e){}srcN=null;an=null;if(micStream){micStream.getTracks().forEach(t=>t.stop());micStream=null}}
+function startRecorder(){if(!window.MediaRecorder||!micStream){setVoice({phase:'err',text:'',sub:'เบราว์เซอร์นี้ไม่รองรับการบันทึกเสียง'});listening=false;micUI(false);cleanupStream();return}
+ usedFallback=true;const mt=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4'].find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
+ const chunks=[];mr=new MediaRecorder(micStream,mt?{mimeType:mt,audioBitsPerSecond:32000}:{});
+ mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+ mr.onstop=()=>{const b=new Blob(chunks,{type:mr.mimeType||mt||'audio/webm'});mr=null;cleanupStream();if(b.size>2*1024*1024-1024)return setVoice({phase:'err',text:'',sub:'เสียงยาวเกินไป'});b.size?sendAudio(b):setVoice({phase:'err',text:'',sub:'ไม่ได้ยินเลย ลองอีกครั้งนะ'})};
+ mr.start(1000);setVoice({phase:'listen',text:'',sub:'กำลังอัดเสียง (สูงสุด 30 วินาที)'})}
+function startMic(){unlock();if(listening)return stopMic();
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){setVoice({phase:'err',text:'',sub:'ไม่รองรับไมโครโฟน'});return Promise.resolve(false)}
+ if(window.speechSynthesis)speechSynthesis.cancel();
+ listening=true;heard='';gotSpeech=false;usedFallback=false;micUI(true);setVoice({phase:'listen',text:''});
+ return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}).then(st=>{
+  if(!listening){st.getTracks().forEach(t=>t.stop());return false}
+  micStream=st;startedAt=lastLoud=Date.now();
+  try{const AC=window.AudioContext||window.webkitAudioContext;actx=actx||new AC();actx.resume&&actx.resume();srcN=actx.createMediaStreamSource(st);an=actx.createAnalyser();an.fftSize=512;wbuf=new Uint8Array(an.fftSize);srcN.connect(an)}catch(e){an=null}
+  requestAnimationFrame(meter);
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR||window.EVE_FORCE_REC){startRecorder();return true}
+  try{rec=new SR();rec.lang='th-TH';rec.interimResults=true;rec.continuous=true;rec.maxAlternatives=1}catch(e){rec=null;startRecorder();return true}
+  rec.onresult=ev=>{let fin='',tmp='';for(let i=0;i<ev.results.length;i++){const r=ev.results[i];(r.isFinal?(fin+=r[0].transcript):(tmp+=r[0].transcript))}
+   heard=(fin+tmp).trim();gotSpeech=true;lastLoud=Date.now();if(voice&&voice.phase==='listen'){voice.text=heard;render()}};
+  rec.onerror=ev=>{const r=rec;rec=null;try{r&&r.abort()}catch(e){}
+   if(heard){listening=false;micUI(false);cleanupStream();sendSay(heard)}
+   else if(listening&&ev.error!=='aborted'&&ev.error!=='no-speech')startRecorder(); // SR unavailable/offline -> record audio instead
+   else{listening=false;micUI(false);cleanupStream();setVoice({phase:'err',text:'',sub:'ไม่ได้ยินเลย ลองอีกครั้งนะ'})}};
+  rec.onend=()=>{if(!rec)return;rec=null;listening=false;micUI(false);cleanupStream();heard?sendSay(heard):setVoice({phase:'err',text:'',sub:'ไม่ได้ยินเลย ลองอีกครั้งนะ'})};
+  rec.start();return true
+ }).catch(err=>{listening=false;micUI(false);setVoice({phase:'err',text:'',sub:err&&err.name==='NotAllowedError'?'ไม่ได้รับอนุญาตให้ใช้ไมโครโฟน':'เปิดไมโครโฟนไม่ได้'});return false})}
+function stopMic(){if(!listening)return;listening=false;micUI(false);lvl=0;
+ if(rec){try{rec.stop()}catch(e){}}            // onend sends the text
+ else if(mr&&mr.state!=='inactive'){mr.stop()}  // onstop uploads the audio
+ else{cleanupStream();setVoice(null)}}
+SL.addEventListener('click',()=>{if(document.body.classList.contains('mic-c'))startMic()});
+window.EVE={sendSay,startMic,stopMic,say,debugListen:on=>{on===false?(setVoice(null),setV('')):setVoice({phase:'listen',text:''})},state:()=>({listening,vmode,usedFallback,voice})};
 tick();setInterval(tick,15000);startSSE();
 </script></body></html>
