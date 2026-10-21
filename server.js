@@ -217,6 +217,37 @@ app.get('/api/tesla/state', pushOk, async (req, res) => {
       battery_level: cs.battery_level ?? null, charging_state: cs.charging_state ?? null, ts: ds.timestamp || cs.timestamp || Date.now() });
   } catch (e) { tErr(res, e); }
 });
+
+// ---- OpenAI text-to-speech ----
+const OA_KEY = process.env.OPENAI_API_KEY || '';
+const TTS_MODEL = process.env.OPENAI_TTS_MODEL || 'gpt-4o-mini-tts';
+const TTS_VOICES = ['marin', 'cedar', 'coral', 'nova', 'shimmer', 'sage', 'alloy', 'ash', 'ballad', 'echo', 'fable', 'onyx', 'verse'];
+const TTS_VOICE = TTS_VOICES.includes(process.env.OPENAI_TTS_VOICE) ? process.env.OPENAI_TTS_VOICE : 'marin';
+const TTS_INSTR = 'Speak Thai naturally, warm, friendly, concise, like a calm in-car companion.';
+const ttsCache = new Map(); // LRU: key -> Buffer
+app.get('/api/tts/status', viewOrPush, (req, res) => res.json({ enabled: !!OA_KEY, model: TTS_MODEL, voice: TTS_VOICE, voices: TTS_VOICES }));
+app.post('/api/tts', viewOrPush, async (req, res) => {
+  if (!OA_KEY) return res.status(501).json({ error: 'tts not configured' });
+  const text = String((req.body || {}).text || '').trim().slice(0, 600);
+  if (!text) return res.status(400).json({ error: 'text required' });
+  const voice = TTS_VOICES.includes((req.body || {}).voice) ? req.body.voice : TTS_VOICE;
+  let speed = Number((req.body || {}).speed); speed = speed >= 0.5 && speed <= 2 ? Math.round(speed * 10) / 10 : 1;
+  const key = voice + '|' + speed + '|' + text;
+  let buf = ttsCache.get(key);
+  if (buf) { ttsCache.delete(key); ttsCache.set(key, buf); }
+  else {
+    try {
+      const body = { model: TTS_MODEL, input: text, voice, response_format: 'mp3', speed };
+      if (!/^tts-1/.test(TTS_MODEL)) body.instructions = TTS_INSTR;
+      const ac = new AbortController(); const t = setTimeout(() => ac.abort(), 20000);
+      const r = await fetch('https://api.openai.com/v1/audio/speech', { method: 'POST', headers: { Authorization: 'Bearer ' + OA_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: ac.signal }).finally(() => clearTimeout(t));
+      if (!r.ok) { console.log('tts failed', r.status); return res.status(502).json({ error: 'tts upstream ' + r.status }); }
+      buf = Buffer.from(await r.arrayBuffer());
+      ttsCache.set(key, buf); while (ttsCache.size > 50) ttsCache.delete(ttsCache.keys().next().value);
+    } catch (e) { console.log('tts error'); return res.status(502).json({ error: 'tts error' }); }
+  }
+  res.set('Cache-Control', 'private, max-age=86400').type('audio/mpeg').send(buf);
+});
 app.get('/', viewOk, (req, res) => res.sendFile(path.join(PUB, 'index.html')));
 app.get('/eve-blob-white.svg', (req, res) => res.sendFile(path.join(PUB, 'eve-blob-white.svg')));
 app.listen(PORT, () => console.log(`EvE Me on :${PORT}`));

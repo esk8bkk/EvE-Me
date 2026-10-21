@@ -31,3 +31,6 @@ Region: Thailand is Asia-Pacific, so use the NA/APAC base URL `https://fleet-api
 - `GET /api/tesla/state[?vin=...]` (Bearer PUSH_TOKEN) returns `{state, shift_state, speed, lat, lng, battery_level, charging_state, ts}`. It never wakes the car: if the car is asleep or offline you get only `state`.
 
 Access tokens refresh automatically. Tesla rotates refresh tokens, so after a long restart gap you may need to repeat step 5.
+
+## OpenAI voice (optional)
+Set `OPENAI_API_KEY` in Render. Optional: `OPENAI_TTS_MODEL` (default `gpt-4o-mini-tts`) and `OPENAI_TTS_VOICE` (default `marin`). If no key is set, `/api/tts` returns 501 and the page uses the browser's voice.
