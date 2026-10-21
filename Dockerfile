@@ -12,5 +12,5 @@ COPY package*.json ./
 RUN npm install --omit=dev
 COPY . .
 RUN chmod +x start.sh
-ENV TESLA_PROXY_URL=https://localhost:4443 TESLA_PROXY_CA=/tmp/proxy-tls-cert.pem
+ENV TESLA_PROXY_URL=https://127.0.0.1:4443 TESLA_PROXY_CA=/tmp/proxy-tls-cert.pem
 CMD ["./start.sh"]
