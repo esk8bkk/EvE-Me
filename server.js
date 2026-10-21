@@ -174,7 +174,7 @@ app.get('/tesla/login', viewOrPush, (req, res) => {
   if (!T_ID) return res.status(500).send('TESLA_CLIENT_ID not set');
   const state = crypto.randomBytes(16).toString('hex'); tStates.set(state, Date.now() + 600000);
   for (const [k, v] of tStates) if (v < Date.now()) tStates.delete(k);
-  const q = new URLSearchParams({ response_type: 'code', client_id: T_ID, redirect_uri: T_REDIRECT, scope: T_SCOPES, state, locale: 'en-US', prompt: 'login' });
+  const q = new URLSearchParams({ response_type: 'code', client_id: T_ID, redirect_uri: T_REDIRECT, scope: T_SCOPES, state, locale: 'en-US', prompt: 'login', prompt_missing_scopes: 'true' });
   res.redirect(T_AUTH + '?' + q);
 });
 app.get('/tesla/callback', viewOk, async (req, res) => {
