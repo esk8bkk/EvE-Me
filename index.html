@@ -198,6 +198,46 @@ body.m-idle.has-alert #pmain,body.has-agenda #pmain,body.has-agenda #alert{displ
 #alert .at{font-size:28px;font-weight:800;line-height:1.2}
 #alert .ad{font-size:16px;color:#8A8A93;margin-top:6px}
 @media (prefers-reduced-motion:reduce){#alert.in{animation:none;transform:none;opacity:1}}
+/* ===== strip mode: short pane (Tesla browser shrunk above the map) ===== */
+.amore-s{display:none}
+@media (max-height:360px),(min-aspect-ratio:4/1){
+ body{background:var(--bg)}
+ body:before{content:"";position:fixed;inset:8px;border-radius:24px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);pointer-events:none}
+ header{top:0;bottom:0;left:auto;right:0;height:auto;padding:0 calc(var(--px) + 6px) 0 0;gap:12px}
+ header .sp,.date,#locT{display:none}
+ .loc{min-height:56px;padding:0 16px}.spk{min-height:56px;width:56px;min-width:56px}
+ .clock{padding:10px 18px}.time{font-size:40px}
+ #stage{inset:16px 490px 16px calc(var(--px) + 6px);display:grid;grid-template-columns:var(--sh) minmax(0,1fr);grid-template-rows:none;gap:28px;align-items:center;--sh:min(calc(100vh - 56px),190px)}
+ body .slot{width:var(--sh);height:var(--sh);justify-self:start;align-self:center}
+ body.mic-c .micbadge{width:44px;height:44px;right:2%;bottom:2%}body.mic-c .micbadge svg{width:22px;height:22px}
+ #panel{align-self:center;display:flex;flex-direction:column;justify-content:center;max-height:100%}
+ body.m-idle #panel{align-items:stretch}
+ #hist{display:none}
+ .bub{background:none;border:0;box-shadow:none;padding:0;backdrop-filter:none;-webkit-backdrop-filter:none;border-radius:0}
+ .greet{text-align:left!important;font-size:44px!important}.greet small{display:none}
+ .greet,.title,.said,.q{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;text-wrap:nowrap}
+ .title,.said,.q{font-size:clamp(32px,min(4vw,15vh),46px)!important;line-height:1.2;margin:4px 0!important}
+ .kind{font-size:16px;letter-spacing:2px}
+ .body,.ago,.vsub,.fl,.tm,.conf,.err{display:none}
+ .opts{display:flex;gap:10px;flex-wrap:nowrap;overflow:hidden}.opt{min-height:52px;font-size:24px;padding:0 18px;border-radius:20px;flex:0 1 auto}
+ body.has-alert #pmain,body.has-agenda #pmain{display:none}
+ #alert,#agenda{margin:0;padding:14px 22px;border-radius:999px;align-items:center;gap:16px;box-shadow:none}
+ #alert .ai svg,#agenda .ai svg{width:30px;height:30px}#agenda .ai{padding:0}
+ #alert>div{display:flex;align-items:baseline;gap:14px;min-width:0}
+ #alert .at,#agenda .ag .at{font-size:30px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0}
+ #alert>div{flex:1 1 auto}
+ #alert .at{flex:0 1 auto;min-width:0}
+ #alert .ad{flex:1 1 0;min-width:0;font-size:18px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .ag{display:flex;align-items:baseline;gap:16px;min-width:0}
+ .ag .at{font-size:18px!important;color:#C4B5FD;flex:none}
+ .ar{display:flex;align-items:baseline;gap:12px;border:0;padding:0;min-width:0}.ar~.ar,.amore{display:none}
+ .ar b,.ar span{font-size:30px}.ar b{flex:none}.ar span{min-width:0;overflow:hidden;text-overflow:ellipsis}.ar small{display:none}.ag .ar{flex:0 1 auto}
+ .amore-s{display:block;flex:none;font-size:20px;font-weight:800;color:#C4B5FD}
+ .tapl{margin-top:8px;min-height:44px;font-size:18px}
+ #vset{top:12px;left:auto;right:12px;max-height:calc(100vh - 24px);overflow:auto;padding:18px 24px;gap:14px}
+ body.listening .slot:after{content:"";position:absolute;inset:-6%;border-radius:50%;box-shadow:0 0 0 2px rgba(139,92,246,.5);animation:spulse 1.6s ease-out infinite;pointer-events:none}
+ @keyframes spulse{0%{transform:scale(.9);opacity:.9}100%{transform:scale(1.25);opacity:0}}
+}
 </style></head><body class="m-idle mic-c">
 <header><button class="glass loc" id="loc"><span class="ld"></span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span id="locT">แชร์ตำแหน่ง</span></button><button class="glass spk" id="spk" aria-label="เสียงพูด"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.5a8 8 0 0 1 0 11"/></svg></button><button class="glass spk gear" id="gear" aria-label="ตั้งค่าเสียง" aria-expanded="false" aria-controls="vset"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button><div class="sp"></div><div class="glass clock"><div class="dot" id="dot" role="img" aria-label="สถานะ"></div><span id="st" class="vh">กำลังเชื่อมต่อ…</span><div class="time" id="time">--:--</div><div class="date" id="date"></div></div></header>
 <div id="stage"><div class="slot" id="slot"><button class="micbadge" id="micC" aria-label="คุยกับ EvE" tabindex="-1"><svg class="ic-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><svg class="ic-stop" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg></button></div><div id="panel"><button id="agenda" aria-live="polite"></button><button id="alert" aria-live="polite" data-k=""></button><div id="pmain"></div></div></div>
@@ -323,7 +363,7 @@ pollCar();setInterval(pollCar,60000);setInterval(renderAlert,30000);
 let agT=null;
 function hideAgenda(){clearTimeout(agT);$('agenda').classList.remove('in');document.body.classList.remove('has-agenda')}
 function showAgenda(it){const evs=(it.meta&&it.meta.events)||[],G=$('agenda');
- G.innerHTML=`<span class="ai">${CI.cal}</span><div class="ag"><div class="at">วันนี้</div>`+(evs.length?evs.slice(0,3).map(e=>`<div class="ar"><b>${esc(e.time||'')}</b><span>${esc(e.title)}</span>${e.location?`<small>${esc(e.location)}</small>`:''}</div>`).join('')+(evs.length>3?`<div class="amore">+${evs.length-3}</div>`:''):`<div class="ad">วันนี้ว่าง</div>`)+`</div>`;
+ G.innerHTML=`<span class="ai">${CI.cal}</span><div class="ag"><div class="at">วันนี้</div>`+(evs.length?evs.slice(0,3).map(e=>`<div class="ar"><b>${esc(e.time||'')}</b><span>${esc(e.title)}</span>${e.location?`<small>${esc(e.location)}</small>`:''}</div>`).join('')+(evs.length>3?`<div class="amore">+${evs.length-3}</div>`:'')+(evs.length>1?`<div class="amore-s">+${evs.length-1}</div>`:''):`<div class="ad">วันนี้ว่าง</div>`)+`</div>`;
  G.classList.remove('in');void G.offsetWidth;G.classList.add('in');document.body.classList.add('has-agenda');
  clearTimeout(agT);agT=setTimeout(hideAgenda,15000);lastAct=Date.now();document.body.classList.remove('dim');perk();
  if(it.speak!==false)say({body:it.body})}
