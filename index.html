@@ -238,9 +238,41 @@ body.m-idle.has-alert #pmain,body.has-agenda #pmain,body.has-agenda #alert{displ
  body.listening .slot:after{content:"";position:absolute;inset:-6%;border-radius:50%;box-shadow:0 0 0 2px rgba(139,92,246,.5);animation:spulse 1.6s ease-out infinite;pointer-events:none}
  @keyframes spulse{0%{transform:scale(.9);opacity:.9}100%{transform:scale(1.25);opacity:0}}
 }
+/* ===== morning briefing (transient) ===== */
+body.has-brief #pmain,body.has-brief #alert,body.has-brief #agenda{display:none}
+#brief{display:none;align-items:center;gap:28px;width:100%;padding:22px 30px;border-radius:28px;border:1px solid rgba(139,92,246,.45);background:rgba(18,16,28,.55);backdrop-filter:blur(28px) saturate(140%);-webkit-backdrop-filter:blur(28px) saturate(140%);color:#fff;cursor:pointer;text-align:left;font-family:inherit;box-shadow:0 20px 60px rgba(0,0,0,.45);transform:translateY(-16px);opacity:0}
+#brief.in{display:flex;animation:ain .5s cubic-bezier(.2,.8,.2,1) forwards}
+#brief .bs{flex:none;display:flex;flex-direction:column;align-items:flex-start;padding-right:26px;border-right:1px solid rgba(255,255,255,.1)}
+#brief .bn{font-size:84px;font-weight:800;line-height:.95;font-variant-numeric:tabular-nums;letter-spacing:-2px}#brief .bn small{font-size:30px;font-weight:700;color:#8A8A93;margin-left:4px;letter-spacing:0}
+#brief .bl{font-size:16px;color:#8A8A93;margin-top:6px}
+#brief .bx{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+#brief .br{display:inline-flex;align-items:center;gap:10px;font-size:22px;font-weight:700;color:#C4B5FD}#brief .br i{width:10px;height:10px;border-radius:50%;background:#8B5CF6;box-shadow:0 0 12px #8B5CF6}
+#brief .bd{font-size:28px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#brief .bt{font-size:20px;color:#B8B8C2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@media (prefers-reduced-motion:reduce){#brief.in{animation:none;transform:none;opacity:1}}
+@media (max-height:360px),(min-aspect-ratio:4/1){
+ body.has-brief #pmain{display:none}
+ #brief{padding:12px 24px;border-radius:999px;gap:18px;box-shadow:none}
+ #brief .bs{flex-direction:row;align-items:baseline;gap:8px;padding-right:18px}
+ #brief .bn{font-size:52px;letter-spacing:-1px}#brief .bn small{font-size:22px}#brief .bl{display:none}
+ #brief .bx{flex-direction:row;align-items:baseline;gap:16px}
+ #brief .br{font-size:24px;flex:none;color:#fff}#brief .brl{display:none}#brief .bd{font-size:26px;flex:1 1 auto;min-width:0}#brief .bt{display:none}
+ #brief{gap:14px;padding:10px 20px}#brief .bs{padding-right:14px}#brief .bn{font-size:46px}#brief .bx{gap:12px}
+}
+#brief.cmp{padding:12px 24px;border-radius:999px;gap:18px;box-shadow:none}#brief.cmp .bs{flex-direction:row;align-items:baseline;gap:8px;padding-right:18px}#brief.cmp .bn{font-size:52px}#brief.cmp .bl,#brief.cmp .bt{display:none}#brief.cmp .bx{flex-direction:row;align-items:baseline;gap:12px}#brief.cmp .brl{display:none}#brief.cmp .bd{font-size:26px;flex:1 1 auto;min-width:0}
+/* ===== nav ETA line (only while a Tesla route is active) ===== */
+#eta{display:none;align-items:center;gap:14px;max-width:100%;width:max-content;margin:0 0 clamp(14px,2vh,22px);padding:12px 24px;border-radius:999px;
+ background:rgba(18,18,24,.55);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(24px) saturate(140%);-webkit-backdrop-filter:blur(24px) saturate(140%);
+ color:var(--t);font:600 clamp(20px,1.7vw,28px)/1.2 Inter,-apple-system,"Noto Sans Thai",system-ui,sans-serif;white-space:nowrap;overflow:hidden}
+#eta.on{display:flex}
+#eta .ed{flex:none;width:10px;height:10px;border-radius:50%;background:var(--a);box-shadow:0 0 12px var(--a)}
+#eta .en{min-width:0;overflow:hidden;text-overflow:ellipsis;font-weight:700}
+#eta .es{color:var(--m);flex:none}#eta b{font-weight:700;color:var(--t);font-variant-numeric:tabular-nums}
+#eta .ex{color:var(--rim);flex:none}
+@media (max-height:360px),(min-aspect-ratio:4/1){#eta{margin:0 0 10px;padding:8px 18px;font-size:22px;gap:10px}#eta .ed{width:8px;height:8px}}
 </style></head><body class="m-idle mic-c">
 <header><button class="glass loc" id="loc"><span class="ld"></span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span id="locT">แชร์ตำแหน่ง</span></button><button class="glass spk" id="spk" aria-label="เสียงพูด"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.5a8 8 0 0 1 0 11"/></svg></button><button class="glass spk gear" id="gear" aria-label="ตั้งค่าเสียง" aria-expanded="false" aria-controls="vset"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button><div class="sp"></div><div class="glass clock"><div class="dot" id="dot" role="img" aria-label="สถานะ"></div><span id="st" class="vh">กำลังเชื่อมต่อ…</span><div class="time" id="time">--:--</div><div class="date" id="date"></div></div></header>
-<div id="stage"><div class="slot" id="slot"><button class="micbadge" id="micC" aria-label="คุยกับ EvE" tabindex="-1"><svg class="ic-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><svg class="ic-stop" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg></button></div><div id="panel"><button id="agenda" aria-live="polite"></button><button id="alert" aria-live="polite" data-k=""></button><div id="pmain"></div></div></div>
+<div id="stage"><div class="slot" id="slot"><button class="micbadge" id="micC" aria-label="คุยกับ EvE" tabindex="-1"><svg class="ic-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><svg class="ic-stop" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg></button></div><div id="panel"><div id="eta" aria-live="polite"></div><button id="agenda" aria-live="polite"></button><button id="brief" aria-live="polite"></button><button id="alert" aria-live="polite" data-k=""></button><div id="pmain"></div></div></div>
 <div class="glass" id="hist"></div>
 <div class="glass" id="vset" role="dialog" aria-label="ตั้งค่าเสียง" hidden>
 <div class="vs-h">ตั้งค่าเสียง</div>
@@ -323,8 +355,9 @@ function setConn(on,txt){sleeping=!on;E.classList.toggle('sleep',!on);$('dot').c
 function setItems(a){a.forEach(addExt);setTimeout(renderAlert,0);if(a.length&&(!items[0]||a[0].id!==items[0].id)){lastAct=Date.now();document.body.classList.remove('dim')}items=a;render()}
 function startPoll(){if(poll)return;const f=()=>fetch('/api/latest'+KQ,{credentials:'same-origin'}).then(r=>r.json()).then(d=>{setItems(d.items);setConn(true,'ดึงข้อมูลเป็นระยะ')}).catch(()=>setConn(false,'ออฟไลน์'));f();poll=setInterval(f,5000)}
 function startSSE(){if(!window.EventSource)return startPoll();const es=new EventSource('/api/stream'+KQ,{withCredentials:true});let fails=0;
- es.addEventListener('init',e=>{fails=0;if(poll){clearInterval(poll);poll=null}setConn(true,'ออนไลน์');setItems(JSON.parse(e.data).items)});
- es.addEventListener('item',e=>{const it=JSON.parse(e.data);if(it.type==='agenda'){showAgenda(it);return}if(it.meta&&it.meta.alert){addExt(it);setTimeout(renderAlert,0)}hold=null;if(voice&&voice.phase!=='listen')setVoice(null);setItems([it,...items].slice(0,20));perk();if(it.speak||it.type==='reply')say(it)});
+ es.addEventListener('init',e=>{fails=0;if(poll){clearInterval(poll);poll=null}setConn(true,'ออนไลน์');const _d=JSON.parse(e.data);setItems(_d.items);if('route' in _d&&typeof setRoute==='function')setRoute(_d.route)});
+ es.addEventListener('route',e=>setRoute(JSON.parse(e.data)));
+ es.addEventListener('item',e=>{const it=JSON.parse(e.data);if(it.type==='agenda'){showAgenda(it);return}if(it.type==='briefing'){showBrief(it);return}if(it.meta&&it.meta.alert){addExt(it);setTimeout(renderAlert,0)}hold=null;if(voice&&voice.phase!=='listen')setVoice(null);setItems([it,...items].slice(0,20));perk();if(it.speak||it.type==='reply')say(it)});
  es.addEventListener('answer',e=>applyAnswer(JSON.parse(e.data)));
  es.onerror=()=>{setConn(false,'กำลังเชื่อมต่อใหม่…');if(++fails>=3)startPoll()}}
 function tick(){const d=new Date();$('time').textContent=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
@@ -356,9 +389,17 @@ function renderAlert(){extAlerts=extAlerts.filter(x=>x.until>Date.now());const a
  A.classList.add('in')}
 
 // EvE speaks alerts via the server hooks (30-min debounce); the client only shows them, so nothing is spoken twice.
-function pollCar(){fetch('/api/car'+KQ,{credentials:'same-origin'}).then(r=>r.ok?r.json():null).then(d=>{carData=d;renderAlert()}).catch(()=>{})}
+/* ---------- nav ETA ---------- */
+let route=null;
+function renderEta(){const E=$('eta'),r=route&&route.minutes!=null&&(Date.now()-(route.ts||0)<5*60000)?route:null;
+ E.classList.toggle('on',!!r);if(!r){E.innerHTML='';return}
+ const arr=new Date((r.ts||Date.now())+r.minutes*60000).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Bangkok'}),S='<span class="es">·</span>';
+ E.innerHTML=`<span class="ed"></span><span class="en">${esc(r.destination)}</span>${S}<span>ถึง <b>${arr}</b></span>`+(r.km!=null?`${S}<span><b>${r.km<10?r.km.toFixed(1):Math.round(r.km)}</b> กม.</span>`:'')+(r.delay_min>=1?`${S}<span class="ex">ติด +${r.delay_min} นาที</span>`:'')}
+function setRoute(r){route=r||null;renderEta()}
+setInterval(renderEta,30000);
+function pollCar(){fetch('/api/car'+KQ,{credentials:'same-origin'}).then(r=>r.ok?r.json():null).then(d=>{carData=d;setRoute(d&&d.state==='online'?d.route:null);renderAlert()}).catch(()=>{})}
 $('alert').addEventListener('click',e=>{e.stopPropagation();const k=$('alert').dataset.k;if(k){dismissed[k]=1;renderAlert()}});
-pollCar();setInterval(pollCar,60000);setInterval(renderAlert,30000);
+pollCar();setInterval(pollCar,60000);setInterval(()=>{if(route)pollCar()},30000);setInterval(renderAlert,30000);
 /* ---------- today agenda (transient) ---------- */
 let agT=null;
 function hideAgenda(){clearTimeout(agT);$('agenda').classList.remove('in');document.body.classList.remove('has-agenda')}
@@ -368,6 +409,17 @@ function showAgenda(it){const evs=(it.meta&&it.meta.events)||[],G=$('agenda');
  clearTimeout(agT);agT=setTimeout(hideAgenda,15000);lastAct=Date.now();document.body.classList.remove('dim');perk();
  if(it.speak!==false)say({body:it.body})}
 $('agenda').addEventListener('click',e=>{e.stopPropagation();hideAgenda()});
+/* ---------- morning briefing (transient, once per day; server decides) ---------- */
+let brT=null;
+function hideBrief(){clearTimeout(brT);$('brief').classList.remove('in');document.body.classList.remove('has-brief')}
+function showBrief(it){const b=(it.meta&&it.meta.briefing)||{},B=$('brief'),rd=b.readiness;
+ B.classList.toggle('cmp',!!(it.meta&&it.meta.compact)||!!route);
+ B.innerHTML=(b.sleep_h!=null?`<div class="bs"><div class="bn">${esc(String(b.sleep_h))}<small>ชม.</small></div><div class="bl">นอนเมื่อคืน</div></div>`:'')+
+  `<div class="bx">${rd!=null?`<div class="br"><i></i><span class="brl">ความพร้อม </span>${esc(String(rd))}${typeof rd==='number'?'%':''}</div>`:''}${b.duty?`<div class="bd">${esc(b.duty)}</div>`:''}${b.tip?`<div class="bt">${esc(b.tip)}</div>`:''}</div>`;
+ B.classList.remove('in');void B.offsetWidth;B.classList.add('in');document.body.classList.add('has-brief');
+ clearTimeout(brT);brT=setTimeout(hideBrief,15000);lastAct=Date.now();document.body.classList.remove('dim');perk();
+ if(it.body)say({body:it.body})}
+$('brief').addEventListener('click',e=>{e.stopPropagation();hideBrief()});
 /* ---------- location sharing ---------- */
 let watchId=null,lastSent=null;
 function locUI(c,t){const b=$('loc');b.className='glass loc'+(c?' '+c:'');$('locT').textContent=t}

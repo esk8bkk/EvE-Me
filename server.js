@@ -43,6 +43,7 @@ const broadcast = (event, obj) => { const d = `event: ${event}\ndata: ${JSON.str
 app.get('/healthz', (req, res) => res.json({ ok: true }));
 app.post('/api/push', pushOk, (req, res) => {
   if ((req.body || {}).type === 'agenda') return pushAgenda(req, res);
+  if ((req.body || {}).type === 'briefing') return pushBriefing(req, res);
   const { type = 'message', title = '', text = '', body = '', meta = {}, options, speak } = req.body || {};
   if (!['message', 'card', 'flight', 'question', 'reply'].includes(type)) return res.status(400).json({ error: 'bad type' });
   const item = { id: crypto.randomUUID(), ts: Date.now(), type, title: String(title || (type === 'question' ? text : '')).slice(0, 300), body: String(body || (type !== 'question' ? text : '')).slice(0, 4000), meta: typeof meta === 'object' && meta ? meta : {} };
@@ -124,8 +125,9 @@ app.get('/api/latest', viewOk, (req, res) => res.json({ items }));
 app.get('/api/stream', viewOk, (req, res) => {
   res.set({ 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache, no-transform', Connection: 'keep-alive', 'X-Accel-Buffering': 'no' });
   res.flushHeaders();
-  res.write(`retry: 3000\nevent: init\ndata: ${JSON.stringify({ items })}\n\n`);
+  res.write(`retry: 3000\nevent: init\ndata: ${JSON.stringify({ items, route: trip.route })}\n\n`);
   clients.add(res);
+  deliverBriefing('connect');
   const hb = setInterval(() => res.write(': ping\n\n'), 25000);
   req.on('close', () => { clearInterval(hb); clients.delete(res); });
 });
@@ -219,14 +221,25 @@ function condense(v, d) {
     windows: { fd: !!vs.fd_window, fp: !!vs.fp_window, rd: !!vs.rd_window, rp: !!vs.rp_window },
     odometer: vs.odometer == null ? null : Math.round(vs.odometer * MI),
     tpms_pressure_fl: r1(vs.tpms_pressure_fl), tpms_pressure_fr: r1(vs.tpms_pressure_fr), tpms_pressure_rl: r1(vs.tpms_pressure_rl), tpms_pressure_rr: r1(vs.tpms_pressure_rr),
+    route: routeOf(ds),
     ts: ds.timestamp || cs.timestamp || vs.timestamp || Date.now(),
   };
 }
+function routeOf(ds) { // Tesla nav: active route fields live in drive_state (location_data scope)
+  const dest = ds.active_route_destination, min = ds.active_route_minutes_to_arrival;
+  if (!dest || min == null || !(Number(min) >= 0)) return null;
+  return { destination: String(dest).slice(0, 120), minutes: Math.round(Number(min) * 10) / 10,
+    km: ds.active_route_miles_to_arrival == null ? null : r1(ds.active_route_miles_to_arrival * MI),
+    delay_min: ds.active_route_traffic_minutes_delay == null ? 0 : Math.round(Number(ds.active_route_traffic_minutes_delay)),
+    lat: ds.active_route_latitude ?? null, lng: ds.active_route_longitude ?? null, ts: Date.now() };
+}
 const ENDPOINTS = 'charge_state;climate_state;vehicle_state;drive_state;location_data';
+const MOCK_VD = process.env.MOCK_VEHICLE_FILE || '';
 async function readCar(vin) {
-  const vs = await listVehicles();
+  const vs = MOCK_VD ? [{ state: 'online' }] : await listVehicles();
   const v = vs.find(x => vin ? x.vin === vin : true);
   if (!v) { const e = new Error('no vehicle'); e.status = 404; throw e; }
+  if (MOCK_VD) { const d = JSON.parse(fs.readFileSync(MOCK_VD, 'utf8')); return d.state && d.state !== 'online' ? { state: d.state } : condense({ state: 'online' }, d); } // local testing only
   if (v.state !== 'online') return { state: v.state === 'offline' ? 'offline' : 'asleep' }; // never wake the car
   const { status, j } = await fleet(`/api/1/vehicles/${encodeURIComponent(v.vin || v.id)}/vehicle_data?endpoints=${encodeURIComponent(ENDPOINTS)}`);
   if (status === 408) return { state: 'asleep' };
@@ -272,17 +285,58 @@ function hook(key, text) { // debounce: one per kind per 30 min
 async function refreshCar() {
   try {
     const cur = await readCar();
+    if (cur.state === 'online' && !(car.last && car.last.state === 'online')) setImmediate(() => deliverBriefing('awake'));
     if (cur.state === 'online') { carHooks(car.last && car.last.state === 'online' ? car.last : (car.last && car.last.known), cur); car.last = cur; car.known = cur; }
     else car.last = { state: cur.state, known: car.known || null, known_ts: car.known ? car.known.ts : null, ts: Date.now() };
     car.err = null;
+    routeTick(cur.state === 'online' ? cur.route : null, cur.state === 'online');
   } catch (e) { car.err = { status: e.status || 500, error: String(e.message || e) }; }
   car.at = Date.now();
 }
 app.get('/api/car', viewOrPush, async (req, res) => {
-  if (Date.now() - car.at > 60000) { car.inflight = car.inflight || refreshCar().finally(() => { car.inflight = null; }); if (!car.last) await car.inflight; }
+  if (Date.now() - car.at > (routeFast() ? 30000 : 60000)) { car.inflight = car.inflight || refreshCar().finally(() => { car.inflight = null; }); if (!car.last) await car.inflight; }
   if (!car.last) return res.status(car.err ? car.err.status : 503).json(car.err || { error: 'no data' });
   res.json({ ...car.last, stale_error: car.err ? car.err.error : undefined });
 });
+
+// ---- Navigation ETA: per-trip voice alerts + faster poll only while driving a route ----
+const trip = { dest: null, minDelay: null, said: new Set(), route: null };
+const routeFast = () => { const c = car.last; return !!(c && c.state === 'online' && c.route && (c.shift_state === 'D' || c.shift_state === 'R' || c.speed > 0)); };
+function routeSay(key, text, title, detail) {
+  if (trip.said.has(key)) return; trip.said.add(key);
+  const item = { id: crypto.randomUUID(), ts: Date.now(), type: 'reply', title: '', body: text, speak: true,
+    meta: { car: 'route_' + key, alert: { kind: 'route', title: title || text, detail: detail || '', until: Date.now() + 10 * 60000, event_id: 'route-' + key } } };
+  items.unshift(item); items.length = Math.min(items.length, MAX); broadcast('item', item);
+}
+const normLoc = s => String(s || '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+function locMatch(a, b) {
+  a = normLoc(a); b = normLoc(b); if (!a || !b) return false;
+  if (a.includes(b) || b.includes(a)) return true;
+  const wa = a.split(' ').filter(w => w.length >= 3), wb = new Set(b.split(' ').filter(w => w.length >= 3));
+  return wa.some(w => wb.has(w));
+}
+function routeTick(r, online, now = Date.now()) {
+  if (!r) { // route ended (or car not online): reset trip, hide ETA
+    if (trip.route) broadcast('route', null);
+    if (!online || trip.route) { trip.dest = null; trip.minDelay = null; trip.said.clear(); }
+    trip.route = null; return;
+  }
+  if (r.destination !== trip.dest) { trip.dest = r.destination; trip.minDelay = null; trip.said.clear(); }
+  trip.route = r; broadcast('route', r);
+  const d = r.delay_min || 0;
+  if (trip.minDelay == null || d < trip.minDelay) trip.minDelay = d;
+  if (r.minutes <= 10.5 && r.minutes >= 1) routeSay('eta10', `อีก 10 นาทีถึง${r.destination}`, `อีก ${Math.round(r.minutes)} นาที · ${r.destination}`);
+  const grow = d - trip.minDelay;
+  if (grow >= 10) routeSay('traffic', `รถติดเพิ่ม ${grow} นาที`, `รถติดเพิ่ม ${grow} นาที`, r.destination);
+  const arrive = now + r.minutes * 60000;
+  const evs = calendar.map(e => ({ e, t: Date.parse(e.start) })).filter(x => Number.isFinite(x.t) && x.t > now - 15 * 60000).sort((a, b) => a.t - b.t);
+  const ev = evs.find(x => locMatch(x.e.location, r.destination)) || evs.find(x => x.t <= now + 3 * 3600000);
+  if (ev) {
+    const cut = ev.t - (CAL_LONG.has(String(ev.e.kind || '').toLowerCase()) ? 15 * 60000 : 0);
+    if (arrive > cut) routeSay('late:' + ev.e.id, `อาจไปไม่ทัน${ev.e.title}`, `อาจไปไม่ทัน ${ev.e.title}`, `ถึง ${bkkHM(arrive)} · เริ่ม ${bkkHM(ev.t)}`);
+  }
+}
+setInterval(() => { if (routeFast() && Date.now() - car.at >= 30000 && !car.inflight) car.inflight = refreshCar().finally(() => { car.inflight = null; }); }, 10000).unref(); // only re-reads while already online+driving a route; readCar never wakes
 
 // ---- OpenAI text-to-speech ----
 const OA_KEY = process.env.OPENAI_API_KEY || '';
@@ -424,6 +478,44 @@ function pushAgenda(req, res) {
   broadcast('item', item); // transient: not stored in the history list
   res.json({ ok: true, id: item.id, count: evs.length, clients: clients.size });
 }
+// ---- Morning briefing (type "briefing"): held in memory, shown once per Bangkok date ----
+const briefings = new Map(); // date -> { b, shown, shown_at }
+const clip = (v, n) => v == null || v === '' ? null : String(v).slice(0, n);
+function pushBriefing(req, res) {
+  const b = req.body || {}, today = bkkDay(Date.now());
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(b.date || '') ? b.date : today;
+  const sl = Number(b.sleep_h);
+  const rd = b.readiness == null || b.readiness === '' ? null : (Number.isFinite(Number(b.readiness)) ? Math.max(0, Math.min(100, Math.round(Number(b.readiness)))) : clip(b.readiness, 24));
+  const br = { date, sleep_h: Number.isFinite(sl) && sl >= 0 && sl <= 24 ? Math.round(sl * 10) / 10 : null, readiness: rd,
+    duty: clip(b.duty, 80), tip: clip(b.tip, 160), speak: clip(b.speak, 300), received_at: Date.now() };
+  briefings.set(date, { b: br, shown: false, shown_at: null });
+  for (const k of briefings.keys()) if (k < bkkDay(Date.now() - 3 * 864e5)) briefings.delete(k);
+  res.json({ ok: true });
+  if (date === today) setImmediate(() => { if (clients.size && car.last && car.last.state === 'online') deliverBriefing('push'); });
+}
+function briefingText(b) {
+  if (b.speak) return b.speak;
+  const p = ['อรุณสวัสดิ์'];
+  if (b.sleep_h != null) p.push(`เมื่อคืนนอนได้ ${b.sleep_h} ชั่วโมง`);
+  if (b.readiness != null) p.push(`ความพร้อม ${b.readiness}${typeof b.readiness === 'number' ? ' เปอร์เซ็นต์' : ''}`);
+  if (b.duty) p.push(`วันนี้ ${b.duty}`);
+  if (b.tip) p.push(b.tip);
+  return p.join(' ');
+}
+function deliverBriefing(why) {
+  const e = briefings.get(bkkDay(Date.now()));
+  if (!e || e.shown || !clients.size) return false;
+  const b = e.b, item = { id: crypto.randomUUID(), ts: Date.now(), type: 'briefing', title: '', body: briefingText(b), speak: true,
+    meta: { briefing: { sleep_h: b.sleep_h, readiness: b.readiness, duty: b.duty, tip: b.tip }, compact: routeFast() || !!trip.route } };
+  const d = `event: item\ndata: ${JSON.stringify(item)}\n\n`; let sent = 0;
+  for (const c of clients) { try { if (c.write(d) !== undefined && !c.writableEnded) sent++; } catch {} }
+  if (sent) { e.shown = true; e.shown_at = Date.now(); console.log(`[briefing] ${b.date} shown (${why}) to ${sent}`); }
+  return !!sent;
+}
+app.get('/api/briefing', pushOk, (req, res) => {
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(req.query.date || '') ? req.query.date : bkkDay(Date.now()), e = briefings.get(date);
+  res.json({ date, briefing: e ? e.b : null, shown: e ? e.shown : false, shown_at: e && e.shown_at ? new Date(e.shown_at).toISOString() : null });
+});
 app.get('/', viewOk, (req, res) => res.sendFile(path.join(PUB, 'index.html')));
 app.get('/eve-blob-white.svg', (req, res) => res.sendFile(path.join(PUB, 'eve-blob-white.svg')));
 app.listen(PORT, () => console.log(`EvE Me on :${PORT}`));

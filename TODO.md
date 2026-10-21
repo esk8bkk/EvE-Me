@@ -7,3 +7,10 @@ Flow: gear changes to Park → server wakes EvE → EvE asks "จอดรถไ
 - Wake: WAKE_WEBHOOK_URL → EvE.
 - Ask/answer: reuse the type:"reply" spoken push + mic button / inbox.
 - iMessage: via EvE's setup (to verify).
+
+## Idea (2026-10-22): Manual review quiz by voice
+- While driving, EvE runs a voice-only quiz of 3–5 questions from the manual (SEP/CCOM/aircraft type), answered by voice, with the answer and manual section cited
+- Spaced repetition: wrong answers come back on later days
+- Match topics to calendar (recurrent / SEP teaching)
+- The screen shows only a small score card at the end
+- SEP Course Builder builds the question bank from the real manual (still need: which manual and the file location)
