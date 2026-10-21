@@ -1,0 +1,11 @@
+#!/bin/sh
+# Starts tesla-http-proxy on localhost only (self-signed TLS, pinned by server.js), then the Node app.
+KEY="${TESLA_KEY_FILE:-/etc/secrets/tesla_private.pem}"
+if [ -f "$KEY" ]; then
+  openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -subj "/CN=localhost" -addext "subjectAltName=DNS:localhost" \
+    -keyout /tmp/proxy-tls-key.pem -out /tmp/proxy-tls-cert.pem -days 3650 >/dev/null 2>&1
+  tesla-http-proxy -tls-key /tmp/proxy-tls-key.pem -cert /tmp/proxy-tls-cert.pem -key-file "$KEY" -host 127.0.0.1 -port 4443 &
+else
+  echo "no Tesla private key at $KEY: signed commands disabled"; unset TESLA_PROXY_URL
+fi
+exec node server.js

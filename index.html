@@ -178,9 +178,29 @@ body.mic-c.listening .micbadge{box-shadow:0 0 0 4px rgba(196,181,253,.35),0 0 30
 #vsOA,#vsVoice{font:600 22px/1.2 Inter,"Noto Sans Thai",system-ui,sans-serif;color:#fff;background:rgba(255,255,255,.06);border:1px solid rgba(139,92,246,.45);border-radius:18px;padding:14px 18px;appearance:none;-webkit-appearance:none}
 #vsOA option{background:#1b1a22}
 #vset .hid{display:none}
+.tapl{margin-top:22px;display:inline-flex;align-self:flex-start;width:auto;align-items:center;gap:10px;min-height:56px;padding:0 26px;border-radius:28px;border:0;background:linear-gradient(135deg,#8B5CF6,#6D28D9);color:#fff;font:800 22px/1 Inter,"Noto Sans Thai",system-ui,sans-serif;cursor:pointer;box-shadow:0 0 24px rgba(139,92,246,.45)}.tapl .ico{width:22px;height:22px}
+#alert{display:none;align-items:center;gap:20px;text-align:left;width:100%;margin:0 0 clamp(14px,2vh,22px);padding:22px 28px;border-radius:28px;border:1px solid rgba(139,92,246,.5);background:rgba(255,255,255,.06);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);color:#fff;cursor:pointer;box-shadow:0 20px 60px rgba(0,0,0,.45);font-family:inherit;transform:translateY(-16px);opacity:0}
+#alert.in{display:flex;animation:ain .5s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes ain{to{transform:none;opacity:1}}
+body.m-idle.has-alert #pmain,body.has-agenda #pmain,body.has-agenda #alert{display:none}
+#agenda{display:none;align-items:flex-start;gap:20px;text-align:left;width:100%;padding:18px 28px;border-radius:28px;border:1px solid rgba(139,92,246,.5);background:rgba(255,255,255,.06);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);color:#fff;cursor:pointer;box-shadow:0 20px 60px rgba(0,0,0,.45);font-family:inherit;transform:translateY(-16px);opacity:0}
+@media (max-aspect-ratio:7/5){body.has-agenda #stage{--heroH:min(26vh,32vw)}}
+#agenda.in{display:flex;animation:ain .5s cubic-bezier(.2,.8,.2,1) forwards}
+#agenda .ai{color:#8B5CF6;display:flex;flex:none;padding-top:2px}#agenda .ai svg{width:38px;height:38px}
+.ag{flex:1;min-width:0}.ag .at{font-size:28px;font-weight:800;margin-bottom:6px}
+.ar{display:grid;grid-template-columns:82px 1fr;column-gap:16px;padding:6px 0;border-top:1px solid rgba(255,255,255,.08)}
+.ar b{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}.ar span{font-size:22px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ar small{grid-column:2;font-size:16px;color:#8A8A93;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.amore{font-size:16px;color:#C4B5FD;font-weight:700;padding-top:8px}
+#agenda .ad{font-size:22px;color:#8A8A93}
+#alert.cal .ai svg{width:38px;height:38px}
+#alert .ai{color:#8B5CF6;display:flex;flex:none}#alert .ai svg{width:40px;height:40px}
+#alert .at{font-size:28px;font-weight:800;line-height:1.2}
+#alert .ad{font-size:16px;color:#8A8A93;margin-top:6px}
+@media (prefers-reduced-motion:reduce){#alert.in{animation:none;transform:none;opacity:1}}
 </style></head><body class="m-idle mic-c">
 <header><button class="glass loc" id="loc"><span class="ld"></span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span id="locT">แชร์ตำแหน่ง</span></button><button class="glass spk" id="spk" aria-label="เสียงพูด"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.5a8 8 0 0 1 0 11"/></svg></button><button class="glass spk gear" id="gear" aria-label="ตั้งค่าเสียง" aria-expanded="false" aria-controls="vset"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button><div class="sp"></div><div class="glass clock"><div class="dot" id="dot" role="img" aria-label="สถานะ"></div><span id="st" class="vh">กำลังเชื่อมต่อ…</span><div class="time" id="time">--:--</div><div class="date" id="date"></div></div></header>
-<div id="stage"><div class="slot" id="slot"><button class="micbadge" id="micC" aria-label="คุยกับ EvE" tabindex="-1"><svg class="ic-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><svg class="ic-stop" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg></button></div><div id="panel"></div></div>
+<div id="stage"><div class="slot" id="slot"><button class="micbadge" id="micC" aria-label="คุยกับ EvE" tabindex="-1"><svg class="ic-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><svg class="ic-stop" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg></button></div><div id="panel"><button id="agenda" aria-live="polite"></button><button id="alert" aria-live="polite" data-k=""></button><div id="pmain"></div></div></div>
 <div class="glass" id="hist"></div>
 <div class="glass" id="vset" role="dialog" aria-label="ตั้งค่าเสียง" hidden>
 <div class="vs-h">ตั้งค่าเสียง</div>
@@ -230,10 +250,10 @@ function pickView(){
  if(voice&&Date.now()<voice.until)return{m:'v'};
  if(hold&&Date.now()<holdUntil)return{m:'q',it:hold};
  const q=items.find(i=>i.type==='question'&&!i.answer);if(q)return{m:'q',it:q};
- const it=items.find(i=>i.type!=='question');if(it)return{m:'msg',it};
+ const it=items.find(i=>i.type!=='question'&&!(i.meta&&i.meta.alert));if(it)return{m:'msg',it};
  return{m:'idle'}}
 function ago(ts){const s=Math.round((Date.now()-ts)/1000);return s<60?'เมื่อสักครู่':s<3600?Math.floor(s/60)+' นาทีที่แล้ว':Math.floor(s/3600)+' ชม.ที่แล้ว'}
-function render(){const v=pickView(),P=$('panel');
+function render(){const v=pickView(),P=$('pmain');
  const key=(v.m==='v'?'v:'+voice.phase+voice.text:'')+v.m+':'+(v.it?v.it.id+(v.it.answer||'')+(v.m==='msg'?ago(v.it.ts):''):greeting()[0]);
  if(key!==modeKey){modeKey=key;mode=v.m;document.body.className=document.body.className.replace(/\bm-\w+/g,'').trim()+' m-'+v.m;
   if(v.m==='v'){const ph={listen:'กำลังฟัง…',think:'EvE กำลังคิด…',err:'อุ๊ย'}[voice.phase];
@@ -251,8 +271,8 @@ function render(){const v=pickView(),P=$('panel');
    P.innerHTML=h+`<div class="ago">${ago(it.ts)}</div>`}}
  const cur=v.it,hs=items.filter(i=>i!==cur).slice(0,4);
  $('hist').innerHTML=hs.length?`<h3>ล่าสุด</h3>`+hs.map(i=>`<div class="hi"><small>${new Date(i.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</small>${i.type==='question'?(i.answer?"<svg class='ico i-chk' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12.5l4.5 4.5L19 7.5'/></svg> ":'? '):''}${esc(i.title||i.body)}${i.answer?` <b style="color:var(--a)">${esc(i.answer)}</b>`:''}</div>`).join(''):'';
- $('hist').style.visibility=hs.length?'visible':'hidden'}
-$('panel').addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b||b.disabled)return;const q=pickView().it;if(!q||q.answer)return;
+ $('hist').style.visibility=hs.length?'visible':'hidden';addTap()}
+$('pmain').addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b||b.disabled)return;const q=pickView().it;if(!q||q.answer)return;
  const ans=q.options[+b.dataset.i];document.querySelectorAll('.opt').forEach(x=>x.disabled=true);b.classList.add('sel');
  fetch('/api/answer'+KQ,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({id:q.id,answer:ans})})
   .then(r=>{if(!r.ok)throw 0;return r.json()}).then(applyAnswer)
@@ -260,16 +280,54 @@ $('panel').addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b||
 function applyAnswer(a){const q=items.find(i=>i.id===a.id);if(!q||q.answer===a.answer&&hold===q)return;q.answer=a.answer;hold=q;holdUntil=Date.now()+HOLD;
  lastAct=Date.now();document.body.classList.remove('dim');perk();render();clearTimeout(applyAnswer.t);applyAnswer.t=setTimeout(render,HOLD+100)}
 function setConn(on,txt){sleeping=!on;E.classList.toggle('sleep',!on);$('dot').className='dot'+(on?' on':'');$('st').textContent=txt}
-function setItems(a){if(a.length&&(!items[0]||a[0].id!==items[0].id)){lastAct=Date.now();document.body.classList.remove('dim')}items=a;render()}
+function setItems(a){a.forEach(addExt);setTimeout(renderAlert,0);if(a.length&&(!items[0]||a[0].id!==items[0].id)){lastAct=Date.now();document.body.classList.remove('dim')}items=a;render()}
 function startPoll(){if(poll)return;const f=()=>fetch('/api/latest'+KQ,{credentials:'same-origin'}).then(r=>r.json()).then(d=>{setItems(d.items);setConn(true,'ดึงข้อมูลเป็นระยะ')}).catch(()=>setConn(false,'ออฟไลน์'));f();poll=setInterval(f,5000)}
 function startSSE(){if(!window.EventSource)return startPoll();const es=new EventSource('/api/stream'+KQ,{withCredentials:true});let fails=0;
  es.addEventListener('init',e=>{fails=0;if(poll){clearInterval(poll);poll=null}setConn(true,'ออนไลน์');setItems(JSON.parse(e.data).items)});
- es.addEventListener('item',e=>{const it=JSON.parse(e.data);hold=null;if(voice&&voice.phase!=='listen')setVoice(null);setItems([it,...items].slice(0,20));perk();if(it.speak||it.type==='reply')say(it)});
+ es.addEventListener('item',e=>{const it=JSON.parse(e.data);if(it.type==='agenda'){showAgenda(it);return}if(it.meta&&it.meta.alert){addExt(it);setTimeout(renderAlert,0)}hold=null;if(voice&&voice.phase!=='listen')setVoice(null);setItems([it,...items].slice(0,20));perk();if(it.speak||it.type==='reply')say(it)});
  es.addEventListener('answer',e=>applyAnswer(JSON.parse(e.data)));
  es.onerror=()=>{setConn(false,'กำลังเชื่อมต่อใหม่…');if(++fails>=3)startPoll()}}
 function tick(){const d=new Date();$('time').textContent=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
  $('date').textContent=d.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long'});
  if(Date.now()-lastAct>10*60*1000&&mode!=='q')document.body.classList.add('dim');render()}
+/* ---------- car strip ---------- */
+const CI={"batt": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2.5\" y=\"7\" width=\"17\" height=\"10\" rx=\"2.2\"/><path d=\"M21.5 10.5v3\"/></svg>", "bolt": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M13 2.5L5 13.5h6l-1 8 8-11h-6z\"/></svg>", "fan": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"1.6\"/><path d=\"M12 10.4C11 7 12.5 3.5 15 4c2 .4 1.6 3.6-1.4 6.2M13.6 12c3.4-1 6.9.5 6.4 3-.4 2-3.6 1.6-6.2-1.4M12 13.6c1 3.4-.5 6.9-3 6.4-2-.4-1.6-3.6 1.4-6.2M10.4 12C7 13 3.5 11.5 4 9c.4-2 3.6-1.6 6.2 1.4\"/></svg>", "lock": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"10.5\" width=\"14\" height=\"10\" rx=\"2.2\"/><path d=\"M8 10.5V7.5a4 4 0 0 1 8 0v3\"/></svg>", "unlock": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"10.5\" width=\"14\" height=\"10\" rx=\"2.2\"/><path d=\"M8 10.5V7.5a4 4 0 0 1 7.7-1.5\"/></svg>", "gear": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"8.5\"/><circle cx=\"12\" cy=\"12\" r=\"2\"/><path d=\"M12 3.5V10M5 15.5l5.3-2.5M19 15.5l-5.3-2.5\"/></svg>", "moon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"/></svg>", "tyre": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"8.5\"/><circle cx=\"12\" cy=\"12\" r=\"3.5\"/><path d=\"M12 3.5v5M12 15.5v5M3.5 12h5M15.5 12h5\"/></svg>", "arrow": "<svg class=\"harr\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3l6 17-6-4-6 4z\"/></svg>"};
+const DOORN={df:'ประตูหน้าซ้าย',pf:'ประตูหน้าขวา',dr:'ประตูหลังซ้าย',pr:'ประตูหลังขวา'},WINN={fd:'กระจกหน้าซ้าย',fp:'กระจกหน้าขวา',rd:'กระจกหลังซ้าย',rp:'กระจกหลังขวา'};
+function hm(ts){return new Date(ts).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}
+function tyreW(c){const t={FL:c.tpms_pressure_fl,FR:c.tpms_pressure_fr,RL:c.tpms_pressure_rl,RR:c.tpms_pressure_rr},ks=Object.keys(t).filter(k=>t[k]!=null);
+ for(const k of ks){const o=ks.filter(x=>x!==k).map(x=>t[x]),av=o.reduce((a,b)=>a+b,0)/(o.length||1);if(t[k]<2.6||(o.length&&Math.abs(t[k]-av)>.3))return`ยาง ${k} ${t[k].toFixed(1)} bar`}return''}
+function openList(c){const o=[];for(const k in DOORN)if(c.doors&&c.doors[k])o.push(DOORN[k]);if(c.ft)o.push('ฝากระโปรงหน้า');if(c.rt)o.push('ท้ายรถ');for(const k in WINN)if(c.windows&&c.windows[k])o.push(WINN[k]);return o}
+let carData=null,dismissed={},parkedUnlockedAt=0,extAlerts=[];
+CI.cal='<svg viewBox="0 0 24 24" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>';
+function addExt(it){const a=it&&it.meta&&it.meta.alert;if(!a||!(a.until>Date.now()))return;extAlerts=extAlerts.filter(x=>x.k!=='cal:'+a.event_id);extAlerts.push({k:'cal:'+a.event_id,ic:CI.cal,get t(){if(!a.event_title)return a.title;const m=Math.max(1,Math.round((a.until-Date.now())/60000));return(m<60?`อีก ${m} นาที`:`อีก ${Math.floor(m/60)} ชม.${m%60>=10?' '+m%60+' นาที':''}`)+' · '+a.event_title},d:a.detail,until:a.until,cls:'cal'})}
+function carAlerts(d){if(!d||d.error||d.state!=='online')return[];const c=d,a=[];
+ const P=!c.shift_state||c.shift_state==='P';
+ if(c.battery_level!=null&&c.battery_level<20&&c.charging_state!=='Charging')a.push({k:'batt',ic:CI.batt,t:`แบตเหลือ ${c.battery_level}%`,d:c.battery_range!=null?`${c.battery_range} km · ควรหาที่ชาร์จ`:'ควรหาที่ชาร์จ'});
+ if(c.charging_state==='Complete')a.push({k:'chg',ic:CI.bolt,t:`ชาร์จเต็มแล้ว ${c.battery_level??''}%`,d:c.battery_range!=null?`${c.battery_range} km`:''});
+ const tw=tyreW(c);if(tw)a.push({k:'tyre',ic:CI.tyre,t:tw,d:'ตรวจลมยางก่อนออกเดินทาง'});
+ const op=openList(c);if(op.length&&P&&(c.locked||!(c.speed>0)))a.push({k:'open:'+op.join(','),ic:CI.unlock,t:op[0]+'เปิด',d:op.length>1?'และ'+op.slice(1).join(', '):(c.locked?'รถล็อกแล้วแต่ยังเปิดอยู่':'ตรวจก่อนลงจากรถ')});
+ if(c.locked===false&&P&&!op.length){parkedUnlockedAt=parkedUnlockedAt||Date.now();if(Date.now()-parkedUnlockedAt>5*60000)a.push({k:'unl',ic:CI.unlock,t:'รถยังไม่ได้ล็อก',d:`จอดอยู่ ${Math.round((Date.now()-parkedUnlockedAt)/60000)} นาทีแล้ว`})}else parkedUnlockedAt=0;
+ return a}
+function renderAlert(){extAlerts=extAlerts.filter(x=>x.until>Date.now());const al=[...extAlerts,...carAlerts(carData)],live=new Set(al.map(x=>x.k));for(const k in dismissed)if(!live.has(k))delete dismissed[k];
+ const x=al.find(z=>!dismissed[z.k]),A=$('alert');
+ document.body.classList.toggle('has-alert',!!x);
+ if(!x){A.classList.remove('in');A.dataset.k='';return}
+ if(A.dataset.k!==x.k||A.dataset.t!==x.t){A.dataset.t=x.t;A.dataset.k=x.k;A.className=x.cls||'';A.innerHTML=`<span class="ai">${x.ic}</span><div><div class="at">${esc(x.t)}</div>${x.d?`<div class="ad">${esc(x.d)}</div>`:''}</div>`;A.classList.remove('in');void A.offsetWidth}
+ A.classList.add('in')}
+
+// EvE speaks alerts via the server hooks (30-min debounce); the client only shows them, so nothing is spoken twice.
+function pollCar(){fetch('/api/car'+KQ,{credentials:'same-origin'}).then(r=>r.ok?r.json():null).then(d=>{carData=d;renderAlert()}).catch(()=>{})}
+$('alert').addEventListener('click',e=>{e.stopPropagation();const k=$('alert').dataset.k;if(k){dismissed[k]=1;renderAlert()}});
+pollCar();setInterval(pollCar,60000);setInterval(renderAlert,30000);
+/* ---------- today agenda (transient) ---------- */
+let agT=null;
+function hideAgenda(){clearTimeout(agT);$('agenda').classList.remove('in');document.body.classList.remove('has-agenda')}
+function showAgenda(it){const evs=(it.meta&&it.meta.events)||[],G=$('agenda');
+ G.innerHTML=`<span class="ai">${CI.cal}</span><div class="ag"><div class="at">วันนี้</div>`+(evs.length?evs.slice(0,3).map(e=>`<div class="ar"><b>${esc(e.time||'')}</b><span>${esc(e.title)}</span>${e.location?`<small>${esc(e.location)}</small>`:''}</div>`).join('')+(evs.length>3?`<div class="amore">+${evs.length-3}</div>`:''):`<div class="ad">วันนี้ว่าง</div>`)+`</div>`;
+ G.classList.remove('in');void G.offsetWidth;G.classList.add('in');document.body.classList.add('has-agenda');
+ clearTimeout(agT);agT=setTimeout(hideAgenda,15000);lastAct=Date.now();document.body.classList.remove('dim');perk();
+ if(it.speak!==false)say({body:it.body})}
+$('agenda').addEventListener('click',e=>{e.stopPropagation();hideAgenda()});
 /* ---------- location sharing ---------- */
 let watchId=null,lastSent=null;
 function locUI(c,t){const b=$('loc');b.className='glass loc'+(c?' '+c:'');$('locT').textContent=t}
@@ -297,9 +355,13 @@ function setV(m){vmode=m;document.body.classList.toggle('listening',m==='listen'
 function setVoice(v){voice=v?{until:Date.now()+(v.phase==='think'?90000:v.phase==='err'?6000:60000),...v}:null;
  if(vmode!=='speak'||v)setV(v&&v.phase==='listen'?'listen':v&&v.phase==='think'?'think':'');
  render();clearTimeout(setVoice.t);if(voice)setVoice.t=setTimeout(()=>{if(voice&&voice.phase==='think')setV('');render()},voice.until-Date.now()+50)}
-function unlock(){if(unlocked)return;unlocked=true;try{if(window.speechSynthesis){const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u)}}catch(e){}
+const SILENT='data:audio/wav;base64,UklGRkQDAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YSADAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgA==';
+const AU=new Audio();AU.preload='auto';AU.playsInline=true;let audioOK=false;
+let unlocking=false;
+function unlock(){try{if(!audioOK&&!unlocking){unlocking=true;AU.muted=false;AU.src=SILENT;const pr=AU.play();pr&&pr.then(()=>{audioOK=true;console.log('[EvE] audio unlocked')}).catch(e=>console.log('[EvE] unlock failed',e&&e.name)).finally(()=>{unlocking=false})}}catch(e){}
+ if(unlocked)return;unlocked=true;try{if(window.speechSynthesis){const u=new SpeechSynthesisUtterance('');u.volume=0;speechSynthesis.speak(u)}}catch(e){}
  try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){actx=actx||new AC();actx.resume&&actx.resume()}}catch(e){}}
-addEventListener('pointerdown',unlock,{once:true,capture:true});
+['pointerdown','touchend','click','keydown'].forEach(ev=>addEventListener(ev,unlock,{capture:true,passive:true}));
 let VS={uri:'',rate:1,pitch:1,src:'openai',oa:''};try{VS={...VS,...JSON.parse(localStorage.getItem('eveVoice')||'{}')}}catch(e){}
 function saveVS(){try{localStorage.setItem('eveVoice',JSON.stringify(VS))}catch(e){}}
 function allVoices(){const vs=window.speechSynthesis?speechSynthesis.getVoices().slice():[];const r=v=>/^th/i.test(v.lang)?0:1;return vs.sort((a,b)=>r(a)-r(b)||a.name.localeCompare(b.name))}
@@ -311,19 +373,26 @@ fetch('/api/tts/status'+KQ,{credentials:'same-origin'}).then(r=>r.ok?r.json():nu
 function fillOA(){const s=$('vsOA');s.innerHTML=(TTS.voices||[]).map(v=>`<option value="${v}"${v===(VS.oa||TTS.voice)?' selected':''}>${v[0].toUpperCase()+v.slice(1)}</option>`).join('');srcUI()}
 function useOA(){return VS.src==='openai'&&TTS.enabled}
 function srcUI(){const oa=useOA();$('srcOA').disabled=!TTS.enabled;$('srcOA').setAttribute('aria-checked',oa);$('srcBR').setAttribute('aria-checked',!oa);$('vsOAw').classList.toggle('hid',!oa);$('vsVoiceW').classList.toggle('hid',oa);$('vsPitch').parentNode.classList.toggle('hid',oa)}
-function stopAudio(){if(player){try{player.pause()}catch(e){}player=null}if(window.speechSynthesis)speechSynthesis.cancel();if(vmode==='speak')setV('')}
-function speakOA(text){const my={};player=my;setV('speak');
- return fetch('/api/tts'+KQ,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({text,voice:VS.oa||undefined,speed:+VS.rate||1})})
-  .then(r=>{if(r.status===501)TTS.enabled=false;if(!r.ok)throw 0;return r.blob()}).then(b=>{if(player!==my)return;
-   const url=URL.createObjectURL(b),a=new Audio(url);player=a;const done=()=>{URL.revokeObjectURL(url);if(player===a){player=null;if(vmode==='speak')setV('')}};
-   a.onended=done;a.onerror=()=>{done();speakBR(text)};return a.play().catch(()=>{done();speakBR(text)})})
-  .catch(()=>{if(player===my){player=null;speakBR(text)}})}
+let speakQ=[],playing=false,tapText='';
+function stopAudio(){speakQ=[];playing=false;try{AU.pause()}catch(e){}if(window.speechSynthesis)speechSynthesis.cancel();if(vmode==='speak')setV('')}
+function spoke(){playing=false;if(vmode==='speak')setV('');setTimeout(drainQ,150)}
+function drainQ(){if(playing||listening||!speakQ.length)return;const t=speakQ.shift();playing=true;useOA()?speakOA(t):speakBR(t)}
+function addTap(){const bub=document.querySelector('#pmain .bub')||$('pmain');if(!tapText||!bub||bub.querySelector('.tapl'))return;
+ const b=document.createElement('button');b.className='tapl';b.innerHTML=`<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5.5v13l10.5-6.5z"/></svg>แตะเพื่อฟัง`;
+ b.onclick=e=>{e.stopPropagation();const t=tapText;tapText='';b.remove();unlock();speakQ.unshift(t);playing=false;drainQ()};bub.appendChild(b)}
+function speakOA(text){setV('speak');const ac=new AbortController(),to=setTimeout(()=>ac.abort(),12000);
+ fetch('/api/tts'+KQ,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',signal:ac.signal,body:JSON.stringify({text,voice:VS.oa||undefined,speed:+VS.rate||1})})
+  .then(r=>{if(r.status===501)TTS.enabled=false;if(!r.ok)throw new Error('tts http '+r.status);return r.blob()})
+  .then(bl=>{clearTimeout(to);const url=URL.createObjectURL(bl);let fin=false;const done=()=>{if(fin)return;fin=true;URL.revokeObjectURL(url);AU.onended=AU.onerror=null;spoke()};
+   AU.onended=done;AU.onerror=()=>{console.log('[EvE] audio element error');fin=true;URL.revokeObjectURL(url);speakBR(text)};
+   AU.src=url;const pr=AU.play();window.__eveLastPlay={text,at:Date.now()};
+   return pr&&pr.catch(e=>{AU.onended=AU.onerror=null;console.log('[EvE] play() rejected:',e&&e.name,e&&e.message);fin=true;URL.revokeObjectURL(url);if(e&&e.name==='NotAllowedError'){tapText=text;addTap()}speakBR(text)})})
+  .catch(e=>{clearTimeout(to);console.log('[EvE] OpenAI TTS failed, using browser voice:',e&&e.name==='AbortError'?'timeout 12s':e&&e.message);speakBR(text)})}
 function say(it,force){if(!spkOn&&!force)return;const text=[it.title,it.body].filter(Boolean).join('. ');if(!text)return;
- if(listening)return; // never talk over the mic
- stopAudio();if(useOA())return speakOA(text);speakBR(text)}
-function speakBR(text){if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){setV('');return}
+ if(force){stopAudio()}speakQ.push(text);drainQ()}
+function speakBR(text){playing=true;if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){console.log('[EvE] no speechSynthesis');spoke();return}
  try{const u=new SpeechSynthesisUtterance(text);const v=thVoice();u.lang=v?v.lang:'th-TH';if(v)u.voice=v;u.rate=+VS.rate||1;u.pitch=+VS.pitch||1;
-  u.onstart=()=>setV('speak');u.onend=u.onerror=()=>{if(vmode==='speak')setV('')};setV('speak');speechSynthesis.speak(u)}catch(e){setV('')}}
+  let fin=false;const done=ev=>{if(fin)return;fin=true;if(ev&&ev.error)console.log('[EvE] speechSynthesis error:',ev.error);spoke()};u.onstart=()=>setV('speak');u.onend=u.onerror=done;setV('speak');speechSynthesis.speak(u);setTimeout(()=>{if(!fin&&!speechSynthesis.speaking&&!speechSynthesis.pending)done()},Math.max(4000,text.length*250))}catch(e){console.log('[EvE] speechSynthesis threw',e);spoke()}}
 if(window.speechSynthesis&&speechSynthesis.addEventListener)speechSynthesis.addEventListener('voiceschanged',fillVoices);
 fillVoices();vsUI();
 $('gear').addEventListener('click',e=>{e.stopPropagation();const p=$('vset'),o=p.hidden;p.hidden=!o;$('gear').setAttribute('aria-expanded',o);if(o)fillVoices()});
@@ -349,7 +418,7 @@ function meter(){if(!listening)return;let rms=0;
 
  if(gotSpeech&&now-lastLoud>1500)return stopMic();if(now-startedAt>30000)return stopMic();
  requestAnimationFrame(meter)}
-function micUI(on){const l=on?'แตะเพื่อหยุด':'คุยกับ EvE';$('micC').setAttribute('aria-label',l)}
+function micUI(on){if(!on)setTimeout(drainQ,200);const l=on?'แตะเพื่อหยุด':'คุยกับ EvE';$('micC').setAttribute('aria-label',l)}
 function cleanupStream(){try{srcN&&srcN.disconnect()}catch(e){}srcN=null;an=null;if(micStream){micStream.getTracks().forEach(t=>t.stop());micStream=null}}
 function startRecorder(){if(!window.MediaRecorder||!micStream){setVoice({phase:'err',text:'',sub:'เบราว์เซอร์นี้ไม่รองรับการบันทึกเสียง'});listening=false;micUI(false);cleanupStream();return}
  usedFallback=true;const mt=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4'].find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
@@ -383,6 +452,6 @@ function stopMic(){if(!listening)return;listening=false;micUI(false);lvl=0;
  else if(mr&&mr.state!=='inactive'){mr.stop()}  // onstop uploads the audio
  else{cleanupStream();setVoice(null)}}
 SL.addEventListener('click',()=>{if(document.body.classList.contains('mic-c'))startMic()});
-window.EVE={sendSay,startMic,stopMic,say,debugListen:on=>{on===false?(setVoice(null),setV('')):setVoice({phase:'listen',text:''})},state:()=>({listening,vmode,usedFallback,voice})};
+window.EVE={sendSay,startMic,stopMic,say,debugListen:on=>{on===false?(setVoice(null),setV('')):setVoice({phase:'listen',text:''})},state:()=>({speakQ:speakQ.length,playing,audioOK,listening,vmode,usedFallback,voice})};
 tick();setInterval(tick,15000);startSSE();
 </script></body></html>
