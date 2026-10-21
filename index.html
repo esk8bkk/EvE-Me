@@ -9,138 +9,153 @@
 *{box-sizing:border-box;margin:0}
 html,body{height:100%;background:var(--bg);color:var(--t);overflow:hidden;-webkit-tap-highlight-color:transparent;
 font-family:Inter,-apple-system,"SF Pro Display","Noto Sans Thai",Sarabun,"Thonburi",system-ui,sans-serif;font-size:34px;line-height:1.4}
-body{background:radial-gradient(1200px 800px at 15% 10%,rgba(245,184,61,.07),transparent 60%),var(--bg);transition:filter 2s}
+body{background:radial-gradient(900px 900px at 28% 55%,rgba(245,184,61,.10),transparent 65%),var(--bg);transition:filter 2s}
 body.dim{filter:brightness(.35)}
-.app{display:grid;grid-template-columns:1fr 520px;grid-template-rows:auto 1fr;gap:36px;height:100vh;padding:44px 56px}
-header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between}
+.glass{background:var(--g);border:1px solid var(--b);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+header{position:fixed;top:0;left:0;right:0;height:150px;padding:40px 56px;display:flex;align-items:flex-start;justify-content:space-between;z-index:5}
 .brand{font-weight:800;font-size:40px;letter-spacing:.5px}.brand span{color:var(--a)}
-.status{display:flex;align-items:center;gap:14px;color:var(--m);font-size:26px}
-.dot{width:18px;height:18px;border-radius:50%;background:#c44;box-shadow:0 0 12px #c44}
+.status{display:flex;align-items:center;gap:12px;color:var(--m);font-size:24px;margin-top:8px}
+.dot{width:16px;height:16px;border-radius:50%;background:#c44;box-shadow:0 0 12px #c44}
 .dot.on{background:var(--a);box-shadow:0 0 16px var(--a)}
-.glass{background:var(--g);border:1px solid var(--b);border-radius:36px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
-.main{padding:60px 68px;display:flex;flex-direction:column;overflow:hidden;min-height:0}
-.kind{color:var(--a);font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase}
-.title{font-size:72px;font-weight:800;line-height:1.15;margin:18px 0 28px}
-.body{font-size:44px;white-space:pre-wrap;overflow:hidden;color:#ddd}
-.ago{margin-top:auto;color:var(--m);font-size:26px;padding-top:24px}
-.side{display:flex;flex-direction:column;gap:36px;min-height:0}
-.clock{padding:36px 40px}.time{font-size:92px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
-.date{color:var(--m);font-size:30px;margin-top:12px}
-.hist{padding:32px 40px;flex:1;overflow:hidden;min-height:0}
-.hist h3{color:var(--m);font-size:24px;letter-spacing:3px;font-weight:600;margin-bottom:12px}
-.hi{padding:18px 0;border-top:1px solid var(--b);font-size:30px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hi small{color:var(--a);font-size:22px;margin-right:12px}
-.fl{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin:20px 0 36px}
-.ap{font-size:150px;font-weight:800;line-height:1}.ap.r{text-align:right}
-.arr{color:var(--a);font-size:90px;padding:0 30px}
-.tm{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.tm div{font-size:28px;color:var(--m)}.tm b{display:block;font-size:96px;color:var(--t);font-variant-numeric:tabular-nums}
-.tm div:last-child{text-align:right}
-.empty{color:var(--m);font-size:44px;margin:auto}
-/* roaming mascot */
-#eve{position:fixed;left:0;top:0;width:150px;height:150px;z-index:20;pointer-events:none;will-change:transform;transition:filter .8s,opacity .8s}
-#eve img{width:100%;height:100%;display:block}
+.right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.clock{border-radius:28px;padding:18px 30px;display:flex;align-items:baseline;gap:22px}
+.time{font-size:64px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.date{color:var(--m);font-size:26px}
+/* stage */
+#stage{position:fixed;inset:150px 56px 130px 56px;display:grid;grid-template-columns:var(--hero,720px) 1fr;gap:56px;align-items:center;transition:grid-template-columns .6s}
+body.m-q{--hero:640px}body.m-msg{--hero:500px}
+.slot{width:100%;aspect-ratio:1;max-height:100%}
+#panel{min-width:0;max-height:100%;overflow:hidden;position:relative;z-index:2}
+#eve{position:fixed;left:0;top:0;width:100px;height:100px;z-index:3;pointer-events:none;will-change:transform;transform-origin:50% 100%;transition:filter .8s,opacity .8s}
+#eve img{width:100%;height:100%;display:block;filter:drop-shadow(0 0 60px rgba(245,184,61,.35))}
 #eve.sleep{opacity:.45;filter:grayscale(1)}
-#eve.perk img{filter:drop-shadow(0 0 26px #F5B83D)}
-/* question bubble */
-#bub{position:fixed;left:0;top:0;z-index:30;width:860px;max-width:calc(100vw - 80px);padding:44px 48px;display:none;will-change:transform;
-background:rgba(22,23,27,.78);border:1px solid rgba(245,184,61,.45);border-radius:40px;backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 30px 80px rgba(0,0,0,.55)}
-#bub.show{display:block}
-#bub .tail{position:absolute;width:44px;height:44px;background:rgba(22,23,27,.95);border-left:1px solid rgba(245,184,61,.45);border-bottom:1px solid rgba(245,184,61,.45);transform:rotate(45deg);left:-23px;top:var(--ty,60px)}
-#bub.flip .tail{left:auto;right:-23px;transform:rotate(225deg)}
-#bub .q{font-size:56px;font-weight:800;line-height:1.2;margin:14px 0 32px}
-.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px}
-.opt{min-height:96px;padding:18px 26px;border-radius:28px;border:2px solid rgba(245,184,61,.6);background:rgba(245,184,61,.08);color:var(--t);
-font:800 46px/1.1 Inter,-apple-system,"SF Pro Display","Noto Sans Thai",system-ui,sans-serif;cursor:pointer;font-variant-numeric:tabular-nums}
-.opt:active,.opt.sel{background:var(--a);color:#111;border-color:var(--a)}
-.opt:disabled{opacity:.5}.opt.sel:disabled{opacity:1}
-.conf{font-size:44px;font-weight:800;color:var(--a);margin-top:8px}
-.conf small{display:block;color:var(--m);font-size:28px;font-weight:600;margin-top:10px}
-.err{color:#ff7b7b;font-size:28px;margin-top:18px}
-</style></head><body>
-<div class="app">
-<header><div class="brand">EvE <span>Me</span></div><div class="status"><span id="st">กำลังเชื่อมต่อ…</span><div class="dot" id="dot"></div></div></header>
-<section class="glass main" id="main"><div class="empty">รอข้อความจาก Grok Bot…</div></section>
-<aside class="side">
-<div class="glass clock"><div class="time" id="time">--:--</div><div class="date" id="date"></div></div>
-<div class="glass hist"><h3>ล่าสุด</h3><div id="hist"></div></div>
-</aside></div>
+#eve.perk img{filter:drop-shadow(0 0 110px rgba(245,184,61,.9))}
+.bub{position:relative;background:rgba(255,255,255,.07);border:1px solid rgba(245,184,61,.4);border-radius:48px;padding:56px 64px;backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 30px 90px rgba(0,0,0,.5)}
+.bub:before{content:"";position:absolute;left:-26px;top:50%;margin-top:-25px;width:50px;height:50px;background:#1b1c1f;border-left:1px solid rgba(245,184,61,.4);border-bottom:1px solid rgba(245,184,61,.4);transform:rotate(45deg)}
+.kind{color:var(--a);font-size:28px;font-weight:700;letter-spacing:3px}
+.greet{font-size:96px;font-weight:800;line-height:1.12}
+.greet small{display:block;color:#cfcfcf;font-size:52px;font-weight:600;margin-top:22px;line-height:1.25}
+.q{font-size:72px;font-weight:800;line-height:1.18;margin:16px 0 40px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
+.opt{min-height:120px;padding:18px 26px;border-radius:32px;border:2px solid rgba(245,184,61,.6);background:rgba(245,184,61,.08);color:var(--t);
+font:800 58px/1.1 Inter,-apple-system,"SF Pro Display","Noto Sans Thai",system-ui,sans-serif;cursor:pointer;font-variant-numeric:tabular-nums}
+.opt:active,.opt.sel{background:var(--a);color:#111;border-color:var(--a);box-shadow:0 0 50px rgba(245,184,61,.5)}
+.opt:disabled{opacity:.3}.opt.sel:disabled{opacity:1}
+.conf{margin-top:32px;font-size:42px;font-weight:800;color:var(--a)}
+.err{color:#ff7b7b;font-size:30px;margin-top:20px}
+.title{font-size:88px;font-weight:800;line-height:1.12;margin:18px 0 28px}
+.body{font-size:50px;white-space:pre-wrap;color:#ddd;display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
+.ago{color:var(--m);font-size:26px;margin-top:28px}
+.fl{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin:10px 0 30px}
+.ap{font-size:140px;font-weight:800;line-height:1}.ap.r{text-align:right}
+.arr{color:var(--a);font-size:80px;padding:0 26px}
+.tm{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.tm div{font-size:28px;color:var(--m)}.tm b{display:block;font-size:92px;color:var(--t);font-variant-numeric:tabular-nums}
+.tm div:last-child{text-align:right}
+/* history strip */
+#hist{position:fixed;left:56px;right:56px;bottom:36px;height:70px;border-radius:24px;display:flex;align-items:center;gap:40px;padding:0 30px;overflow:hidden;white-space:nowrap;z-index:4;transition:opacity .6s}
+body.m-idle #hist{opacity:0}
+#hist h3{color:var(--m);font-size:22px;letter-spacing:3px;font-weight:600}
+.hi{font-size:26px;overflow:hidden;text-overflow:ellipsis;max-width:520px;color:#ccc}
+.hi small{color:var(--a);font-size:20px;margin-right:10px}
+.hdl{display:flex;align-items:flex-start;gap:28px}
+.loc{min-height:64px;margin-top:2px;padding:0 28px;border-radius:32px;display:flex;align-items:center;gap:14px;color:var(--t);font:700 26px/1 Inter,-apple-system,"Noto Sans Thai",system-ui,sans-serif;cursor:pointer}
+.loc .ld{width:14px;height:14px;border-radius:50%;background:var(--m)}
+.loc.on .ld{background:var(--a);box-shadow:0 0 14px var(--a)}.loc.on{border-color:rgba(245,184,61,.5)}
+.loc.err{color:#ff9b9b}.loc.err .ld{background:#c44}
+</style></head><body class="m-idle">
+<header><div class="hdl"><div><div class="brand">EvE <span>Me</span></div><div class="status"><div class="dot" id="dot"></div><span id="st">กำลังเชื่อมต่อ…</span></div></div><button class="glass loc" id="loc"><span class="ld"></span><span id="locT">แชร์ตำแหน่ง</span></button></div>
+<div class="right"><div class="glass clock"><div class="time" id="time">--:--</div><div class="date" id="date"></div></div></div></header>
+<div id="stage"><div class="slot" id="slot"></div><div id="panel"></div></div>
+<div class="glass" id="hist"></div>
 <div id="eve" class="sleep"><img src="eve-blob-white.svg" alt="EvE"></div>
-<div id="bub"><div class="tail"></div><div id="bubIn"></div></div>
 <script>
 const k=new URLSearchParams(location.search).get('k')||'';const KQ=k?'?k='+encodeURIComponent(k):'';
-let items=[],poll=null,lastAct=Date.now(),sleeping=true,shownQ=null,confUntil=0;
+let items=[],poll=null,lastAct=Date.now(),sleeping=true,hold=null,holdUntil=0,mode='',modeKey='';
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const KIND={message:'ข้อความ',card:'การ์ด',flight:'เที่ยวบิน',question:'คำถาม'};
-// drop ?k from the address bar once cookie is set (cookie now carries auth)
+const HOLD=15000;
 if(k&&history.replaceState)setTimeout(()=>history.replaceState(null,'',location.pathname),1500);
 
-/* ---------- roaming EvE ---------- */
-const E=$('eve'),B=$('bub'),S=150;
-let px=innerWidth-260,py=innerHeight-260,vx=0,vy=0,tx=px,ty=py,nextT=0,hop=0,perkT=0;
-function avoidRect(){return['main','time'].map(id=>{const r=$(id).getBoundingClientRect();return{l:r.left+30,t:r.top+30,r:r.right-30,b:r.bottom-30}})}
-function hit(x,y,A){return A.some(a=>x+S>a.l&&x<a.r&&y+S>a.t&&y<a.b)}
-function pickTarget(){const W=innerWidth,H=innerHeight,a=avoidRect();
- for(let i=0;i<25;i++){const x=20+Math.random()*(W-S-40),y=20+Math.random()*(H-S-40);if(!hit(x,y,a)){tx=x;ty=y;return}}
- tx=W-S-40;ty=H-S-40}
-function qPending(){return items.find(i=>i.type==='question'&&(!i.answer||i.id===shownQ&&Date.now()<confUntil))}
-function frame(t){
- const q=$('bub').classList.contains('show');
- if(q){tx=70;ty=innerHeight-S-70}            // park bottom-left; bubble sits up-right of it
- else if(sleeping){tx=innerWidth-S-60;ty=innerHeight-S-50}
- else if(t>nextT||Math.hypot(tx-px,ty-py)<8){pickTarget();nextT=t+6000+Math.random()*6000}
- const acc=sleeping?.004:q?.03:.012,damp=q?.82:.94,maxV=sleeping?.8:q?14:2.6;
- vx=(vx+(tx-px)*acc)*damp;vy=(vy+(ty-py)*acc)*damp;const sp=Math.hypot(vx,vy);if(sp>maxV){vx*=maxV/sp;vy*=maxV/sp}
- px+=vx;py+=vy;
- const bob=sleeping?Math.sin(t/1400)*3:Math.sin(t/650)*9;
+/* ---------- EvE hero: follows the slot, subtle drift + squash ---------- */
+const E=$('eve'),SL=$('slot');let x=0,y=0,s=0,hop=0,init=false;
+function frame(t){const r=SL.getBoundingClientRect(),sz=Math.min(r.width,r.height);
+ const tx=r.left+(r.width-sz)/2,ty=r.top+(r.height-sz)/2;
+ if(!init){x=tx;y=ty;s=sz;init=true}
+ x+=(tx-x)*.07;y+=(ty-y)*.07;s+=(sz-s)*.07;
+ const slow=sleeping?2.2:1;
+ const dx=Math.sin(t/(5200*slow))*s*.025,dy=Math.sin(t/(2600*slow))*s*.03; // drift a few %
  let hy=0,sx=1,sy=1;
- if(hop>0){const p=1-hop;hy=-Math.abs(Math.sin(p*Math.PI*3))*70*hop;const s=Math.cos(p*Math.PI*6)*.12*hop;sx=1+s;sy=1-s;hop=Math.max(0,hop-.012)}
- else{const br=Math.sin(t/(sleeping?2200:900))*.035;sx=1+br;sy=1-br}
- const tilt=Math.max(-12,Math.min(12,vx*4));
- E.style.transform=`translate3d(${px}px,${py+bob+hy}px,0) rotate(${tilt}deg) scale(${sx},${sy})`;
- if(q)placeBubble(px,py+bob+hy);
+ if(hop>0){const p=1-hop;hy=-Math.abs(Math.sin(p*Math.PI*3))*s*.12*hop;const q=Math.cos(p*Math.PI*6)*.1*hop;sx=1+q;sy=1-q;hop=Math.max(0,hop-.01)}
+ else{const br=Math.sin(t/(1300*slow))*.025;sx=1+br;sy=1-br}
+ E.style.transform=`translate3d(${x+dx}px,${y+dy+hy}px,0) scale(${s/100*sx},${s/100*sy})`;
  requestAnimationFrame(frame)}
-function placeBubble(x,y){const w=B.offsetWidth,h=B.offsetHeight,W=innerWidth,H=innerHeight;let bx=x+S+30,flip=false;
- if(bx+w>W-20){bx=x-w-30;flip=true}let by=Math.max(20,Math.min(H-h-20,y+S/2-h+90));
- B.classList.toggle('flip',flip);B.style.setProperty('--ty',Math.max(30,Math.min(h-70,y+S/2-by-22))+'px');B.style.transform=`translate3d(${bx}px,${by}px,0)`}
-function perk(){hop=1;E.classList.add('perk');clearTimeout(perk.t);perk.t=setTimeout(()=>E.classList.remove('perk'),2200);nextT=0}
-requestAnimationFrame(frame);addEventListener('resize',()=>{nextT=0});
+E.style.transformOrigin='0 0';
+function perk(){hop=1;E.classList.add('perk');clearTimeout(perk.t);perk.t=setTimeout(()=>E.classList.remove('perk'),2400)}
+requestAnimationFrame(frame);
 
-/* ---------- questions ---------- */
-function renderQ(){const q=qPending();
- if(!q){B.classList.remove('show');shownQ=null;return}
- if(q.id!==shownQ||B.dataset.state!==(q.answer?'a':'q')){shownQ=q.id;B.dataset.state=q.answer?'a':'q';
-  $('bubIn').innerHTML=`<div class="kind">คำถามจาก EvE</div><div class="q">${esc(q.title)}</div>`+
-   (q.answer?`<div class="conf">✓ บันทึกคำตอบแล้ว: ${esc(q.answer)}<small>ส่งให้ Grok Bot เรียบร้อย</small></div>`
-   :`<div class="opts">${q.options.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o)}</button>`).join('')}</div><div class="err" id="qerr"></div>`);
-  B.classList.add('show')}}
-$('bubIn').addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b||b.disabled)return;const q=items.find(i=>i.id===shownQ);if(!q)return;
+/* ---------- content ---------- */
+function greeting(){const h=new Date().getHours();
+ if(h>=5&&h<12)return['สวัสดีตอนเช้า','วันนี้พร้อมออกเดินทางไหม?'];
+ if(h>=12&&h<17)return['สวัสดีตอนบ่าย','พร้อมออกเดินทางไหม?'];
+ if(h>=17&&h<21)return['สวัสดีตอนเย็น','ขับขี่ปลอดภัยนะ กลับบ้านกันไหม?'];
+ return['ดึกแล้วนะ','ขับช้า ๆ พักสายตาด้วยนะ']}
+function pickView(){
+ if(hold&&Date.now()<holdUntil)return{m:'q',it:hold};
+ const q=items.find(i=>i.type==='question'&&!i.answer);if(q)return{m:'q',it:q};
+ const it=items.find(i=>i.type!=='question');if(it)return{m:'msg',it};
+ return{m:'idle'}}
+function ago(ts){const s=Math.round((Date.now()-ts)/1000);return s<60?'เมื่อสักครู่':s<3600?Math.floor(s/60)+' นาทีที่แล้ว':Math.floor(s/3600)+' ชม.ที่แล้ว'}
+function render(){const v=pickView(),P=$('panel');
+ const key=v.m+':'+(v.it?v.it.id+(v.it.answer||'')+(v.m==='msg'?ago(v.it.ts):''):greeting()[0]);
+ if(key!==modeKey){modeKey=key;mode=v.m;document.body.className=document.body.className.replace(/\bm-\w+/g,'').trim()+' m-'+v.m;
+  if(v.m==='idle'){const g=greeting();P.innerHTML=`<div class="bub"><div class="greet">${g[0]}<small>${g[1]}</small></div></div>`}
+  else if(v.m==='q'){const q=v.it;
+   P.innerHTML=`<div class="bub"><div class="kind">คำถามจาก EvE</div><div class="q">${esc(q.title)}</div>
+   <div class="opts">${q.options.map((o,i)=>`<button class="opt${q.answer===o?' sel':''}" data-i="${i}"${q.answer?' disabled':''}>${esc(o)}</button>`).join('')}</div>
+   ${q.answer?`<div class="conf">✓ บันทึกคำตอบแล้ว: ${esc(q.answer)}</div>`:'<div class="err" id="qerr"></div>'}</div>`}
+  else{const it=v.it,m=it.meta||{};let h=`<div class="kind">${esc(KIND[it.type]||it.type)}</div><div class="title">${esc(it.title)}</div>`;
+   if(it.type==='flight')h+=`<div class="fl"><div class="ap">${esc(m.from||'')}</div><div class="arr">✈</div><div class="ap r">${esc(m.to||'')}</div></div>
+    <div class="tm"><div>ออกเดินทาง<b>${esc(m.dep||'--:--')}</b></div><div>ถึง<b>${esc(m.arr||'--:--')}</b></div></div>${it.body?`<div class="body" style="margin-top:24px">${esc(it.body)}</div>`:''}`;
+   else h+=`<div class="body">${esc(it.body)}</div>`;
+   P.innerHTML=h+`<div class="ago">${ago(it.ts)}</div>`}}
+ const cur=v.it,hs=items.filter(i=>i!==cur).slice(0,4);
+ $('hist').innerHTML=hs.length?`<h3>ล่าสุด</h3>`+hs.map(i=>`<div class="hi"><small>${new Date(i.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</small>${i.type==='question'?(i.answer?'✓ ':'? '):''}${esc(i.title||i.body)}${i.answer?` <b style="color:var(--a)">${esc(i.answer)}</b>`:''}</div>`).join(''):'';
+ $('hist').style.visibility=hs.length?'visible':'hidden'}
+$('panel').addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b||b.disabled)return;const q=pickView().it;if(!q||q.answer)return;
  const ans=q.options[+b.dataset.i];document.querySelectorAll('.opt').forEach(x=>x.disabled=true);b.classList.add('sel');
  fetch('/api/answer'+KQ,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({id:q.id,answer:ans})})
-  .then(r=>{if(!r.ok)throw 0;return r.json()}).then(a=>applyAnswer(a))
+  .then(r=>{if(!r.ok)throw 0;return r.json()}).then(applyAnswer)
   .catch(()=>{document.querySelectorAll('.opt').forEach(x=>x.disabled=false);b.classList.remove('sel');const er=$('qerr');if(er)er.textContent='ส่งไม่สำเร็จ ลองแตะอีกครั้ง'})});
-function applyAnswer(a){const q=items.find(i=>i.id===a.id);if(!q)return;q.answer=a.answer;if(a.id===shownQ||!shownQ){shownQ=a.id;confUntil=Date.now()+8000;setTimeout(renderQ,8100)}perk();renderQ()}
-
-/* ---------- main card ---------- */
+function applyAnswer(a){const q=items.find(i=>i.id===a.id);if(!q||q.answer===a.answer&&hold===q)return;q.answer=a.answer;hold=q;holdUntil=Date.now()+HOLD;
+ lastAct=Date.now();document.body.classList.remove('dim');perk();render();clearTimeout(applyAnswer.t);applyAnswer.t=setTimeout(render,HOLD+100)}
 function setConn(on,txt){sleeping=!on;E.classList.toggle('sleep',!on);$('dot').className='dot'+(on?' on':'');$('st').textContent=txt}
-function ago(ts){const s=Math.round((Date.now()-ts)/1000);return s<60?'เมื่อสักครู่':s<3600?Math.floor(s/60)+' นาทีที่แล้ว':Math.floor(s/3600)+' ชม.ที่แล้ว'}
-function render(){const it=items.find(i=>i.type!=='question');
- if(it){const m=it.meta||{};let h=`<div class="kind">${esc(KIND[it.type]||it.type)}</div><div class="title">${esc(it.title)}</div>`;
-  if(it.type==='flight')h+=`<div class="fl"><div class="ap">${esc(m.from||'')}</div><div class="arr">✈</div><div class="ap r">${esc(m.to||'')}</div></div>
-   <div class="tm"><div>ออกเดินทาง<b>${esc(m.dep||'--:--')}</b></div><div>ถึง<b>${esc(m.arr||'--:--')}</b></div></div>${it.body?`<div class="body" style="margin-top:28px">${esc(it.body)}</div>`:''}`;
-  else h+=`<div class="body">${esc(it.body)}</div>`;
-  $('main').innerHTML=h+`<div class="ago">${ago(it.ts)}</div>`}
- $('hist').innerHTML=items.filter(i=>i!==it).slice(0,8).map(i=>`<div class="hi"><small>${new Date(i.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</small>${i.type==='question'?(i.answer?'✓ ':'? '):''}${esc(i.title||i.body)}</div>`).join('');
- renderQ()}
 function setItems(a){if(a.length&&(!items[0]||a[0].id!==items[0].id)){lastAct=Date.now();document.body.classList.remove('dim')}items=a;render()}
 function startPoll(){if(poll)return;const f=()=>fetch('/api/latest'+KQ,{credentials:'same-origin'}).then(r=>r.json()).then(d=>{setItems(d.items);setConn(true,'ดึงข้อมูลเป็นระยะ')}).catch(()=>setConn(false,'ออฟไลน์'));f();poll=setInterval(f,5000)}
 function startSSE(){if(!window.EventSource)return startPoll();const es=new EventSource('/api/stream'+KQ,{withCredentials:true});let fails=0;
  es.addEventListener('init',e=>{fails=0;if(poll){clearInterval(poll);poll=null}setConn(true,'ออนไลน์');setItems(JSON.parse(e.data).items)});
- es.addEventListener('item',e=>{setItems([JSON.parse(e.data),...items].slice(0,20));perk()});
+ es.addEventListener('item',e=>{hold=null;setItems([JSON.parse(e.data),...items].slice(0,20));perk()});
  es.addEventListener('answer',e=>applyAnswer(JSON.parse(e.data)));
  es.onerror=()=>{setConn(false,'กำลังเชื่อมต่อใหม่…');if(++fails>=3)startPoll()}}
 function tick(){const d=new Date();$('time').textContent=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
  $('date').textContent=d.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long'});
- if(Date.now()-lastAct>10*60*1000&&!qPending())document.body.classList.add('dim');if(items.length)render()}
+ if(Date.now()-lastAct>10*60*1000&&mode!=='q')document.body.classList.add('dim');render()}
+/* ---------- location sharing ---------- */
+let watchId=null,lastSent=null;
+function locUI(c,t){const b=$('loc');b.className='glass loc'+(c?' '+c:'');$('locT').textContent=t}
+function dist(a,b){const R=6371e3,r=Math.PI/180,dl=(b.lat-a.lat)*r,dn=(b.lng-a.lng)*r,x=Math.sin(dl/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
+function sendLoc(p){const c=p.coords,d={lat:c.latitude,lng:c.longitude,accuracy:c.accuracy,speed:c.speed,heading:c.heading,ts:p.timestamp||Date.now()};
+ if(lastSent&&Date.now()-lastSent.at<30000&&dist(lastSent,d)<=100)return;
+ lastSent={...d,at:Date.now()};
+ fetch('/api/location'+KQ,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify(d)})
+  .then(r=>{if(!r.ok)throw 0;locUI('on','กำลังแชร์ตำแหน่ง')}).catch(()=>{lastSent=null;locUI('err','ส่งตำแหน่งไม่สำเร็จ')})}
+function startLoc(){if(!navigator.geolocation){locUI('err','ไม่รองรับ');return}
+ if(watchId!==null)return;locUI('on','กำลังหาตำแหน่ง…');
+ watchId=navigator.geolocation.watchPosition(p=>{try{localStorage.setItem('eveLoc','1')}catch(e){}sendLoc(p)},
+  e=>{if(e.code===1){try{localStorage.removeItem('eveLoc')}catch(_){}navigator.geolocation.clearWatch(watchId);watchId=null;locUI('err','เบราว์เซอร์ไม่อนุญาตตำแหน่ง')}
+      else locUI('err',e.code===3?'หาตำแหน่งไม่ทัน กำลังลองใหม่':'หาตำแหน่งไม่ได้')},
+  {enableHighAccuracy:true,maximumAge:10000,timeout:30000})}
+$('loc').addEventListener('click',()=>{if(watchId===null)startLoc()});
+try{if(localStorage.getItem('eveLoc')==='1')startLoc()}catch(e){}
 tick();setInterval(tick,15000);startSSE();
 </script></body></html>

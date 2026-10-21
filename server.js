@@ -67,6 +67,19 @@ app.post('/api/answer', viewOk, (req, res) => {
   broadcast('answer', a);
   res.json({ ok: true, ...a });
 });
+let lastLoc = null;
+const num = (v, lo, hi) => { const n = Number(v); return Number.isFinite(n) && n >= lo && n <= hi ? n : null; };
+app.post('/api/location', viewOk, (req, res) => {
+  const b = req.body || {};
+  const lat = num(b.lat, -90, 90), lng = num(b.lng, -180, 180);
+  if (lat === null || lng === null) return res.status(400).json({ error: 'bad coords' });
+  lastLoc = { lat, lng, accuracy: num(b.accuracy, 0, 1e6), speed: num(b.speed, 0, 1000), heading: num(b.heading, 0, 360), ts: num(b.ts, 0, 1e14) || Date.now(), received: Date.now() };
+  res.json({ ok: true });
+});
+app.get('/api/location', pushOk, (req, res) => {
+  if (!lastLoc) return res.status(404).json({ error: 'no location yet' });
+  res.json({ ...lastLoc, age_s: Math.round((Date.now() - lastLoc.ts) / 1000) });
+});
 app.get('/api/answers', pushOk, (req, res) => res.json({ answers }));
 app.get('/api/latest', viewOk, (req, res) => res.json({ items }));
 app.get('/api/stream', viewOk, (req, res) => {
