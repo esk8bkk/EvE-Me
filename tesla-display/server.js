@@ -1,0 +1,36 @@
+const express = require('express');
+const path = require('path');
+const crypto = require('crypto');
+const app = express();
+const PORT = process.env.PORT || 3000;
+const PUSH_TOKEN = process.env.PUSH_TOKEN || '';
+const VIEW_KEY = process.env.VIEW_KEY || '';
+const MAX = 20;
+const items = [];
+const clients = new Set();
+app.use(express.json({ limit: '64kb' }));
+const safeEq = (a, b) => { const x = Buffer.from(String(a)), y = Buffer.from(String(b)); return x.length === y.length && crypto.timingSafeEqual(x, y); };
+const viewOk = (req, res, next) => (VIEW_KEY && safeEq(req.query.k || '', VIEW_KEY)) ? next() : res.status(401).send('Unauthorized');
+app.get('/healthz', (req, res) => res.json({ ok: true }));
+app.post('/api/push', (req, res) => {
+  const m = /^Bearer (.+)$/.exec(req.get('authorization') || '');
+  if (!PUSH_TOKEN || !m || !safeEq(m[1], PUSH_TOKEN)) return res.status(401).json({ error: 'unauthorized' });
+  const { type = 'message', title = '', body = '', meta = {} } = req.body || {};
+  if (!['message', 'card', 'flight'].includes(type)) return res.status(400).json({ error: 'bad type' });
+  const item = { id: crypto.randomUUID(), ts: Date.now(), type, title: String(title).slice(0, 300), body: String(body).slice(0, 4000), meta: typeof meta === 'object' && meta ? meta : {} };
+  items.unshift(item); items.length = Math.min(items.length, MAX);
+  const data = `event: item\ndata: ${JSON.stringify(item)}\n\n`;
+  for (const c of clients) c.write(data);
+  res.json({ ok: true, id: item.id, clients: clients.size });
+});
+app.get('/api/latest', viewOk, (req, res) => res.json({ items }));
+app.get('/api/stream', viewOk, (req, res) => {
+  res.set({ 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache, no-transform', Connection: 'keep-alive', 'X-Accel-Buffering': 'no' });
+  res.flushHeaders();
+  res.write(`retry: 3000\nevent: init\ndata: ${JSON.stringify({ items })}\n\n`);
+  clients.add(res);
+  const hb = setInterval(() => res.write(': ping\n\n'), 25000);
+  req.on('close', () => { clearInterval(hb); clients.delete(res); });
+});
+app.get('/', viewOk, (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+app.listen(PORT, () => console.log(`EvE Me on :${PORT}`));

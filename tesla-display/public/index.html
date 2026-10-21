@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EvE Me</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+Thai:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--a:#F5B83D;--bg:#07080a;--g:rgba(255,255,255,.055);--b:rgba(255,255,255,.09);--t:#f2f2f0;--m:#8b8d93}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:var(--bg);color:var(--t);overflow:hidden;
+font-family:Inter,-apple-system,"SF Pro Display","Noto Sans Thai",Sarabun,"Thonburi",system-ui,sans-serif;font-size:34px;line-height:1.4}
+body{background:radial-gradient(1200px 800px at 15% 10%,rgba(245,184,61,.07),transparent 60%),var(--bg);transition:filter 2s}
+body.dim{filter:brightness(.35)}
+.app{display:grid;grid-template-columns:1fr 520px;grid-template-rows:auto 1fr;gap:36px;height:100vh;padding:44px 56px}
+header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between}
+.brand{font-weight:800;font-size:40px;letter-spacing:.5px}.brand span{color:var(--a)}
+.status{display:flex;align-items:center;gap:14px;color:var(--m);font-size:26px}
+.dot{width:18px;height:18px;border-radius:50%;background:#c44;box-shadow:0 0 12px #c44}
+.dot.on{background:var(--a);box-shadow:0 0 16px var(--a)}
+.glass{background:var(--g);border:1px solid var(--b);border-radius:36px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.main{padding:60px 68px;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.kind{color:var(--a);font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase}
+.title{font-size:72px;font-weight:800;line-height:1.15;margin:18px 0 28px}
+.body{font-size:44px;white-space:pre-wrap;overflow:hidden;color:#ddd}
+.ago{margin-top:auto;color:var(--m);font-size:26px;padding-top:24px}
+.side{display:flex;flex-direction:column;gap:36px;min-height:0}
+.clock{padding:36px 40px}.time{font-size:92px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.date{color:var(--m);font-size:30px;margin-top:12px}
+.hist{padding:32px 40px;flex:1;overflow:hidden;min-height:0}
+.hist h3{color:var(--m);font-size:24px;letter-spacing:3px;font-weight:600;margin-bottom:12px}
+.hi{padding:18px 0;border-top:1px solid var(--b);font-size:30px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hi small{color:var(--a);font-size:22px;margin-right:12px}
+.fl{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin:20px 0 36px}
+.ap{font-size:150px;font-weight:800;line-height:1}.ap.r{text-align:right}
+.arr{color:var(--a);font-size:90px;padding:0 30px}
+.tm{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.tm div{font-size:28px;color:var(--m)}.tm b{display:block;font-size:96px;color:var(--t);font-variant-numeric:tabular-nums}
+.tm div:last-child{text-align:right}
+.empty{color:var(--m);font-size:44px;margin:auto}
+.clock{display:flex;align-items:center;gap:36px}
+.mascot{width:130px;height:130px;flex:none;animation:float 4s ease-in-out infinite;border-radius:50%;transition:filter .6s,opacity .6s}
+.mascot svg{width:100%;height:100%;overflow:visible}
+.mascot .eye{transform-box:fill-box;transform-origin:center;animation:blink 5s infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.mascot.speak{animation:float 4s ease-in-out infinite,glow 1s ease-in-out 2}
+.mascot.speak .eye{animation:bounce .33s ease-in-out 6}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 0 rgba(245,184,61,0))}50%{filter:drop-shadow(0 0 28px #F5B83D)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px) scaleY(1.1)}}
+.mascot.sleep{opacity:.45;animation:none}
+.mascot.sleep .eye{animation:none;transform:scaleY(.18)}
+@media (prefers-reduced-motion:reduce){.mascot,.mascot .eye,.mascot.speak,.mascot.speak .eye{animation:none!important}}
+</style></head><body>
+<div class="app">
+<header><div class="brand">EvE <span>Me</span></div><div class="status"><span id="st">connecting…</span><div class="dot" id="dot"></div></div></header>
+<section class="glass main" id="main"><div class="empty">รอข้อความจาก Grok Bot…</div></section>
+<aside class="side">
+<div class="glass clock"><div class="mascot sleep" id="mascot"><svg viewBox="0 0 100 100"><path d="M50 8C27 8 14 25 14 47v35c0 6 6 9 10 5l6-5 7 6c3 3 7 3 10 0l3-3 3 3c3 3 7 3 10 0l7-6 6 5c4 4 10 1 10-5V47C86 25 73 8 50 8z" fill="#f4f4f2"/><ellipse class="eye" cx="38" cy="46" rx="6" ry="9" fill="#111"/><ellipse class="eye" cx="62" cy="46" rx="6" ry="9" fill="#111"/></svg></div><div><div class="time" id="time">--:--</div><div class="date" id="date"></div></div></div>
+<div class="glass hist"><h3>HISTORY</h3><div id="hist"></div></div>
+</aside></div>
+<script>
+const k=new URLSearchParams(location.search).get('k')||'';let items=[],poll=null,lastAct=Date.now();
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function speak(){const m=$('mascot');m.classList.remove('speak');void m.offsetWidth;m.classList.add('speak');clearTimeout(speak.t);speak.t=setTimeout(()=>m.classList.remove('speak'),2000)}
+function setConn(on,txt){$('mascot').classList.toggle('sleep',!on);$('dot').className='dot'+(on?' on':'');$('st').textContent=txt}
+function ago(ts){const s=Math.round((Date.now()-ts)/1000);return s<60?'เมื่อสักครู่':s<3600?Math.floor(s/60)+' นาทีที่แล้ว':Math.floor(s/3600)+' ชม.ที่แล้ว'}
+function render(){const it=items[0];
+ if(it){const m=it.meta||{};let h=`<div class="kind">${esc(it.type)}</div><div class="title">${esc(it.title)}</div>`;
+  if(it.type==='flight')h+=`<div class="fl"><div class="ap">${esc(m.from||'')}</div><div class="arr">✈</div><div class="ap r">${esc(m.to||'')}</div></div>
+   <div class="tm"><div>DEPART<b>${esc(m.dep||'--:--')}</b></div><div>ARRIVE<b>${esc(m.arr||'--:--')}</b></div></div>${it.body?`<div class="body" style="margin-top:28px">${esc(it.body)}</div>`:''}`;
+  else h+=`<div class="body">${esc(it.body)}</div>`;
+  $('main').innerHTML=h+`<div class="ago">${ago(it.ts)}</div>`}
+ $('hist').innerHTML=items.slice(1,9).map(i=>`<div class="hi"><small>${new Date(i.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</small>${esc(i.title||i.body)}</div>`).join('')}
+function setItems(a){if(a.length&&(!items[0]||a[0].id!==items[0].id)){lastAct=Date.now();document.body.classList.remove('dim')}items=a;render()}
+function startPoll(){if(poll)return;const f=()=>fetch('/api/latest?k='+encodeURIComponent(k)).then(r=>r.json()).then(d=>{setItems(d.items);setConn(true,'polling')}).catch(()=>setConn(false,'offline'));f();poll=setInterval(f,5000)}
+function startSSE(){if(!window.EventSource)return startPoll();const es=new EventSource('/api/stream?k='+encodeURIComponent(k));let fails=0;
+ es.addEventListener('init',e=>{fails=0;if(poll){clearInterval(poll);poll=null}setConn(true,'live');setItems(JSON.parse(e.data).items)});
+ es.addEventListener('item',e=>{setItems([JSON.parse(e.data),...items].slice(0,20));speak()});
+ es.onerror=()=>{setConn(false,'reconnecting…');if(++fails>=3)startPoll()}}
+function tick(){const d=new Date();$('time').textContent=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+ $('date').textContent=d.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long'});
+ if(Date.now()-lastAct>10*60*1000)document.body.classList.add('dim');if(items[0])render()}
+tick();setInterval(tick,15000);startSSE();
+</script></body></html>

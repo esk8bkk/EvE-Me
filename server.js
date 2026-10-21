@@ -1,4 +1,5 @@
 const express = require('express');
+const PUB = require('fs').existsSync(require('path').join(__dirname, 'public', 'index.html')) ? require('path').join(__dirname, 'public') : __dirname;
 const path = require('path');
 const crypto = require('crypto');
 const app = express();
@@ -32,6 +33,6 @@ app.get('/api/stream', viewOk, (req, res) => {
   const hb = setInterval(() => res.write(': ping\n\n'), 25000);
   req.on('close', () => { clearInterval(hb); clients.delete(res); });
 });
-app.get('/', viewOk, (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
-app.get('/eve-blob-white.svg', (req, res) => res.sendFile(path.join(__dirname, 'public', 'eve-blob-white.svg')));
+app.get('/', viewOk, (req, res) => res.sendFile(path.join(PUB, 'index.html')));
+app.get('/eve-blob-white.svg', (req, res) => res.sendFile(path.join(PUB, 'eve-blob-white.svg')));
 app.listen(PORT, () => console.log(`EvE Me on :${PORT}`));
