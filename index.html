@@ -158,10 +158,30 @@ body.mic-c.listening .micbadge{box-shadow:0 0 0 4px rgba(196,181,253,.35),0 0 30
 .spk.off{color:#fff;opacity:.5;border-color:var(--b);box-shadow:none}
 .loc .ico{width:26px;height:26px;margin-left:-4px}
 .arr .ico{width:.8em;height:.8em;vertical-align:middle}
+.gear{border-color:var(--b);box-shadow:none}.gear[aria-expanded="true"]{border-color:rgba(139,92,246,.6);box-shadow:0 0 14px rgba(139,92,246,.3)}
+#vset{position:fixed;top:calc(var(--hh) - 10px);left:var(--px);z-index:8;width:min(520px,calc(100vw - 2*var(--px)));padding:28px 32px;border-radius:32px;border-color:rgba(139,92,246,.45);background:rgba(20,18,28,.94);box-shadow:0 30px 90px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:22px;font-size:24px}
+#vset[hidden]{display:none}
+.vs-h{font-weight:800;font-size:28px;color:var(--a);letter-spacing:1px}
+#vset label{display:flex;flex-direction:column;gap:12px;color:#ccc;font-weight:600}
+#vset label b{color:#fff;font-variant-numeric:tabular-nums;position:absolute;right:32px;margin-top:0}
+#vset label{position:relative}
+#vsVoice{font:600 22px/1.2 Inter,"Noto Sans Thai",system-ui,sans-serif;color:#fff;background:rgba(255,255,255,.06);border:1px solid rgba(139,92,246,.45);border-radius:18px;padding:14px 18px;appearance:none;-webkit-appearance:none}
+#vsVoice option{background:#1b1a22}
+#vset input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,.15);accent-color:#8B5CF6}
+#vset input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:34px;height:34px;border-radius:50%;background:#8B5CF6;border:3px solid #fff;box-shadow:0 0 14px rgba(139,92,246,.6)}
+.vs-test{min-height:68px;border-radius:34px;border:1px solid rgba(139,92,246,.6);background:linear-gradient(135deg,#8B5CF6,#6D28D9);color:#fff;font:800 24px/1 Inter,"Noto Sans Thai",system-ui,sans-serif;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer}
+.vs-test .ico{width:26px;height:26px}
 </style></head><body class="m-idle mic-c">
-<header><button class="glass loc" id="loc"><span class="ld"></span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span id="locT">แชร์ตำแหน่ง</span></button><button class="glass spk" id="spk" aria-label="เสียงพูด"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.5a8 8 0 0 1 0 11"/></svg></button><div class="sp"></div><div class="glass clock"><div class="dot" id="dot" role="img" aria-label="สถานะ"></div><span id="st" class="vh">กำลังเชื่อมต่อ…</span><div class="time" id="time">--:--</div><div class="date" id="date"></div></div></header>
+<header><button class="glass loc" id="loc"><span class="ld"></span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span id="locT">แชร์ตำแหน่ง</span></button><button class="glass spk" id="spk" aria-label="เสียงพูด"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.5a8 8 0 0 1 0 11"/></svg></button><button class="glass spk gear" id="gear" aria-label="ตั้งค่าเสียง" aria-expanded="false" aria-controls="vset"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button><div class="sp"></div><div class="glass clock"><div class="dot" id="dot" role="img" aria-label="สถานะ"></div><span id="st" class="vh">กำลังเชื่อมต่อ…</span><div class="time" id="time">--:--</div><div class="date" id="date"></div></div></header>
 <div id="stage"><div class="slot" id="slot"><button class="micbadge" id="micC" aria-label="คุยกับ EvE" tabindex="-1"><svg class="ic-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><svg class="ic-stop" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg></button></div><div id="panel"></div></div>
 <div class="glass" id="hist"></div>
+<div class="glass" id="vset" role="dialog" aria-label="ตั้งค่าเสียง" hidden>
+<div class="vs-h">ตั้งค่าเสียง</div>
+<label>เสียง<select id="vsVoice"></select></label>
+<label>ความเร็ว <b id="vsRateV">1.0×</b><input type="range" id="vsRate" min="0.5" max="1.6" step="0.1" value="1"></label>
+<label>ระดับเสียง <b id="vsPitchV">1.0</b><input type="range" id="vsPitch" min="0.5" max="1.6" step="0.1" value="1"></label>
+<button class="vs-test" id="vsTest"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5.5v13l10.5-6.5z"/></svg><span>ทดสอบเสียง</span></button>
+</div>
 <div id="eve" class="sleep"><div id="aura"></div><svg id="trace" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" pathLength="100"/></svg><img src="eve-blob-white.svg" alt="EvE"><div id="mouth"></div></div>
 <script>
 const k=new URLSearchParams(location.search).get('k')||'';const KQ=k?'?k='+encodeURIComponent(k):'';
@@ -271,11 +291,23 @@ function setVoice(v){voice=v?{until:Date.now()+(v.phase==='think'?90000:v.phase=
 function unlock(){if(unlocked)return;unlocked=true;try{if(window.speechSynthesis){const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u)}}catch(e){}
  try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){actx=actx||new AC();actx.resume&&actx.resume()}}catch(e){}}
 addEventListener('pointerdown',unlock,{once:true,capture:true});
-function thVoice(){const vs=window.speechSynthesis?speechSynthesis.getVoices():[];return vs.find(v=>/^th/i.test(v.lang))||null}
+let VS={uri:'',rate:1,pitch:1};try{VS={...VS,...JSON.parse(localStorage.getItem('eveVoice')||'{}')}}catch(e){}
+function saveVS(){try{localStorage.setItem('eveVoice',JSON.stringify(VS))}catch(e){}}
+function allVoices(){const vs=window.speechSynthesis?speechSynthesis.getVoices().slice():[];const r=v=>/^th/i.test(v.lang)?0:1;return vs.sort((a,b)=>r(a)-r(b)||a.name.localeCompare(b.name))}
+function thVoice(){const vs=allVoices();return vs.find(v=>v.voiceURI===VS.uri)||vs.find(v=>/^th/i.test(v.lang))||null}
+function fillVoices(){const sel=$('vsVoice'),vs=allVoices();sel.innerHTML=`<option value="">อัตโนมัติ (ไทย)</option>`+vs.map(v=>`<option value="${esc(v.voiceURI)}"${v.voiceURI===VS.uri?' selected':''}>${esc(v.name)} · ${esc(v.lang)}</option>`).join('')}
+function vsUI(){$('vsRate').value=VS.rate;$('vsPitch').value=VS.pitch;$('vsRateV').textContent=(+VS.rate).toFixed(1)+'×';$('vsPitchV').textContent=(+VS.pitch).toFixed(1)}
 function say(it){if(!spkOn||!window.speechSynthesis||!window.SpeechSynthesisUtterance)return;const text=[it.title,it.body].filter(Boolean).join('. ');if(!text)return;
- try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='th-TH';const v=thVoice();if(v)u.voice=v;u.rate=1;
+ try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);const v=thVoice();u.lang=v?v.lang:'th-TH';if(v)u.voice=v;u.rate=+VS.rate||1;u.pitch=+VS.pitch||1;
   u.onstart=()=>setV('speak');u.onend=u.onerror=()=>{if(vmode==='speak')setV('')};setV('speak');speechSynthesis.speak(u)}catch(e){setV('')}}
-if(window.speechSynthesis&&speechSynthesis.addEventListener)speechSynthesis.addEventListener('voiceschanged',()=>{});
+if(window.speechSynthesis&&speechSynthesis.addEventListener)speechSynthesis.addEventListener('voiceschanged',fillVoices);
+fillVoices();vsUI();
+$('gear').addEventListener('click',e=>{e.stopPropagation();const p=$('vset'),o=p.hidden;p.hidden=!o;$('gear').setAttribute('aria-expanded',o);if(o)fillVoices()});
+document.addEventListener('click',e=>{const p=$('vset');if(!p.hidden&&!p.contains(e.target)&&!e.target.closest('#gear')){p.hidden=true;$('gear').setAttribute('aria-expanded','false')}});
+$('vsVoice').addEventListener('change',e=>{VS.uri=e.target.value;saveVS()});
+$('vsRate').addEventListener('input',e=>{VS.rate=+e.target.value;saveVS();vsUI()});
+$('vsPitch').addEventListener('input',e=>{VS.pitch=+e.target.value;saveVS();vsUI()});
+$('vsTest').addEventListener('click',()=>{unlock();const was=spkOn;spkOn=true;say({title:'สวัสดีค่ะ ฉันคือ EvE',body:'ขับขี่ปลอดภัยนะคะ'});spkOn=was});
 function sendSay(text){text=String(text||'').trim();if(!text){setVoice({phase:'err',text:'',sub:'ไม่ได้ยินเลย ลองอีกครั้งนะ'});return Promise.resolve(false)}
  setVoice({phase:'think',text});
  return fetch('/api/say'+KQ,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({text})})
