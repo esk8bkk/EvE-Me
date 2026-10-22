@@ -270,8 +270,20 @@ body.has-brief #pmain,body.has-brief #alert,body.has-brief #agenda{display:none}
 #eta .es{color:var(--m);flex:none}#eta b{font-weight:700;color:var(--t);font-variant-numeric:tabular-nums}
 #eta .ex{color:var(--rim);flex:none}
 @media (max-height:360px),(min-aspect-ratio:4/1){#eta{margin:0 0 10px;padding:8px 18px;font-size:22px;gap:10px}#eta .ed{width:8px;height:8px}}
+
+/* hands-free wake pill */
+.wake{position:relative}
+.wake .wd{position:absolute;top:10px;right:10px;width:9px;height:9px;border-radius:50%;background:#a78bfa;opacity:0;transition:opacity .3s}
+.wake.on .wd{opacity:.9}
+.wake.on.hear .wd{animation:wkp 1.6s ease-in-out infinite}
+.wake.on.vad .wd{background:#c4b5fd}
+.wake.err .wd{opacity:.9;background:#f87171;animation:none}
+@keyframes wkp{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(167,139,250,.6)}50%{transform:scale(1.25);box-shadow:0 0 0 6px rgba(167,139,250,0)}}
+#wkL{position:fixed;left:50%;bottom:6px;transform:translateX(-50%);font-size:14px;color:rgba(196,181,253,.7);letter-spacing:.02em;z-index:4;pointer-events:none;transition:opacity .4s}
+#wkL:empty{opacity:0}
+@media (max-height:360px),(min-aspect-ratio:4/1){.wake .wd{top:8px;right:8px}#wkL{bottom:2px;font-size:12px}}
 </style></head><body class="m-idle mic-c">
-<header><button class="glass loc" id="loc"><span class="ld"></span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span id="locT">แชร์ตำแหน่ง</span></button><button class="glass spk" id="spk" aria-label="เสียงพูด"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.5a8 8 0 0 1 0 11"/></svg></button><button class="glass spk gear" id="gear" aria-label="ตั้งค่าเสียง" aria-expanded="false" aria-controls="vset"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button><div class="sp"></div><div class="glass clock"><div class="dot" id="dot" role="img" aria-label="สถานะ"></div><span id="st" class="vh">กำลังเชื่อมต่อ…</span><div class="time" id="time">--:--</div><div class="date" id="date"></div></div></header>
+<header><button class="glass loc" id="loc"><span class="ld"></span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span id="locT">แชร์ตำแหน่ง</span></button><button class="glass spk" id="spk" aria-label="เสียงพูด"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.5a8 8 0 0 1 0 11"/></svg></button><button class="glass spk gear" id="gear" aria-label="ตั้งค่าเสียง" aria-expanded="false" aria-controls="vset"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button><button class="glass spk wake off" id="wake" aria-label="เปิดโหมดเรียก อีฟ" aria-pressed="false"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span class="wd"></span></button><div class="sp"></div><div class="glass clock"><div class="dot" id="dot" role="img" aria-label="สถานะ"></div><span id="st" class="vh">กำลังเชื่อมต่อ…</span><div class="time" id="time">--:--</div><div class="date" id="date"></div></div></header><div id="wkL" aria-live="polite"></div>
 <div id="stage"><div class="slot" id="slot"><button class="micbadge" id="micC" aria-label="คุยกับ EvE" tabindex="-1"><svg class="ic-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><svg class="ic-stop" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg></button></div><div id="panel"><div id="eta" aria-live="polite"></div><button id="agenda" aria-live="polite"></button><button id="brief" aria-live="polite"></button><button id="alert" aria-live="polite" data-k=""></button><div id="pmain"></div></div></div>
 <div class="glass" id="hist"></div>
 <div class="glass" id="vset" role="dialog" aria-label="ตั้งค่าเสียง" hidden>
@@ -326,9 +338,9 @@ function pickView(){
  return{m:'idle'}}
 function ago(ts){const s=Math.round((Date.now()-ts)/1000);return s<60?'เมื่อสักครู่':s<3600?Math.floor(s/60)+' นาทีที่แล้ว':Math.floor(s/3600)+' ชม.ที่แล้ว'}
 function render(){const v=pickView(),P=$('pmain');
- const key=(v.m==='v'?'v:'+voice.phase+voice.text:'')+v.m+':'+(v.it?v.it.id+(v.it.answer||'')+(v.m==='msg'?ago(v.it.ts):''):greeting()[0]);
+ const key=(v.m==='v'?'v:'+voice.phase+voice.text+(voice.sub||'')+(voice.phase==='think'&&Date.now()-(voice.started||0)>8000?'+':''):'')+v.m+':'+(v.it?v.it.id+(v.it.answer||'')+(v.m==='msg'?ago(v.it.ts):''):greeting()[0]);
  if(key!==modeKey){modeKey=key;mode=v.m;document.body.className=document.body.className.replace(/\bm-\w+/g,'').trim()+' m-'+v.m;
-  if(v.m==='v'){const ph={listen:'กำลังฟัง…',think:'EvE กำลังคิด…',err:'อุ๊ย'}[voice.phase];
+  if(v.m==='v'){const ph={listen:'กำลังฟัง…',think:(Date.now()-(voice.started||0)>8000?'รอสักครู่ EvE กำลังตอบ…':'EvE กำลังคิด…'),err:'อุ๊ย'}[voice.phase];
    P.innerHTML=`<div class="bub"><div class="kind">${ph}</div><div class="said${voice.text?'':' ph'}">${voice.text?'“'+esc(voice.text)+'”':(voice.phase==='listen'?'พูดได้เลย…':'')}</div>`+
     (voice.phase==='think'?`<div class="said dots" style="margin-top:20px"><span></span><span></span><span></span></div>`:'')+(voice.sub?`<div class="vsub">${esc(voice.sub)}</div>`:'')+`</div>`}
   else if(v.m==='idle'){const g=greeting();P.innerHTML=`<div class="bub"><div class="greet">${g[0]}<small>${g[1]}</small></div></div>`}
@@ -353,13 +365,37 @@ function applyAnswer(a){const q=items.find(i=>i.id===a.id);if(!q||q.answer===a.a
  lastAct=Date.now();document.body.classList.remove('dim');perk();render();clearTimeout(applyAnswer.t);applyAnswer.t=setTimeout(render,HOLD+100)}
 function setConn(on,txt){sleeping=!on;E.classList.toggle('sleep',!on);$('dot').className='dot'+(on?' on':'');$('st').textContent=txt}
 function setItems(a){a.forEach(addExt);setTimeout(renderAlert,0);if(a.length&&(!items[0]||a[0].id!==items[0].id)){lastAct=Date.now();document.body.classList.remove('dim')}items=a;render()}
-function startPoll(){if(poll)return;const f=()=>fetch('/api/latest'+KQ,{credentials:'same-origin'}).then(r=>r.json()).then(d=>{setItems(d.items);setConn(true,'ดึงข้อมูลเป็นระยะ')}).catch(()=>setConn(false,'ออฟไลน์'));f();poll=setInterval(f,5000)}
-function startSSE(){if(!window.EventSource)return startPoll();const es=new EventSource('/api/stream'+KQ,{withCredentials:true});let fails=0;
- es.addEventListener('init',e=>{fails=0;if(poll){clearInterval(poll);poll=null}setConn(true,'ออนไลน์');const _d=JSON.parse(e.data);setItems(_d.items);if('route' in _d&&typeof setRoute==='function')setRoute(_d.route)});
+/* ---------- delivery: seq + catch-up + dedupe (nothing lost while SSE is down, nothing spoken twice) ---------- */
+const LS=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return null}};
+let lastSeq=+LS('eveSeq')||0,boot=LS('eveBoot')||'',seen=[];try{seen=JSON.parse(LS('eveSeen')||'[]')}catch(e){seen=[]}
+const SPEAK_MAX_AGE=180000;
+function markSeen(it){const key=it.id;if(seen.includes(key))return false;seen.push(key);if(seen.length>80)seen=seen.slice(-80);LS('eveSeen',JSON.stringify(seen));return true}
+function noteSeq(it){if(it.boot&&it.boot!==boot){boot=it.boot;LS('eveBoot',boot);lastSeq=0}if(it.seq>lastSeq){lastSeq=it.seq;LS('eveSeq',String(lastSeq))}}
+function onBoot(b){if(b&&b!==boot){boot=b;LS('eveBoot',b);lastSeq=0;LS('eveSeq','0')}}
+function handleItem(it,catchup){if(!it||!it.id)return;noteSeq(it);if(!markSeen(it))return; // dedupe by id (seq is per server run)
+ const fresh=!catchup||Date.now()-(it.ts||0)<SPEAK_MAX_AGE;
+ if(it.type==='agenda'){if(fresh)showAgenda(it);return}if(it.type==='briefing'){if(fresh)showBrief(it);return}
+ if(it.meta&&it.meta.alert){addExt(it);setTimeout(renderAlert,0)}
+ hold=null;if(voice&&voice.phase==='think'&&(it.type==='reply'||it.type==='question')&&!(it.meta&&(it.meta.car||it.meta.alert)))endThink();
+ if(!items.some(x=>x.id===it.id))setItems([it,...items].sort((a,b)=>b.ts-a.ts).slice(0,20));perk();
+ if(fresh&&(it.speak||it.type==='reply'))say(it)}
+let catching=null;
+function catchUp(){if(catching)return catching;const q=(KQ?KQ+'&':'?')+'after='+lastSeq+(boot?'&boot='+encodeURIComponent(boot):'');
+ catching=fetch('/api/latest'+q,{credentials:'same-origin',cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{onBoot(d.boot);(d.missed||[]).sort((a,b)=>a.seq-b.seq).forEach(it=>handleItem(it,true));if(d.seq>lastSeq&&d.boot===boot){lastSeq=d.seq;LS('eveSeq',String(lastSeq))}return d}).finally(()=>{catching=null});return catching}
+function startPoll(){if(poll)return;const f=()=>catchUp().then(d=>{(d.items||[]).forEach(addExt);setConn(true,'ดึงข้อมูลเป็นระยะ')}).catch(()=>setConn(false,'ออฟไลน์'));f();poll=setInterval(f,8000)}
+let es=null;
+function startSSE(){if(!window.EventSource)return startPoll();if(es){try{es.close()}catch(e){}}
+ es=new EventSource('/api/stream'+(KQ?KQ+'&':'?')+'after='+lastSeq+(boot?'&boot='+encodeURIComponent(boot):''),{withCredentials:true});let fails=0;
+ es.addEventListener('init',e=>{fails=0;if(poll){clearInterval(poll);poll=null}setConn(true,'ออนไลน์');const _d=JSON.parse(e.data);onBoot(_d.boot);
+  _d.items.forEach(it=>{if(Date.now()-(it.ts||0)>SPEAK_MAX_AGE)markSeen(it)}); // old history: show, never speak
+  setItems(_d.items.slice());if('route' in _d&&typeof setRoute==='function')setRoute(_d.route);
+  setTimeout(()=>catchUp().catch(()=>{}),300)}); // belt and braces: SSE replays via Last-Event-ID/?after, this covers the rest
  es.addEventListener('route',e=>setRoute(JSON.parse(e.data)));
- es.addEventListener('item',e=>{const it=JSON.parse(e.data);if(it.type==='agenda'){showAgenda(it);return}if(it.type==='briefing'){showBrief(it);return}if(it.meta&&it.meta.alert){addExt(it);setTimeout(renderAlert,0)}hold=null;if(voice&&voice.phase!=='listen')setVoice(null);setItems([it,...items].slice(0,20));perk();if(it.speak||it.type==='reply')say(it)});
+ es.addEventListener('item',e=>handleItem(JSON.parse(e.data),true));
  es.addEventListener('answer',e=>applyAnswer(JSON.parse(e.data)));
  es.onerror=()=>{setConn(false,'กำลังเชื่อมต่อใหม่…');if(++fails>=3)startPoll()}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)catchUp().catch(()=>{})});
+addEventListener('online',()=>catchUp().catch(()=>{}));
 function tick(){const d=new Date();$('time').textContent=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
  $('date').textContent=d.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long'});
  if(Date.now()-lastAct>10*60*1000&&mode!=='q')document.body.classList.add('dim');render()}
@@ -444,9 +480,17 @@ const SPK_ON=`<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentCo
 function spkUI(){const b=$('spk');b.innerHTML=spkOn?SPK_ON:SPK_OFF;b.setAttribute('aria-label',spkOn?'ปิดเสียงพูด':'เปิดเสียงพูด');b.setAttribute('aria-pressed',spkOn);b.classList.toggle('off',!spkOn)}spkUI();
 $('spk').addEventListener('click',()=>{spkOn=!spkOn;try{localStorage.setItem('eveSpk',spkOn?'1':'0')}catch(e){}if(!spkOn)stopAudio();spkUI()});
 function setV(m){vmode=m;document.body.classList.toggle('listening',m==='listen');document.body.classList.toggle('thinking',m==='think');document.body.classList.toggle('speaking',m==='speak')}
-function setVoice(v){voice=v?{until:Date.now()+(v.phase==='think'?90000:v.phase==='err'?6000:60000),...v}:null;
+const THINK_MS=90000;let thinkPoll=null,thinkLbl=null;
+function setVoice(v){if(v&&v.phase==='think'){v.started=v.started||Date.now();if(!v.until)v.until=v.started+THINK_MS}
+ voice=v?{until:Date.now()+(v.phase==='think'?THINK_MS:v.phase==='err'?6000:60000),...v}:null;
+ if(!voice||voice.phase!=='think'){clearInterval(thinkPoll);thinkPoll=null;clearTimeout(thinkLbl);if(!voice||voice.phase!=='listen')LS('evePending',null)}
+ else{LS('evePending',JSON.stringify({started:voice.started,until:voice.until,text:voice.text||''}));
+  clearTimeout(thinkLbl);const lt=voice.started+8100-Date.now();if(lt>0)thinkLbl=setTimeout(render,lt);
+  if(!thinkPoll)thinkPoll=setInterval(()=>catchUp().catch(()=>{}),12000)} // backup to SSE while waiting
  if(vmode!=='speak'||v)setV(v&&v.phase==='listen'?'listen':v&&v.phase==='think'?'think':'');
- render();clearTimeout(setVoice.t);if(voice)setVoice.t=setTimeout(()=>{if(voice&&voice.phase==='think')setV('');render()},voice.until-Date.now()+50)}
+ render();clearTimeout(setVoice.t);
+ if(voice)setVoice.t=setTimeout(()=>{if(voice&&voice.phase==='think'){setVoice({phase:'err',text:'',sub:'ยังไม่ได้คำตอบ ลองพูดใหม่ได้'});return}if(vmode==='listen'&&!listening)setV('');render()},Math.max(0,voice.until-Date.now()+50))}
+function endThink(){LS('evePending',null);setVoice(null)}
 const SILENT='data:audio/wav;base64,UklGRkQDAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YSADAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgA==';
 const AU=new Audio();AU.preload='auto';AU.playsInline=true;let audioOK=false;
 let unlocking=false;
@@ -499,16 +543,23 @@ function sendSay(text){text=String(text||'').trim();if(!text){setVoice({phase:'e
  setVoice({phase:'think',text});
  return fetch('/api/say'+KQ,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({text})})
   .then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>d.id).catch(()=>{setVoice({phase:'err',text,sub:'ส่งไม่สำเร็จ ลองอีกครั้งนะ'});return false})}
-function sendAudio(blob){setVoice({phase:'think',text:'',sub:'ส่งเสียงให้ EvE แล้ว'});
+function sendAudio(blob){setVoice({phase:'think',text:'',sub:'ส่งเสียงให้ EvE แล้ว'});uploading=true;
  return fetch('/api/voice'+KQ,{method:'POST',headers:{'Content-Type':blob.type||'audio/webm'},credentials:'same-origin',body:blob})
-  .then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>d.id).catch(()=>{setVoice({phase:'err',text:'',sub:'ส่งเสียงไม่สำเร็จ'});return false})}
+  .then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>d.id).catch(()=>{setVoice({phase:'err',text:'',sub:'ส่งเสียงไม่สำเร็จ'});return false}).finally(()=>{uploading=false})}
 // silence detection (only runs while listening)
 let wbuf=null;
-function meter(){if(!listening)return;let rms=0;
+// VAD: needs >= MIN_SPEECH_MS of voiced frames before a SILENCE_TAIL_MS pause may end the clip; hard cap MAX_REC_MS.
+const MIN_SPEECH_MS=1200,SILENCE_TAIL_MS=1800,MAX_REC_MS=30000,NO_SPEECH_GIVEUP_MS=10000;
+let speechMs=0,lastFrame=0,noise=.012,meterOn=false;
+function meter(){if(!listening){meterOn=false;return}let rms=0;const now=Date.now(),dt=Math.min(100,now-(lastFrame||now));lastFrame=now;
  if(an){an.getByteTimeDomainData(wbuf);for(let i=0;i<wbuf.length;i++){const d=(wbuf[i]-128)/128;rms+=d*d}rms=Math.sqrt(rms/wbuf.length)}
- lvl=lvl*.7+Math.min(1,rms*6)*.3;document.body.style.setProperty('--lv',lvl.toFixed(2));const now=Date.now();if(vmode==='speak'){lastLoud=now}else if(rms>.045){lastLoud=now;gotSpeech=true}
-
- if(gotSpeech&&now-lastLoud>1500)return stopMic();if(now-startedAt>30000)return stopMic();
+ const thr=Math.max(.03,noise*3);
+ lvl=lvl*.7+Math.min(1,rms*6)*.3;document.body.style.setProperty('--lv',lvl.toFixed(2));
+ if(vmode==='speak'){lastLoud=now}else if(rms>thr){lastLoud=now;speechMs+=dt;if(speechMs>=250)gotSpeech=true}else noise=noise*.98+rms*.02; // adaptive floor (road noise)
+ const enough=speechMs>=MIN_SPEECH_MS||(!!heard&&gotSpeech);
+ if(enough&&now-lastLoud>SILENCE_TAIL_MS)return stopMic();
+ if(now-startedAt>MAX_REC_MS)return stopMic();
+ if(an&&!gotSpeech&&now-startedAt>NO_SPEECH_GIVEUP_MS)return stopMic();
  requestAnimationFrame(meter)}
 function micUI(on){if(!on)setTimeout(drainQ,200);const l=on?'แตะเพื่อหยุด':'คุยกับ EvE';$('micC').setAttribute('aria-label',l)}
 function cleanupStream(){try{srcN&&srcN.disconnect()}catch(e){}srcN=null;an=null;if(micStream){micStream.getTracks().forEach(t=>t.stop());micStream=null}}
@@ -516,17 +567,20 @@ function startRecorder(){if(!window.MediaRecorder||!micStream){setVoice({phase:'
  usedFallback=true;const mt=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4'].find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
  const chunks=[];mr=new MediaRecorder(micStream,mt?{mimeType:mt,audioBitsPerSecond:32000}:{});
  mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
- mr.onstop=()=>{const b=new Blob(chunks,{type:mr.mimeType||mt||'audio/webm'});mr=null;cleanupStream();if(b.size>2*1024*1024-1024)return setVoice({phase:'err',text:'',sub:'เสียงยาวเกินไป'});b.size?sendAudio(b):setVoice({phase:'err',text:'',sub:'ไม่ได้ยินเลย ลองอีกครั้งนะ'})};
+ mr.onstop=()=>{const b=new Blob(chunks,{type:mr.mimeType||mt||'audio/webm'});mr=null;cleanupStream();if(b.size>2*1024*1024-1024)return setVoice({phase:'err',text:'',sub:'เสียงยาวเกินไป'});const voiced=!an0||gotSpeech;if(!b.size||!voiced)return setVoice({phase:'err',text:'',sub:'ไม่ได้ยินเลย ลองอีกครั้งนะ'});sendAudio(b)};const an0=!!an;
  mr.start(1000);setVoice({phase:'listen',text:'',sub:'กำลังอัดเสียง (สูงสุด 30 วินาที)'})}
-function startMic(){unlock();if(listening)return stopMic();
+let lastTap=0,uploading=false;
+function startMic(){unlock();const now=Date.now();if(now-lastTap<700)return Promise.resolve(false);lastTap=now; // ghost double-taps on the car screen
+ if(listening)return stopMic();
+ if(uploading||(mr&&mr.state!=='inactive'))return Promise.resolve(false); // still finishing/uploading the last utterance: one utterance = one upload
  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){setVoice({phase:'err',text:'',sub:'ไม่รองรับไมโครโฟน'});return Promise.resolve(false)}
  stopAudio();
- listening=true;heard='';gotSpeech=false;usedFallback=false;micUI(true);setVoice({phase:'listen',text:''});
- return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}).then(st=>{
+ listening=true;heard='';gotSpeech=false;speechMs=0;lastFrame=0;usedFallback=false;micUI(true);setVoice({phase:'listen',text:''});
+ return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}}).then(st=>{
   if(!listening){st.getTracks().forEach(t=>t.stop());return false}
   micStream=st;startedAt=lastLoud=Date.now();
   try{const AC=window.AudioContext||window.webkitAudioContext;actx=actx||new AC();actx.resume&&actx.resume();srcN=actx.createMediaStreamSource(st);an=actx.createAnalyser();an.fftSize=512;wbuf=new Uint8Array(an.fftSize);srcN.connect(an)}catch(e){an=null}
-  requestAnimationFrame(meter);
+  if(!meterOn){meterOn=true;requestAnimationFrame(meter)} // single meter loop (rapid taps used to stack rAF loops)
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR||window.EVE_FORCE_REC){startRecorder();return true}
   try{rec=new SR();rec.lang='th-TH';rec.interimResults=true;rec.continuous=true;rec.maxAlternatives=1}catch(e){rec=null;startRecorder();return true}
@@ -544,6 +598,68 @@ function stopMic(){if(!listening)return;listening=false;micUI(false);lvl=0;
  else if(mr&&mr.state!=='inactive'){mr.stop()}  // onstop uploads the audio
  else{cleanupStream();setVoice(null)}}
 SL.addEventListener('click',()=>{if(document.body.classList.contains('mic-c'))startMic()});
-window.EVE={sendSay,startMic,stopMic,say,debugListen:on=>{on===false?(setVoice(null),setV('')):setVoice({phase:'listen',text:''})},state:()=>({speakQ:speakQ.length,playing,audioOK,listening,vmode,usedFallback,voice})};
+
+/* ---------- hands-free wake word ("อีฟ") ----------
+   Real keyword spotting only when the browser has SpeechRecognition. Otherwise an energy VAD ("ฟังเสียงพูด"):
+   any sustained speech >= 0.6s starts a capture — it cannot tell "อีฟ" from other speech. */
+const WK={on:LS('eveWake')==='1',eng:null,sr:null,stream:null,an:null,src:null,buf:null,raf:0,back:500,rt:null,cool:0,sess:null,hit:'',hitN:0,err:''};
+const WSR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const WAKE_RE=/(อีฟ|อี๊ฟ|hey\s*eve|\beve\b|เฮ้\s*อีฟ)/i;
+function wkBusy(){return listening||uploading||playing||speakQ.length>0||vmode==='speak'||vmode==='think'||(voice&&voice.phase==='think')||(mr&&mr.state!=='inactive')||Date.now()<WK.cool||!!WK.sess}
+function wkUI(){const b=$('wake');b.classList.toggle('off',!WK.on);b.classList.toggle('on',WK.on);b.setAttribute('aria-pressed',WK.on);
+ b.setAttribute('aria-label',WK.on?'ปิดโหมดเรียก อีฟ':'เปิดโหมดเรียก อีฟ');b.classList.toggle('hear',!!WK.eng);b.classList.toggle('vad',WK.eng==='vad');b.classList.toggle('err',!!WK.err);
+ $('wkL').textContent=!WK.on?'':WK.err?WK.err:WK.sess?'':WK.eng==='sr'?'พูดว่า “อีฟ”':WK.eng==='vad'?'ฟังเสียงพูด':''}
+function wkStop(){clearTimeout(WK.rt);WK.rt=null;if(WK.sr){const r=WK.sr;WK.sr=null;try{r.onend=r.onerror=r.onresult=null;r.abort()}catch(e){}}
+ cancelAnimationFrame(WK.raf);WK.raf=0;try{WK.src&&WK.src.disconnect()}catch(e){}WK.src=WK.an=null;if(WK.stream){WK.stream.getTracks().forEach(t=>t.stop());WK.stream=null}WK.eng=null;wkUI()}
+function wkRetry(){wkStop();if(!WK.on)return;const d=WK.back;WK.back=Math.min(30000,WK.back*2);WK.rt=setTimeout(()=>{WK.rt=null;wkStart()},d)}
+function wkStart(){if(!WK.on||WK.eng||WK.rt||document.hidden)return;if(wkBusy())return;WK.err='';
+ if(WSR&&!window.EVE_FORCE_VAD){let r;try{r=new WSR();r.lang='th-TH';r.continuous=true;r.interimResults=true;r.maxAlternatives=3}catch(e){return wkVad()}
+  WK.sr=r;WK.eng='sr';WK.hit='';WK.hitN=0;
+  r.onresult=ev=>{if(wkBusy())return;WK.back=500;
+   for(let i=ev.resultIndex;i<ev.results.length;i++){const res=ev.results[i];for(let a=0;a<res.length;a++){const t=String(res[a].transcript||'').toLowerCase(),c=res[a].confidence;
+    const m=t.match(WAKE_RE);if(!m)continue;
+    if(res.isFinal&&(!c||c>=.45))return wkFire('sr:final');            // final + confident (Chrome reports 0 when unknown)
+    if(WK.hit===m[1]){if(++WK.hitN>=2)return wkFire('sr:stable')}else{WK.hit=m[1];WK.hitN=1} // same match in 2 interim events
+   }}};
+  r.onerror=ev=>{const e=ev&&ev.error;if(e==='not-allowed'||e==='service-not-allowed'){WK.err='ไมค์ไม่ได้รับอนุญาต';wkStop();if(e==='service-not-allowed'&&!window.EVE_FORCE_VAD){window.EVE_FORCE_VAD=1;WK.err='';wkRetry()}return}
+   if(e==='network'||e==='audio-capture'){wkRetry();return}};
+  r.onend=()=>{if(WK.sr!==r)return;WK.sr=null;WK.eng=null;wkUI();if(!WK.on)return;const d=Math.max(300,WK.back);WK.back=Math.min(30000,WK.back*2);WK.rt=setTimeout(()=>{WK.rt=null;wkStart()},d)}; // auto-restart, backoff resets on results
+  try{r.start()}catch(e){WK.sr=null;WK.eng=null;return wkRetry()}wkUI();return}
+ wkVad()}
+function wkVad(){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){WK.err='ไม่รองรับไมโครโฟน';wkUI();return}
+ WK.eng='vad';wkUI();
+ navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}}).then(st=>{
+  if(WK.eng!=='vad'||!WK.on){st.getTracks().forEach(t=>t.stop());return}
+  WK.stream=st;const AC=window.AudioContext||window.webkitAudioContext;actx=actx||new AC();actx.resume&&actx.resume();
+  WK.src=actx.createMediaStreamSource(st);WK.an=actx.createAnalyser();WK.an.fftSize=512;WK.buf=new Uint8Array(512);WK.src.connect(WK.an);
+  let floor=.012,sp=0,last=performance.now(),t0=last;
+  const loop=()=>{if(WK.eng!=='vad')return;const now=performance.now(),dt=Math.min(100,now-last);last=now;
+   if(wkBusy()){wkStop();return}
+   WK.an.getByteTimeDomainData(WK.buf);let r=0;for(let i=0;i<WK.buf.length;i++){const d=(WK.buf[i]-128)/128;r+=d*d}r=Math.sqrt(r/WK.buf.length);
+   const thr=Math.max(.035,floor*3.5);
+   if(now-t0<1500){floor=floor*.9+r*.1}                          // calibrate on start
+   else if(r>thr){sp+=dt;if(sp>=600)return wkFire('vad')}           // >=0.6s sustained speech
+   else{sp=Math.max(0,sp-dt*2);floor=floor*.985+r*.015}           // adaptive road-noise floor
+   WK.raf=requestAnimationFrame(loop)};WK.raf=requestAnimationFrame(loop);WK.back=500;
+ }).catch(err=>{WK.eng=null;if(err&&err.name==='NotAllowedError'){WK.err='ไมค์ไม่ได้รับอนุญาต';wkUI()}else wkRetry()})}
+function duckReq(action){return fetch('/api/voice/duck'+KQ,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({action})}).then(r=>r.json().catch(()=>({}))).catch(()=>({}))}
+function wkFire(why){console.log('[EvE] wake',why);wkStop();if(wkBusy())return;
+ const s={at:Date.now(),paused:false,pausing:null,started:false};WK.sess=s;wkUI();
+ if(carData&&carData.state==='online'&&carData.media_playing===true)s.pausing=duckReq('pause').then(d=>{s.paused=!!(d&&d.paused);return d});
+ lastTap=0;startMic().then(ok=>{s.started=!!ok;if(!ok)wkEnd('mic failed')})}
+function wkEnd(why){const s=WK.sess;if(!s)return;WK.sess=null;WK.cool=Date.now()+3000;console.log('[EvE] wake session end',why);
+ (s.pausing||Promise.resolve()).then(()=>{if(s.paused)duckReq('resume')});wkUI();setTimeout(wkStart,3100)}
+setInterval(()=>{const s=WK.sess;
+ if(s){const idle=!listening&&!uploading&&!playing&&!speakQ.length&&vmode!=='speak'&&vmode!=='think'&&!(voice&&voice.phase==='think')&&!(mr&&mr.state!=='inactive');
+  if(Date.now()-s.at>120000)return wkEnd('timeout');
+  if(idle&&Date.now()-s.at>2500)return wkEnd(voice&&voice.phase==='err'?'error/cancel':'reply done');return}
+ if(WK.on&&!WK.eng&&!WK.rt&&!wkBusy())wkStart();
+ if(WK.eng==='sr'&&wkBusy())wkStop()},500);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)wkStop()});
+$('wake').addEventListener('click',e=>{e.stopPropagation();unlock();WK.on=!WK.on;LS('eveWake',WK.on?'1':null);WK.back=500;WK.err='';if(WK.on)wkStart();else{wkStop();if(WK.sess)wkEnd('off')}wkUI()});
+wkUI();if(WK.on)setTimeout(wkStart,1200);
+window.EVE={sendSay,startMic,stopMic,say,debugListen:on=>{on===false?(setVoice(null),setV('')):setVoice({phase:'listen',text:''})},wake:()=>({on:WK.on,engine:WK.eng,session:WK.sess,hasSR:!!WSR}),state:()=>({speakQ:speakQ.length,playing,audioOK,listening,vmode,usedFallback,voice})};
+// resume a pending utterance after a reload: keep thinking until its deadline and catch up on missed replies
+try{const p=JSON.parse(LS('evePending')||'null');if(p&&p.until>Date.now()+1000)setVoice({phase:'think',text:p.text||'',started:p.started,until:p.until,sub:'กำลังรอคำตอบจาก EvE'});else LS('evePending',null)}catch(e){LS('evePending',null)}
 tick();setInterval(tick,15000);startSSE();
 </script></body></html>

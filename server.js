@@ -38,7 +38,22 @@ const pushOk = (req, res, next) => {
   if (!PUSH_TOKEN || !m || !safeEq(m[1], PUSH_TOKEN)) return res.status(401).json({ error: 'unauthorized' });
   next();
 };
-const broadcast = (event, obj) => { const d = `event: ${event}\ndata: ${JSON.stringify(obj)}\n\n`; for (const c of clients) c.write(d); };
+const broadcast = (event, obj) => { const d = `event: ${event}\ndata: ${JSON.stringify(obj)}\n\n`; for (const c of clients) { try { c.write(d); } catch {} } };
+// ---- replay log: every pushed item gets an increasing seq; kept >= 10 min so a reconnecting car can catch up ----
+const BOOT = crypto.randomBytes(4).toString('hex'); // changes on restart so clients can reset their lastSeq
+let seq = 0;
+const log = []; // oldest first: { seq, item }
+const LOG_KEEP_MS = 15 * 60000, LOG_MAX = 300;
+function pruneLog(now = Date.now()) { while (log.length && (log.length > LOG_MAX || now - log[0].item.ts > LOG_KEEP_MS)) log.shift(); }
+const sseItem = item => `id: ${item.seq}\nevent: item\ndata: ${JSON.stringify(item)}\n\n`;
+function emitItem(item) { // assign seq, remember, send with SSE id so EventSource resumes via Last-Event-ID
+  item.seq = ++seq; item.boot = BOOT; log.push({ seq: item.seq, item }); pruneLog();
+  const d = sseItem(item); let sent = 0;
+  for (const c of clients) { try { c.write(d); sent++; } catch {} }
+  return sent;
+}
+const itemsAfter = after => { pruneLog(); return log.filter(e => e.seq > after).map(e => e.item); };
+const parseAfter = v => { const n = Number(v); return Number.isFinite(n) && n >= 0 ? Math.floor(n) : null; };
 
 app.get('/healthz', (req, res) => res.json({ ok: true }));
 app.post('/api/push', pushOk, (req, res) => {
@@ -56,8 +71,8 @@ app.post('/api/push', pushOk, (req, res) => {
     item.answer = null;
   }
   items.unshift(item); items.length = Math.min(items.length, MAX);
-  broadcast('item', item);
-  res.json({ ok: true, id: item.id, clients: clients.size });
+  emitItem(item);
+  res.json({ ok: true, id: item.id, seq: item.seq, clients: clients.size, queued: true });
 });
 app.post('/api/answer', viewOk, (req, res) => {
   const { id, answer } = req.body || {};
@@ -95,7 +110,25 @@ function wake(payload) {
   fetch(WAKE, { method: 'POST', headers: { 'Content-Type': 'application/json', ...(WAKE_AUTH ? { Authorization: WAKE_AUTH } : {}) }, body: JSON.stringify(payload), signal: ac.signal })
     .catch(() => console.log('wake webhook failed')).finally(() => clearTimeout(t)); // never logs the text
 }
-function addUtt(u) { inbox.push(u); if (inbox.length > 50) inbox.splice(0, inbox.length - 50); broadcast('said', { id: u.id, ts: u.ts, kind: u.kind }); wake(u.kind === 'text' ? { id: u.id, ts: u.ts, text: u.text } : { id: u.id, ts: u.ts, audio_id: u.audio_id }); }
+// Wake debounce: clips/texts arriving within WAKE_DEBOUNCE_MS of each other become ONE wake (one bot run).
+// Payload keeps the old single-utterance fields ({id, ts, text} or {id, ts, audio_id}) for the FIRST utterance,
+// plus batch fields: ids[], audio_ids[], texts[], count, since (ts-1 of the first; use with /api/inbox?since=).
+const WAKE_DEBOUNCE_MS = Number(process.env.WAKE_DEBOUNCE_MS) || 2500, WAKE_MAX_WAIT_MS = 8000;
+const pend = { list: [], t: null, first: 0 };
+const single = u => u.kind === 'text' ? { id: u.id, ts: u.ts, text: u.text } : { id: u.id, ts: u.ts, audio_id: u.audio_id };
+function flushWake() {
+  clearTimeout(pend.t); pend.t = null; const list = pend.list; pend.list = []; if (!list.length) return;
+  const p = { ...single(list[0]), count: list.length, ids: list.map(u => u.id), since: list[0].ts - 1, batch: list.map(single) };
+  const a = list.filter(u => u.kind === 'audio').map(u => u.audio_id); if (a.length) p.audio_ids = a;
+  const t = list.filter(u => u.kind === 'text').map(u => u.text); if (t.length) { p.texts = t; if (list[0].kind === 'text' && t.length > 1) p.text_joined = t.join(' '); }
+  wake(p);
+}
+function queueWake(u) {
+  if (!pend.list.length) pend.first = Date.now();
+  pend.list.push(u); clearTimeout(pend.t);
+  pend.t = setTimeout(flushWake, Math.max(0, Math.min(WAKE_DEBOUNCE_MS, pend.first + WAKE_MAX_WAIT_MS - Date.now())));
+}
+function addUtt(u) { inbox.push(u); if (inbox.length > 50) inbox.splice(0, inbox.length - 50); broadcast('said', { id: u.id, ts: u.ts, kind: u.kind }); queueWake(u); }
 app.post('/api/say', viewOk, (req, res) => {
   const text = String((req.body || {}).text || '').trim().slice(0, 1000);
   if (!text) return res.status(400).json({ error: 'text required' });
@@ -106,7 +139,7 @@ app.post('/api/voice', viewOk, express.raw({ type: () => true, limit: '2mb' }), 
   if (!Buffer.isBuffer(req.body) || !req.body.length) return res.status(400).json({ error: 'empty audio' });
   const id = crypto.randomUUID(), ts = Date.now(), mime = String(req.get('content-type') || 'application/octet-stream').slice(0, 100);
   voices.set(id, { buf: req.body, mime, ts });
-  while (voices.size > 5) voices.delete(voices.keys().next().value);
+  while (voices.size > 10) voices.delete(voices.keys().next().value);
   const u = { id, ts, kind: 'audio', audio_id: id, mime, size: req.body.length };
   addUtt(u); res.json({ ok: true, id, ts });
 });
@@ -121,15 +154,29 @@ app.get('/api/voice/:id', pushOk, (req, res) => {
 });
 app.use((err, req, res, next) => res.status(err.status || 500).json({ error: err.type === 'entity.too.large' ? 'too large' : 'bad request' }));
 app.get('/api/answers', pushOk, (req, res) => res.json({ answers }));
-app.get('/api/latest', viewOk, (req, res) => res.json({ items }));
+// GET /api/latest            -> { items (history), seq, boot, missed: [] }   (backward compatible)
+// GET /api/latest?after=<seq> -> missed = every logged item with seq > after (if boot changed, pass after=0)
+app.get('/api/latest', viewOk, (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  const after = parseAfter(req.query.after);
+  const stale = req.query.boot && req.query.boot !== BOOT; // server restarted: client's seq is from an old run
+  res.json({ items, seq, boot: BOOT, missed: after === null ? [] : itemsAfter(stale ? 0 : after) });
+});
+const HB_MS = Number(process.env.SSE_HEARTBEAT_MS) || 15000;
 app.get('/api/stream', viewOk, (req, res) => {
   res.set({ 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache, no-transform', Connection: 'keep-alive', 'X-Accel-Buffering': 'no' });
   res.flushHeaders();
-  res.write(`retry: 3000\nevent: init\ndata: ${JSON.stringify({ items, route: trip.route })}\n\n`);
+  req.socket.setKeepAlive && req.socket.setKeepAlive(true, 10000);
+  const lei = parseAfter(req.get('last-event-id')), qa = parseAfter(req.query.after);
+  const after = lei !== null ? lei : qa;
+  const stale = (req.query.boot && req.query.boot !== BOOT) || (after !== null && after > seq);
+  res.write(`retry: 3000\nevent: init\ndata: ${JSON.stringify({ items, route: trip.route, seq, boot: BOOT })}\n\n`);
+  if (after !== null) for (const it of itemsAfter(stale ? 0 : after)) res.write(sseItem(it)); // replay missed, in order
   clients.add(res);
   deliverBriefing('connect');
-  const hb = setInterval(() => res.write(': ping\n\n'), 25000);
-  req.on('close', () => { clearInterval(hb); clients.delete(res); });
+  const hb = setInterval(() => { try { res.write(`: hb ${Date.now()}\n\n`); } catch {} }, HB_MS);
+  const bye = () => { clearInterval(hb); clients.delete(res); };
+  req.on('close', bye); res.on('error', bye);
 });
 
 // ---- Tesla Fleet API ----
@@ -216,6 +263,7 @@ function condense(v, d) {
     charging_state: cs.charging_state ?? null, charge_limit_soc: cs.charge_limit_soc ?? null,
     minutes_to_full_charge: cs.minutes_to_full_charge ?? null, charger_power: cs.charger_power ?? null,
     inside_temp: r1(cl.inside_temp), outside_temp: r1(cl.outside_temp), is_climate_on: cl.is_climate_on ?? null,
+    media_playing: vs.media_info ? /^play/i.test(String(vs.media_info.media_playback_status || '')) : null,
     locked: vs.locked ?? null, sentry_mode: vs.sentry_mode ?? null,
     doors: { df: !!vs.df, dr: !!vs.dr, pf: !!vs.pf, pr: !!vs.pr }, ft: !!vs.ft, rt: !!vs.rt,
     windows: { fd: !!vs.fd_window, fp: !!vs.fp_window, rd: !!vs.rd_window, rp: !!vs.rp_window },
@@ -280,7 +328,7 @@ const hookAt = {};
 function hook(key, text) { // debounce: one per kind per 30 min
   if (Date.now() - (hookAt[key] || 0) < 30 * 60000) return; hookAt[key] = Date.now();
   const item = { id: crypto.randomUUID(), ts: Date.now(), type: 'reply', title: '', body: text, meta: { car: key }, speak: true };
-  items.unshift(item); items.length = Math.min(items.length, MAX); broadcast('item', item);
+  items.unshift(item); items.length = Math.min(items.length, MAX); emitItem(item);
 }
 async function refreshCar() {
   try {
@@ -306,7 +354,7 @@ function routeSay(key, text, title, detail) {
   if (trip.said.has(key)) return; trip.said.add(key);
   const item = { id: crypto.randomUUID(), ts: Date.now(), type: 'reply', title: '', body: text, speak: true,
     meta: { car: 'route_' + key, alert: { kind: 'route', title: title || text, detail: detail || '', until: Date.now() + 10 * 60000, event_id: 'route-' + key } } };
-  items.unshift(item); items.length = Math.min(items.length, MAX); broadcast('item', item);
+  items.unshift(item); items.length = Math.min(items.length, MAX); emitItem(item);
 }
 const normLoc = s => String(s || '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
 function locMatch(a, b) {
@@ -404,24 +452,60 @@ async function wakeAndWait(v) {
   for (let i = 0; i < 12; i++) { await new Promise(r => setTimeout(r, 2500)); const vs = await listVehicles(); const x = vs.find(y => y.vin === v.vin); if (x && x.state === 'online') return; }
   const e = new Error('car did not wake'); e.status = 504; throw e;
 }
+async function runCommand(name, rawBody, vin, opts = {}) {
+  if (!CMD_REST.has(name) && !CMD_SIGNED.has(name)) { const e = new Error('command not allowed'); e.status = 403; throw e; }
+  const body = cleanBody(name, rawBody);
+  if (CMD_SIGNED.has(name) && !PROXY) { const e = new Error('signing proxy not configured (TESLA_PROXY_URL)'); e.status = 501; throw e; }
+  const vs = await listVehicles(); const v = vs.find(x => vin ? x.vin === vin : true);
+  if (!v) { const e = new Error('no vehicle'); e.status = 404; throw e; }
+  if (opts.noWake && v.state !== 'online') { const e = new Error('car not online'); e.status = 409; throw e; }
+  await wakeAndWait(v); // commands only; reads never wake
+  const pathq = `/api/1/vehicles/${encodeURIComponent(v.vin)}/command/${name}`;
+  let out;
+  if (CMD_REST.has(name)) {
+    const r = await fetch(T_BASE + pathq, { method: 'POST', headers: { Authorization: 'Bearer ' + await accessToken(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    out = { status: r.status, j: await r.json().catch(() => ({})) };
+  } else out = await proxyPost(pathq, await accessToken(), body);
+  console.log('tesla command', name, out.status);
+  return out;
+}
 app.post('/api/tesla/command/:name', pushOk, async (req, res) => {
-  const name = req.params.name;
-  if (!CMD_REST.has(name) && !CMD_SIGNED.has(name)) return res.status(403).json({ error: 'command not allowed' });
+  try { const out = await runCommand(req.params.name, req.body, req.query.vin); res.status(out.status).json(out.j); } catch (e) { tErr(res, e); }
+});
+// ---- Voice ducking: pause car media while the wake-word conversation runs, resume only if we paused it ----
+// Authorized by the page's view key; only ever sends media_toggle_playback; never wakes the car; rate-limited; auto-resume safety.
+const duck = { paused: false, at: 0, hits: [], timer: null, busy: false };
+const DUCK_MAX_MS = 150000;
+async function duckResume(why) {
+  clearTimeout(duck.timer); duck.timer = null;
+  if (!duck.paused) return { ok: true, resumed: false };
+  duck.paused = false;
+  const out = await runCommand('media_toggle_playback', {}, null, { noWake: true });
+  console.log('voice duck resume', why, out.status);
+  if (car.last) car.last.media_playing = out.status < 300 ? true : car.last.media_playing;
+  return { ok: out.status < 300, resumed: out.status < 300 };
+}
+app.post('/api/voice/duck', viewOk, async (req, res) => {
+  const action = req.body && req.body.action;
+  if (action !== 'pause' && action !== 'resume') return res.status(400).json({ error: 'action must be pause|resume' });
+  const now = Date.now(); duck.hits = duck.hits.filter(t => now - t < 60000);
+  if (duck.hits.length >= 8) return res.status(429).json({ error: 'rate limited' });
+  duck.hits.push(now);
+  if (duck.busy) return res.status(409).json({ error: 'busy' });
+  duck.busy = true;
   try {
-    const body = cleanBody(name, req.body);
-    if (CMD_SIGNED.has(name) && !PROXY) return res.status(501).json({ error: 'signing proxy not configured (TESLA_PROXY_URL)' });
-    const vs = await listVehicles(); const v = vs.find(x => req.query.vin ? x.vin === req.query.vin : true);
-    if (!v) return res.status(404).json({ error: 'no vehicle' });
-    await wakeAndWait(v); // commands only; reads never wake
-    const pathq = `/api/1/vehicles/${encodeURIComponent(v.vin)}/command/${name}`;
-    let out;
-    if (CMD_REST.has(name)) {
-      const r = await fetch(T_BASE + pathq, { method: 'POST', headers: { Authorization: 'Bearer ' + await accessToken(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-      out = { status: r.status, j: await r.json().catch(() => ({})) };
-    } else out = await proxyPost(pathq, await accessToken(), body);
-    console.log('tesla command', name, out.status);
-    res.status(out.status).json(out.j);
-  } catch (e) { tErr(res, e); }
+    if (action === 'resume') return res.json(await duckResume('client'));
+    if (duck.paused) return res.json({ ok: true, paused: true, already: true });
+    const c = car.last;
+    if (!c || c.state !== 'online' || now - car.at > 120000) return res.json({ ok: true, paused: false, reason: 'car state unknown/asleep' });
+    if (c.media_playing !== true) return res.json({ ok: true, paused: false, reason: c.media_playing === false ? 'not playing' : 'media state unavailable' });
+    const out = await runCommand('media_toggle_playback', {}, null, { noWake: true });
+    if (out.status >= 300) return res.status(502).json({ ok: false, paused: false, error: 'command ' + out.status });
+    duck.paused = true; duck.at = now; c.media_playing = false;
+    duck.timer = setTimeout(() => duckResume('timeout').catch(e => console.log('duck auto-resume failed', e.message)), DUCK_MAX_MS);
+    console.log('voice duck pause');
+    res.json({ ok: true, paused: true });
+  } catch (e) { tErr(res, e); } finally { duck.busy = false; }
 });
 // ---- Calendar ----
 let calendar = [];
@@ -440,7 +524,7 @@ function calTick(now = Date.now()) {
     const body = `${fmtIn(min)} มี${what} ${ev.title}` + (ev.location ? ` ที่ ${ev.location} ให้ EvE นำทางไหม` : '');
     const item = { id: crypto.randomUUID(), ts: now, type: 'reply', title: '', body, speak: true,
       meta: { alert: { kind: 'calendar', title: `${fmtIn(min)} · ${ev.title}`, detail: ev.location || new Date(t).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Bangkok' }), until: t, event_id: ev.id, event_title: ev.title, location: ev.location || null } } };
-    items.unshift(item); items.length = Math.min(items.length, MAX); broadcast('item', item);
+    items.unshift(item); items.length = Math.min(items.length, MAX); emitItem(item);
   }
   for (const k of calFired) if (Number(k.split('|').pop()) < now - 86400000) calFired.delete(k);
 }
@@ -475,8 +559,8 @@ function pushAgenda(req, res) {
   const text = b.text ? String(b.text).slice(0, 600) : !evs.length ? 'วันนี้ว่าง ไม่มีนัดเลย'
     : `วันนี้มี ${evs.length} นัด เริ่ม ${first.time} ${first.title}` + (evs.length > 1 ? ` ถัดไป ${evs[1].time} ${evs[1].title}` : '');
   const item = { id: crypto.randomUUID(), ts: Date.now(), type: 'agenda', title: 'วันนี้', body: text, meta: { events: evs }, speak: b.speak !== false };
-  broadcast('item', item); // transient: not stored in the history list
-  res.json({ ok: true, id: item.id, count: evs.length, clients: clients.size });
+  emitItem(item); // transient: not stored in the history list
+  res.json({ ok: true, id: item.id, seq: item.seq, count: evs.length, clients: clients.size, queued: true });
 }
 // ---- Morning briefing (type "briefing"): held in memory, shown once per Bangkok date ----
 const briefings = new Map(); // date -> { b, shown, shown_at }
@@ -507,8 +591,7 @@ function deliverBriefing(why) {
   if (!e || e.shown || !clients.size) return false;
   const b = e.b, item = { id: crypto.randomUUID(), ts: Date.now(), type: 'briefing', title: '', body: briefingText(b), speak: true,
     meta: { briefing: { sleep_h: b.sleep_h, readiness: b.readiness, duty: b.duty, tip: b.tip }, compact: routeFast() || !!trip.route } };
-  const d = `event: item\ndata: ${JSON.stringify(item)}\n\n`; let sent = 0;
-  for (const c of clients) { try { if (c.write(d) !== undefined && !c.writableEnded) sent++; } catch {} }
+  const sent = emitItem(item);
   if (sent) { e.shown = true; e.shown_at = Date.now(); console.log(`[briefing] ${b.date} shown (${why}) to ${sent}`); }
   return !!sent;
 }
@@ -518,4 +601,5 @@ app.get('/api/briefing', pushOk, (req, res) => {
 });
 app.get('/', viewOk, (req, res) => res.sendFile(path.join(PUB, 'index.html')));
 app.get('/eve-blob-white.svg', (req, res) => res.sendFile(path.join(PUB, 'eve-blob-white.svg')));
+setInterval(() => pruneLog(), 60000).unref();
 app.listen(PORT, () => console.log(`EvE Me on :${PORT}`));
