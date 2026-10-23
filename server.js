@@ -226,6 +226,19 @@ app.get('/tesla/login', viewOrPush, (req, res) => {
   const q = new URLSearchParams({ response_type: 'code', client_id: T_ID, redirect_uri: T_REDIRECT, scope: T_SCOPES, state, locale: 'en-US', prompt: 'login', prompt_missing_scopes: 'true' });
   res.redirect(T_AUTH + '?' + q);
 });
+// Native app leg of the OAuth dance. The iPhone generates a state prefixed "app:"
+// and validates it itself, so there is nothing to look up here: hand the code
+// straight back to the app's custom scheme. The code is single-use and useless
+// without PUSH_TOKEN at /tesla/exchange.
+app.get('/tesla/callback', (req, res, next) => {
+  const st = String(req.query.state || '');
+  if (!st.startsWith('app:')) return next();
+  res.set('Cache-Control', 'no-store'); res.set('Referrer-Policy', 'no-referrer');
+  const q = new URLSearchParams({ state: st });
+  if (typeof req.query.code === 'string') q.set('code', req.query.code);
+  if (typeof req.query.error === 'string') q.set('error', req.query.error);
+  res.redirect(302, 'eveme://auth?' + q);
+});
 app.get('/tesla/callback', viewOk, async (req, res) => {
   const { code, state, error } = req.query;
   res.set('Cache-Control', 'no-store'); res.set('Referrer-Policy', 'no-referrer');
@@ -249,6 +262,27 @@ app.post('/tesla/register', pushOk, async (req, res) => {
   } catch (e) { tErr(res, e); }
 });
 async function listVehicles() { const { status, j } = await fleet('/api/1/vehicles'); if (status !== 200) { const e = new Error('vehicles ' + status); e.status = status; throw e; } return j.response || []; }
+// ---- Native app support ----
+// Everything the phone needs that is not a secret. It then talks to Tesla direct.
+app.get('/tesla/app-config', pushOk, (req, res) => {
+  if (!T_ID) return res.status(500).json({ error: 'TESLA_CLIENT_ID not set' });
+  res.set('Cache-Control', 'no-store');
+  res.json({ clientID: T_ID, audience: T_BASE, redirectURI: T_REDIRECT, scopes: T_SCOPES });
+});
+// The one call that needs client_secret: Tesla documents no PKCE public-client
+// flow, so the authorization_code exchange goes through here. Tesla's response is
+// passed back untouched and NOT kept on the server - the phone owns the tokens and
+// rotates the refresh token itself (that grant needs no secret), which is what
+// stops the refresh token going stale in an env var.
+app.post('/tesla/exchange', pushOk, async (req, res) => {
+  const code = (req.body || {}).code;
+  if (typeof code !== 'string' || !code) return res.status(400).json({ error: 'code required' });
+  res.set('Cache-Control', 'no-store');
+  try {
+    const j = await tokenReq({ grant_type: 'authorization_code', code, redirect_uri: T_REDIRECT });
+    res.json({ access_token: j.access_token, refresh_token: j.refresh_token, expires_in: j.expires_in });
+  } catch (e) { tErr(res, e); }
+});
 app.get('/api/tesla/vehicles', pushOk, async (req, res) => {
   try { res.json({ vehicles: (await listVehicles()).map(v => ({ id: v.id, vin: v.vin, name: v.display_name, state: v.state })) }); } catch (e) { tErr(res, e); }
 });
