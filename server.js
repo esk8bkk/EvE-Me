@@ -662,6 +662,9 @@ app.get('/api/briefing', pushOk, (req, res) => {
   res.json({ date, briefing: e ? e.b : null, shown: e ? e.shown : false, shown_at: e && e.shown_at ? new Date(e.shown_at).toISOString() : null });
 });
 app.get('/', viewOk, (req, res) => res.sendFile(path.join(PUB, 'index.html')));
-app.get('/eve-blob-white.svg', (req, res) => res.sendFile(path.join(PUB, 'eve-blob-white.svg')));
+app.get('/nimbus-white.svg', (req, res) => res.sendFile(path.join(PUB, 'nimbus-white.svg')));
+// The old name stays served: a car screen left open on a cached page still asks
+// for it, and a missing mascot is a blank hole until the tab is reloaded.
+app.get('/eve-blob-white.svg', (req, res) => res.sendFile(path.join(PUB, 'nimbus-white.svg')));
 setInterval(() => pruneLog(), 60000).unref();
 app.listen(PORT, () => console.log(`EvE Me on :${PORT}`));

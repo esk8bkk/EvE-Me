@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Nimbus: the body only. The page draws the aura behind it and the mouth
+       over it, and animates both, so this file stays a plain silhouette. -->
+  <path d="M50 20c15 0 27 11 29 25 6 2 10 8 10 14 0 9-7 16-16 16H27c-9 0-16-7-16-16 0-6 4-12 10-14C23 31 35 20 50 20z" fill="#ffffff"/>
+  <rect x="38" y="45" width="7.5" height="17" rx="3.75" fill="#15121F"/>
+  <rect x="55" y="45" width="7.5" height="17" rx="3.75" fill="#15121F"/>
+</svg>

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="th"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EvE Me</title>
+<title>Nimbus Me</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+Thai:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
@@ -106,7 +106,7 @@ body.m-q #stage{--hero:min(640px,52vh,34vw)}body.m-msg #stage{--hero:min(500px,4
 }
 @media (max-width:1040px){.date{display:none}}
 .title,.q,.greet{text-wrap:balance}
-/* ===== talk to EvE ===== */
+/* ===== talk to Nimbus ===== */
 #stage{z-index:4}
 .slot{position:relative}
 
@@ -302,8 +302,8 @@ body.m-dash #dash{display:flex}
 .df b{color:var(--t);font-weight:600}
 .dm{margin-left:auto;display:flex;align-items:center;gap:10px;padding:6px 16px;border-radius:999px;border:1px solid rgba(139,92,246,.45);background:rgba(139,92,246,.12);color:var(--rim);white-space:nowrap}
 </style></head><body class="m-idle mic-c">
-<header><button class="glass loc" id="loc"><span class="ld"></span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span id="locT">แชร์ตำแหน่ง</span></button><button class="glass spk" id="spk" aria-label="เสียงพูด"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.5a8 8 0 0 1 0 11"/></svg></button><button class="glass spk gear" id="gear" aria-label="ตั้งค่าเสียง" aria-expanded="false" aria-controls="vset"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button><button class="glass spk wake off" id="wake" aria-label="เปิดโหมดเรียก อีฟ" aria-pressed="false"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span class="wd"></span></button><div class="sp"></div><div class="glass clock"><div class="dot" id="dot" role="img" aria-label="สถานะ"></div><span id="st" class="vh">กำลังเชื่อมต่อ…</span><div class="time" id="time">--:--</div><div class="date" id="date"></div></div></header><div id="wkL" aria-live="polite"></div>
-<div id="stage"><div class="slot" id="slot"><button class="micbadge" id="micC" aria-label="คุยกับ EvE" tabindex="-1"><svg class="ic-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><svg class="ic-stop" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg></button></div><div id="panel"><div id="eta" aria-live="polite"></div><button id="agenda" aria-live="polite"></button><button id="brief" aria-live="polite"></button><button id="alert" aria-live="polite" data-k=""></button><div id="pmain"></div></div></div>
+<header><button class="glass loc" id="loc"><span class="ld"></span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span id="locT">แชร์ตำแหน่ง</span></button><button class="glass spk" id="spk" aria-label="เสียงพูด"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.5a8 8 0 0 1 0 11"/></svg></button><button class="glass spk gear" id="gear" aria-label="ตั้งค่าเสียง" aria-expanded="false" aria-controls="vset"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button><button class="glass spk wake off" id="wake" aria-label="เปิดโหมดเรียก นิมบัส" aria-pressed="false"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span class="wd"></span></button><div class="sp"></div><div class="glass clock"><div class="dot" id="dot" role="img" aria-label="สถานะ"></div><span id="st" class="vh">กำลังเชื่อมต่อ…</span><div class="time" id="time">--:--</div><div class="date" id="date"></div></div></header><div id="wkL" aria-live="polite"></div>
+<div id="stage"><div class="slot" id="slot"><button class="micbadge" id="micC" aria-label="คุยกับ Nimbus" tabindex="-1"><svg class="ic-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><svg class="ic-stop" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg></button></div><div id="panel"><div id="eta" aria-live="polite"></div><button id="agenda" aria-live="polite"></button><button id="brief" aria-live="polite"></button><button id="alert" aria-live="polite" data-k=""></button><div id="pmain"></div></div></div>
 <div class="glass" id="hist"></div>
 <div class="glass" id="vset" role="dialog" aria-label="ตั้งค่าเสียง" hidden>
 <div class="vs-h">ตั้งค่าเสียง</div>
@@ -314,17 +314,17 @@ body.m-dash #dash{display:flex}
 <label>ระดับเสียง <b id="vsPitchV">1.0</b><input type="range" id="vsPitch" min="0.5" max="1.6" step="0.1" value="1"></label>
 <button class="vs-test" id="vsTest"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5.5v13l10.5-6.5z"/></svg><span>ทดสอบเสียง</span></button>
 </div>
-<div id="eve" class="sleep"><div id="aura"></div><svg id="trace" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" pathLength="100"/></svg><img src="eve-blob-white.svg" alt="EvE"><div id="mouth"></div></div>
+<div id="eve" class="sleep"><div id="aura"></div><svg id="trace" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" pathLength="100"/></svg><img src="nimbus-white.svg" alt="Nimbus"><div id="mouth"></div></div>
 <script>
 const k=new URLSearchParams(location.search).get('k')||'';const KQ=k?'?k='+encodeURIComponent(k):'';
 let items=[],poll=null,lastAct=Date.now(),sleeping=true,hold=null,holdUntil=0,mode='',modeKey='';
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const KIND={message:'ข้อความ',card:'การ์ด',flight:'เที่ยวบิน',question:'คำถาม',reply:'EvE ตอบ'};
+const KIND={message:'ข้อความ',card:'การ์ด',flight:'เที่ยวบิน',question:'คำถาม',reply:'Nimbus ตอบ'};
 const HOLD=15000;const SHOW_MS=60000; // an answer stays on screen this long, then the face goes back to idle
 
 if(k&&history.replaceState)setTimeout(()=>history.replaceState(null,'',location.pathname),1500);
 
-/* ---------- EvE hero: follows the slot, subtle drift + squash ---------- */
+/* ---------- Nimbus hero: follows the slot, subtle drift + squash ---------- */
 const E=$('eve'),SL=$('slot');let x=0,y=0,s=0,hop=0,init=false;
 function frame(t){const r=SL.getBoundingClientRect(),sz=Math.min(r.width,r.height);
  const tx=r.left+(r.width-sz)/2,ty=r.top+(r.height-sz)/2;
@@ -361,13 +361,13 @@ function ago(ts){const s=Math.round((Date.now()-ts)/1000);return s<60?'เมื
 function render(){const v=pickView(),P=$('pmain');
  const key=(v.m==='dash'?'dash:'+(dash&&dash.id)+':'+Math.floor(Date.now()/20000):'')+(v.m==='v'?'v:'+voice.phase+voice.text+(voice.sub||'')+(voice.phase==='think'&&Date.now()-(voice.started||0)>8000?'+':''):'')+v.m+':'+(v.it?v.it.id+(v.it.answer||'')+(v.m==='msg'?ago(v.it.ts):''):greeting()[0]);
  if(key!==modeKey){modeKey=key;mode=v.m;document.body.className=document.body.className.replace(/\bm-\w+/g,'').trim()+' m-'+v.m;
-  if(v.m==='v'){const ph={listen:'กำลังฟัง…',think:(Date.now()-(voice.started||0)>8000?'รอสักครู่ EvE กำลังตอบ…':'EvE กำลังคิด…'),err:'อุ๊ย'}[voice.phase];
+  if(v.m==='v'){const ph={listen:'กำลังฟัง…',think:(Date.now()-(voice.started||0)>8000?'รอสักครู่ Nimbus กำลังตอบ…':'Nimbus กำลังคิด…'),err:'อุ๊ย'}[voice.phase];
    P.innerHTML=`<div class="bub"><div class="kind">${ph}</div><div class="said${voice.text?'':' ph'}">${voice.text?'“'+esc(voice.text)+'”':(voice.phase==='listen'?'พูดได้เลย…':'')}</div>`+
     (voice.phase==='think'?`<div class="said dots" style="margin-top:20px"><span></span><span></span><span></span></div>`:'')+(voice.sub?`<div class="vsub">${esc(voice.sub)}</div>`:'')+`</div>`}
   else if(v.m==='dash'){P.innerHTML=`<div id="dash">${dashHTML()}</div>`}
   else if(v.m==='idle'){const g=greeting();P.innerHTML=`<div class="bub"><div class="greet">${g[0]}<small>${g[1]}</small></div></div>`}
   else if(v.m==='q'){const q=v.it;
-   P.innerHTML=`<div class="bub"><div class="kind">คำถามจาก EvE</div><div class="q">${esc(q.title)}</div>
+   P.innerHTML=`<div class="bub"><div class="kind">คำถามจาก Nimbus</div><div class="q">${esc(q.title)}</div>
    <div class="opts">${q.options.map((o,i)=>`<button class="opt${q.answer===o?' sel':''}" data-i="${i}"${q.answer?' disabled':''}>${esc(o)}</button>`).join('')}</div>
    ${q.answer?`<div class="conf"><svg class='ico i-chk' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12.5l4.5 4.5L19 7.5'/></svg> บันทึกคำตอบแล้ว: ${esc(q.answer)}</div>`:'<div class="err" id="qerr"></div>'}</div>`}
   else{const it0=v.it,it=(it0.type==='reply'&&!it0.title)?{...it0,title:it0.body,body:''}:it0,m=it.meta||{};let h=`<div class="kind">${esc(KIND[it.type]||it.type)}</div><div class="title">${esc(it.title)}</div>`;
@@ -446,7 +446,7 @@ function renderAlert(){extAlerts=extAlerts.filter(x=>x.until>Date.now());const a
  if(A.dataset.k!==x.k||A.dataset.t!==x.t){A.dataset.t=x.t;A.dataset.k=x.k;A.className=x.cls||'';A.innerHTML=`<span class="ai">${x.ic}</span><div><div class="at">${esc(x.t)}</div>${x.d?`<div class="ad">${esc(x.d)}</div>`:''}</div>`;A.classList.remove('in');void A.offsetWidth}
  A.classList.add('in')}
 
-// EvE speaks alerts via the server hooks (30-min debounce); the client only shows them, so nothing is spoken twice.
+// Nimbus speaks alerts via the server hooks (30-min debounce); the client only shows them, so nothing is spoken twice.
 /* ---------- nav ETA ---------- */
 let route=null;
 function renderEta(){const E=$('eta'),r=route&&route.minutes!=null&&(Date.now()-(route.ts||0)<5*60000)?route:null;
@@ -516,7 +516,7 @@ function startLoc(){if(!navigator.geolocation){locUI('err','ไม่รอง�
   {enableHighAccuracy:true,maximumAge:10000,timeout:30000})}
 $('loc').addEventListener('click',()=>{if(watchId===null)startLoc()});
 try{if(localStorage.getItem('eveLoc')==='1')startLoc()}catch(e){}
-/* ---------- talk to EvE ---------- */
+/* ---------- talk to Nimbus ---------- */
 let voice=null,spkOn=true,unlocked=false,listening=false,micStream=null,actx=null,an=null,srcN=null,rec=null,mr=null,heard='',lastLoud=0,startedAt=0,gotSpeech=false,usedFallback=false;
 try{spkOn=localStorage.getItem('eveSpk')!=='0'}catch(e){}
 const SPK_ON=`<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.5a8 8 0 0 1 0 11"/></svg>`,SPK_OFF=`<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>`;
@@ -537,7 +537,7 @@ function endThink(){LS('evePending',null);setVoice(null)}
 const SILENT='data:audio/wav;base64,UklGRkQDAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YSADAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgA==';
 const AU=new Audio();AU.preload='auto';AU.playsInline=true;let audioOK=false;
 let unlocking=false;
-function unlock(){try{if(!audioOK&&!unlocking){unlocking=true;AU.muted=false;AU.src=SILENT;const pr=AU.play();pr&&pr.then(()=>{audioOK=true;console.log('[EvE] audio unlocked')}).catch(e=>console.log('[EvE] unlock failed',e&&e.name)).finally(()=>{unlocking=false})}}catch(e){}
+function unlock(){try{if(!audioOK&&!unlocking){unlocking=true;AU.muted=false;AU.src=SILENT;const pr=AU.play();pr&&pr.then(()=>{audioOK=true;console.log('[Nimbus] audio unlocked')}).catch(e=>console.log('[Nimbus] unlock failed',e&&e.name)).finally(()=>{unlocking=false})}}catch(e){}
  if(unlocked)return;unlocked=true;try{if(window.speechSynthesis){const u=new SpeechSynthesisUtterance('');u.volume=0;speechSynthesis.speak(u)}}catch(e){}
  try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){actx=actx||new AC();actx.resume&&actx.resume()}}catch(e){}}
 ['pointerdown','touchend','click','keydown'].forEach(ev=>addEventListener(ev,unlock,{capture:true,passive:true}));
@@ -563,15 +563,15 @@ function speakOA(text){setV('speak');const ac=new AbortController(),to=setTimeou
  fetch('/api/tts'+KQ,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',signal:ac.signal,body:JSON.stringify({text,voice:VS.oa||undefined,speed:+VS.rate||1})})
   .then(r=>{if(r.status===501)TTS.enabled=false;if(!r.ok)throw new Error('tts http '+r.status);return r.blob()})
   .then(bl=>{clearTimeout(to);const url=URL.createObjectURL(bl);let fin=false;const done=()=>{if(fin)return;fin=true;URL.revokeObjectURL(url);AU.onended=AU.onerror=null;spoke()};
-   AU.onended=done;AU.onerror=()=>{console.log('[EvE] audio element error');fin=true;URL.revokeObjectURL(url);speakBR(text)};
+   AU.onended=done;AU.onerror=()=>{console.log('[Nimbus] audio element error');fin=true;URL.revokeObjectURL(url);speakBR(text)};
    AU.src=url;const pr=AU.play();window.__eveLastPlay={text,at:Date.now()};
-   return pr&&pr.catch(e=>{AU.onended=AU.onerror=null;console.log('[EvE] play() rejected:',e&&e.name,e&&e.message);fin=true;URL.revokeObjectURL(url);if(e&&e.name==='NotAllowedError'){tapText=text;addTap()}speakBR(text)})})
-  .catch(e=>{clearTimeout(to);console.log('[EvE] OpenAI TTS failed, using browser voice:',e&&e.name==='AbortError'?'timeout 12s':e&&e.message);speakBR(text)})}
+   return pr&&pr.catch(e=>{AU.onended=AU.onerror=null;console.log('[Nimbus] play() rejected:',e&&e.name,e&&e.message);fin=true;URL.revokeObjectURL(url);if(e&&e.name==='NotAllowedError'){tapText=text;addTap()}speakBR(text)})})
+  .catch(e=>{clearTimeout(to);console.log('[Nimbus] OpenAI TTS failed, using browser voice:',e&&e.name==='AbortError'?'timeout 12s':e&&e.message);speakBR(text)})}
 function say(it,force){if(!spkOn&&!force)return;const text=[it.title,it.body].filter(Boolean).join('. ');if(!text)return;
  if(force){stopAudio()}speakQ.push(text);drainQ()}
-function speakBR(text){playing=true;if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){console.log('[EvE] no speechSynthesis');spoke();return}
+function speakBR(text){playing=true;if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){console.log('[Nimbus] no speechSynthesis');spoke();return}
  try{const u=new SpeechSynthesisUtterance(text);const v=thVoice();u.lang=v?v.lang:'th-TH';if(v)u.voice=v;u.rate=+VS.rate||1;u.pitch=+VS.pitch||1;
-  let fin=false;const done=ev=>{if(fin)return;fin=true;if(ev&&ev.error)console.log('[EvE] speechSynthesis error:',ev.error);spoke()};u.onstart=()=>setV('speak');u.onend=u.onerror=done;setV('speak');speechSynthesis.speak(u);setTimeout(()=>{if(!fin&&!speechSynthesis.speaking&&!speechSynthesis.pending)done()},Math.max(4000,text.length*250))}catch(e){console.log('[EvE] speechSynthesis threw',e);spoke()}}
+  let fin=false;const done=ev=>{if(fin)return;fin=true;if(ev&&ev.error)console.log('[Nimbus] speechSynthesis error:',ev.error);spoke()};u.onstart=()=>setV('speak');u.onend=u.onerror=done;setV('speak');speechSynthesis.speak(u);setTimeout(()=>{if(!fin&&!speechSynthesis.speaking&&!speechSynthesis.pending)done()},Math.max(4000,text.length*250))}catch(e){console.log('[Nimbus] speechSynthesis threw',e);spoke()}}
 if(window.speechSynthesis&&speechSynthesis.addEventListener)speechSynthesis.addEventListener('voiceschanged',fillVoices);
 fillVoices();vsUI();
 $('gear').addEventListener('click',e=>{e.stopPropagation();const p=$('vset'),o=p.hidden;p.hidden=!o;$('gear').setAttribute('aria-expanded',o);if(o)fillVoices()});
@@ -581,12 +581,12 @@ $('vsOA').addEventListener('change',e=>{VS.oa=e.target.value;saveVS()});
 $('vsVoice').addEventListener('change',e=>{VS.uri=e.target.value;saveVS()});
 $('vsRate').addEventListener('input',e=>{VS.rate=+e.target.value;saveVS();vsUI()});
 $('vsPitch').addEventListener('input',e=>{VS.pitch=+e.target.value;saveVS();vsUI()});
-$('vsTest').addEventListener('click',()=>{unlock();say({title:'สวัสดีค่ะ ฉันคือ EvE',body:'ขับขี่ปลอดภัยนะคะ'},true)});
+$('vsTest').addEventListener('click',()=>{unlock();say({title:'สวัสดีค่ะ ฉันคือ Nimbus',body:'ขับขี่ปลอดภัยนะคะ'},true)});
 function sendSay(text){text=String(text||'').trim();if(!text){setVoice({phase:'err',text:'',sub:'ไม่ได้ยินเลย ลองอีกครั้งนะ'});return Promise.resolve(false)}
  setVoice({phase:'think',text});
  return fetch('/api/say'+KQ,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({text})})
   .then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>d.id).catch(()=>{setVoice({phase:'err',text,sub:'ส่งไม่สำเร็จ ลองอีกครั้งนะ'});return false})}
-function sendAudio(blob){setVoice({phase:'think',text:'',sub:'ส่งเสียงให้ EvE แล้ว'});uploading=true;
+function sendAudio(blob){setVoice({phase:'think',text:'',sub:'ส่งเสียงให้ Nimbus แล้ว'});uploading=true;
  return fetch('/api/voice'+KQ,{method:'POST',headers:{'Content-Type':blob.type||'audio/webm'},credentials:'same-origin',body:blob})
   .then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>d.id).catch(()=>{setVoice({phase:'err',text:'',sub:'ส่งเสียงไม่สำเร็จ'});return false}).finally(()=>{uploading=false})}
 // silence detection (only runs while listening)
@@ -604,7 +604,7 @@ function meter(){if(!listening){meterOn=false;return}let rms=0;const now=Date.no
  if(now-startedAt>MAX_REC_MS)return stopMic();
  if(an&&!gotSpeech&&now-startedAt>NO_SPEECH_GIVEUP_MS)return stopMic();
  requestAnimationFrame(meter)}
-function micUI(on){if(!on)setTimeout(drainQ,200);const l=on?'แตะเพื่อหยุด':'คุยกับ EvE';$('micC').setAttribute('aria-label',l)}
+function micUI(on){if(!on)setTimeout(drainQ,200);const l=on?'แตะเพื่อหยุด':'คุยกับ Nimbus';$('micC').setAttribute('aria-label',l)}
 function cleanupStream(){try{srcN&&srcN.disconnect()}catch(e){}srcN=null;an=null;if(micStream){micStream.getTracks().forEach(t=>t.stop());micStream=null}}
 function startRecorder(){if(!window.MediaRecorder||!micStream){setVoice({phase:'err',text:'',sub:'เบราว์เซอร์นี้ไม่รองรับการบันทึกเสียง'});listening=false;micUI(false);cleanupStream();return}
  usedFallback=true;const mt=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4'].find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
@@ -650,7 +650,7 @@ const WSR=window.SpeechRecognition||window.webkitSpeechRecognition;
 const WAKE_RE=/(อีฟ|อี๊ฟ|hey\s*eve|\beve\b|เฮ้\s*อีฟ)/i;
 function wkBusy(){return listening||uploading||playing||speakQ.length>0||vmode==='speak'||vmode==='think'||(voice&&voice.phase==='think')||(mr&&mr.state!=='inactive')||Date.now()<WK.cool||!!WK.sess}
 function wkUI(){const b=$('wake');b.classList.toggle('off',!WK.on);b.classList.toggle('on',WK.on);b.setAttribute('aria-pressed',WK.on);
- b.setAttribute('aria-label',WK.on?'ปิดโหมดเรียก อีฟ':'เปิดโหมดเรียก อีฟ');b.classList.toggle('hear',!!WK.eng);b.classList.toggle('vad',WK.eng==='vad');b.classList.toggle('err',!!WK.err);
+ b.setAttribute('aria-label',WK.on?'ปิดโหมดเรียก นิมบัส':'เปิดโหมดเรียก นิมบัส');b.classList.toggle('hear',!!WK.eng);b.classList.toggle('vad',WK.eng==='vad');b.classList.toggle('err',!!WK.err);
  $('wkL').textContent=!WK.on?'':WK.err?WK.err:WK.sess?'':WK.eng==='sr'?'พูดว่า “อีฟ”':WK.eng==='vad'?'ฟังเสียงพูด':''}
 function wkStop(){clearTimeout(WK.rt);WK.rt=null;if(WK.sr){const r=WK.sr;WK.sr=null;try{r.onend=r.onerror=r.onresult=null;r.abort()}catch(e){}}
  cancelAnimationFrame(WK.raf);WK.raf=0;try{WK.src&&WK.src.disconnect()}catch(e){}WK.src=WK.an=null;if(WK.stream){WK.stream.getTracks().forEach(t=>t.stop());WK.stream=null}WK.eng=null;wkUI()}
@@ -686,11 +686,11 @@ function wkVad(){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedi
    WK.raf=requestAnimationFrame(loop)};WK.raf=requestAnimationFrame(loop);WK.back=500;
  }).catch(err=>{WK.eng=null;if(err&&err.name==='NotAllowedError'){WK.err='ไมค์ไม่ได้รับอนุญาต';wkUI()}else wkRetry()})}
 function duckReq(action){return fetch('/api/voice/duck'+KQ,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({action})}).then(r=>r.json().catch(()=>({}))).catch(()=>({}))}
-function wkFire(why){console.log('[EvE] wake',why);wkStop();if(wkBusy())return;
+function wkFire(why){console.log('[Nimbus] wake',why);wkStop();if(wkBusy())return;
  const s={at:Date.now(),paused:false,pausing:null,started:false};WK.sess=s;wkUI();
  if(carData&&carData.state==='online'&&carData.media_playing===true)s.pausing=duckReq('pause').then(d=>{s.paused=!!(d&&d.paused);return d});
  lastTap=0;startMic().then(ok=>{s.started=!!ok;if(!ok)wkEnd('mic failed')})}
-function wkEnd(why){const s=WK.sess;if(!s)return;WK.sess=null;WK.cool=Date.now()+3000;console.log('[EvE] wake session end',why);
+function wkEnd(why){const s=WK.sess;if(!s)return;WK.sess=null;WK.cool=Date.now()+3000;console.log('[Nimbus] wake session end',why);
  (s.pausing||Promise.resolve()).then(()=>{if(s.paused)duckReq('resume')});wkUI();setTimeout(wkStart,3100)}
 setInterval(()=>{const s=WK.sess;
  if(s){const idle=!listening&&!uploading&&!playing&&!speakQ.length&&vmode!=='speak'&&vmode!=='think'&&!(voice&&voice.phase==='think')&&!(mr&&mr.state!=='inactive');
@@ -703,6 +703,6 @@ $('wake').addEventListener('click',e=>{e.stopPropagation();unlock();WK.on=!WK.on
 wkUI();if(WK.on)setTimeout(wkStart,1200);
 window.EVE={sendSay,startMic,stopMic,say,debugListen:on=>{on===false?(setVoice(null),setV('')):setVoice({phase:'listen',text:''})},wake:()=>({on:WK.on,engine:WK.eng,session:WK.sess,hasSR:!!WSR}),state:()=>({speakQ:speakQ.length,playing,audioOK,listening,vmode,usedFallback,voice})};
 // resume a pending utterance after a reload: keep thinking until its deadline and catch up on missed replies
-try{const p=JSON.parse(LS('evePending')||'null');if(p&&p.until>Date.now()+1000)setVoice({phase:'think',text:p.text||'',started:p.started,until:p.until,sub:'กำลังรอคำตอบจาก EvE'});else LS('evePending',null)}catch(e){LS('evePending',null)}
+try{const p=JSON.parse(LS('evePending')||'null');if(p&&p.until>Date.now()+1000)setVoice({phase:'think',text:p.text||'',started:p.started,until:p.until,sub:'กำลังรอคำตอบจาก Nimbus'});else LS('evePending',null)}catch(e){LS('evePending',null)}
 tick();setInterval(tick,15000);startSSE();
 </script></body></html>
