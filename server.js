@@ -456,7 +456,9 @@ app.post('/api/tts', viewOrPush, async (req, res) => {
 // navigation_* are not part of the signed protocol and go straight to Fleet REST (Tesla's proxy returns "requires using the REST API").
 const CMD_REST = new Set(['navigation_request', 'navigation_gps_request', 'navigation_sc_request']);
 const CMD_SIGNED = new Set(['media_toggle_playback', 'media_next_track', 'media_prev_track', 'media_volume_up', 'media_volume_down',
-  'auto_conditioning_start', 'auto_conditioning_stop', 'set_temps', 'flash_lights']);
+  'auto_conditioning_start', 'auto_conditioning_stop', 'set_temps', 'flash_lights', 'door_lock']);
+// door_unlock and remote_start are deliberately absent. Locking a car by mistake costs nothing;
+// unlocking it by mistake leaves it open.
 const PROXY = (process.env.TESLA_PROXY_URL || '').replace(/\/+$/, '');
 const PROXY_CA = process.env.TESLA_PROXY_CA || '';
 const https = require('https');
@@ -480,31 +482,49 @@ function cleanBody(name, b) {
   if (name === 'set_temps') return { driver_temp: num(b.driver_temp, 15, 28), passenger_temp: num(b.passenger_temp ?? b.driver_temp, 15, 28) };
   return {};
 }
-async function wakeAndWait(v) {
+async function listVehiclesWith(token) {
+  const r = await fetch(T_BASE + '/api/1/vehicles', { headers: { Authorization: 'Bearer ' + token } });
+  if (r.status !== 200) { const e = new Error('vehicles ' + r.status); e.status = r.status; throw e; }
+  const j = await r.json().catch(() => ({}));
+  return j.response || [];
+}
+async function wakeAndWait(v, token) {
+  // Uses the caller's token when the phone supplied one, so a stale
+  // TESLA_REFRESH_TOKEN on this server cannot block a command any more.
+  const bearer = async () => token || await accessToken();
   if (v.state === 'online') return;
-  await fetch(T_BASE + `/api/1/vehicles/${encodeURIComponent(v.vin || v.id)}/wake_up`, { method: 'POST', headers: { Authorization: 'Bearer ' + await accessToken() } });
-  for (let i = 0; i < 12; i++) { await new Promise(r => setTimeout(r, 2500)); const vs = await listVehicles(); const x = vs.find(y => y.vin === v.vin); if (x && x.state === 'online') return; }
+  await fetch(T_BASE + `/api/1/vehicles/${encodeURIComponent(v.vin || v.id)}/wake_up`, { method: 'POST', headers: { Authorization: 'Bearer ' + await bearer() } });
+  for (let i = 0; i < 12; i++) {
+    await new Promise(r => setTimeout(r, 2500));
+    const vs = token ? await listVehiclesWith(token) : await listVehicles();
+    const x = vs.find(y => y.vin === v.vin); if (x && x.state === 'online') return;
+  }
   const e = new Error('car did not wake'); e.status = 504; throw e;
 }
 async function runCommand(name, rawBody, vin, opts = {}) {
+  const token = opts.teslaToken || null; // supplied by the phone; falls back to this server's own
   if (!CMD_REST.has(name) && !CMD_SIGNED.has(name)) { const e = new Error('command not allowed'); e.status = 403; throw e; }
   const body = cleanBody(name, rawBody);
   if (CMD_SIGNED.has(name) && !PROXY) { const e = new Error('signing proxy not configured (TESLA_PROXY_URL)'); e.status = 501; throw e; }
-  const vs = await listVehicles(); const v = vs.find(x => vin ? x.vin === vin : true);
+  const vs = token ? await listVehiclesWith(token) : await listVehicles(); const v = vs.find(x => vin ? x.vin === vin : true);
   if (!v) { const e = new Error('no vehicle'); e.status = 404; throw e; }
   if (opts.noWake && v.state !== 'online') { const e = new Error('car not online'); e.status = 409; throw e; }
-  await wakeAndWait(v); // commands only; reads never wake
+  await wakeAndWait(v, token); // commands only; reads never wake
   const pathq = `/api/1/vehicles/${encodeURIComponent(v.vin)}/command/${name}`;
   let out;
   if (CMD_REST.has(name)) {
-    const r = await fetch(T_BASE + pathq, { method: 'POST', headers: { Authorization: 'Bearer ' + await accessToken(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const r = await fetch(T_BASE + pathq, { method: 'POST', headers: { Authorization: 'Bearer ' + (token || await accessToken()), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     out = { status: r.status, j: await r.json().catch(() => ({})) };
-  } else out = await proxyPost(pathq, await accessToken(), body);
+  } else out = await proxyPost(pathq, token || await accessToken(), body);
   console.log('tesla command', name, out.status);
   return out;
 }
 app.post('/api/tesla/command/:name', pushOk, async (req, res) => {
-  try { const out = await runCommand(req.params.name, req.body, req.query.vin); res.status(out.status).json(out.j); } catch (e) { tErr(res, e); }
+  // X-Tesla-Token lets the phone sign in as itself; this server then only lends
+  // its private key for the signing step.
+  const m = /^Bearer (.+)$/.exec(req.get('x-tesla-token') || '');
+  const teslaToken = m ? m[1] : (req.get('x-tesla-token') || null);
+  try { const out = await runCommand(req.params.name, req.body, req.query.vin, { teslaToken }); res.status(out.status).json(out.j); } catch (e) { tErr(res, e); }
 });
 // ---- Voice ducking: pause car media while the wake-word conversation runs, resume only if we paused it ----
 // Authorized by the page's view key; only ever sends media_toggle_playback; never wakes the car; rate-limited; auto-resume safety.
