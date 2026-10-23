@@ -456,7 +456,7 @@ app.post('/api/tts', viewOrPush, async (req, res) => {
 // navigation_* are not part of the signed protocol and go straight to Fleet REST (Tesla's proxy returns "requires using the REST API").
 const CMD_REST = new Set(['navigation_request', 'navigation_gps_request', 'navigation_sc_request']);
 const CMD_SIGNED = new Set(['media_toggle_playback', 'media_next_track', 'media_prev_track', 'media_volume_up', 'media_volume_down',
-  'auto_conditioning_start', 'auto_conditioning_stop', 'set_temps', 'flash_lights', 'door_lock']);
+  'auto_conditioning_start', 'auto_conditioning_stop', 'set_temps', 'flash_lights', 'door_lock', 'actuate_trunk', 'window_control']);
 // door_unlock and remote_start are deliberately absent. Locking a car by mistake costs nothing;
 // unlocking it by mistake leaves it open.
 const PROXY = (process.env.TESLA_PROXY_URL || '').replace(/\/+$/, '');
@@ -480,6 +480,14 @@ function cleanBody(name, b) {
   if (name === 'navigation_gps_request') return { lat: num(b.lat, -90, 90), lon: num(b.lon ?? b.lng, -180, 180), order: 0 };
   if (name === 'navigation_sc_request') return { id: b.id ? Number(b.id) : 0, order: 0 };
   if (name === 'set_temps') return { driver_temp: num(b.driver_temp, 15, 28), passenger_temp: num(b.passenger_temp ?? b.driver_temp, 15, 28) };
+  // Tesla takes which boot to actuate, and vent/close plus a position for the
+  // windows. Anything else is refused rather than passed through blindly.
+  if (name === 'actuate_trunk') { const w = b.which_trunk === 'front' ? 'front' : 'rear'; return { which_trunk: w }; }
+  if (name === 'window_control') {
+    const c = b.command === 'vent' ? 'vent' : b.command === 'close' ? 'close' : null;
+    if (!c) { const e = new Error('command must be vent or close'); e.status = 400; throw e; }
+    return { command: c, lat: Number(b.lat) || 0, lon: Number(b.lon) || 0 };
+  }
   return {};
 }
 async function listVehiclesWith(token) {
