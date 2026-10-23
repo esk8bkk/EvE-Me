@@ -301,7 +301,8 @@ const k=new URLSearchParams(location.search).get('k')||'';const KQ=k?'?k='+encod
 let items=[],poll=null,lastAct=Date.now(),sleeping=true,hold=null,holdUntil=0,mode='',modeKey='';
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const KIND={message:'ข้อความ',card:'การ์ด',flight:'เที่ยวบิน',question:'คำถาม',reply:'EvE ตอบ'};
-const HOLD=15000;
+const HOLD=15000;const SHOW_MS=60000; // an answer stays on screen this long, then the face goes back to idle
+
 if(k&&history.replaceState)setTimeout(()=>history.replaceState(null,'',location.pathname),1500);
 
 /* ---------- EvE hero: follows the slot, subtle drift + squash ---------- */
@@ -334,7 +335,7 @@ function pickView(){
  if(voice&&Date.now()<voice.until)return{m:'v'};
  if(hold&&Date.now()<holdUntil)return{m:'q',it:hold};
  const q=items.find(i=>i.type==='question'&&!i.answer);if(q)return{m:'q',it:q};
- const it=items.find(i=>i.type!=='question'&&!(i.meta&&i.meta.alert));if(it)return{m:'msg',it};
+ const it=items.find(i=>i.type!=='question'&&!(i.meta&&i.meta.alert)&&Date.now()-(i.ts||0)<SHOW_MS);if(it)return{m:'msg',it};
  return{m:'idle'}}
 function ago(ts){const s=Math.round((Date.now()-ts)/1000);return s<60?'เมื่อสักครู่':s<3600?Math.floor(s/60)+' นาทีที่แล้ว':Math.floor(s/3600)+' ชม.ที่แล้ว'}
 function render(){const v=pickView(),P=$('pmain');
@@ -353,9 +354,8 @@ function render(){const v=pickView(),P=$('pmain');
     <div class="tm"><div>ออกเดินทาง<b>${esc(m.dep||'--:--')}</b></div><div>ถึง<b>${esc(m.arr||'--:--')}</b></div></div>${it.body?`<div class="body" style="margin-top:24px">${esc(it.body)}</div>`:''}`;
    else h+=`<div class="body">${esc(it.body)}</div>`;
    P.innerHTML=h+`<div class="ago">${ago(it.ts)}</div>`}}
- const cur=v.it,hs=items.filter(i=>i!==cur).slice(0,4);
- $('hist').innerHTML=hs.length?`<h3>ล่าสุด</h3>`+hs.map(i=>`<div class="hi"><small>${new Date(i.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</small>${i.type==='question'?(i.answer?"<svg class='ico i-chk' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12.5l4.5 4.5L19 7.5'/></svg> ":'? '):''}${esc(i.title||i.body)}${i.answer?` <b style="color:var(--a)">${esc(i.answer)}</b>`:''}</div>`).join(''):'';
- $('hist').style.visibility=hs.length?'visible':'hidden';addTap()}
+ $('hist').innerHTML='';$('hist').style.display='none';addTap()}
+setInterval(()=>{if(mode==='msg')render()},5000); // lets an expired answer fall away on its own
 $('pmain').addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b||b.disabled)return;const q=pickView().it;if(!q||q.answer)return;
  const ans=q.options[+b.dataset.i];document.querySelectorAll('.opt').forEach(x=>x.disabled=true);b.classList.add('sel');
  fetch('/api/answer'+KQ,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({id:q.id,answer:ans})})
@@ -440,9 +440,9 @@ pollCar();setInterval(pollCar,60000);setInterval(()=>{if(route)pollCar()},30000)
 let agT=null;
 function hideAgenda(){clearTimeout(agT);$('agenda').classList.remove('in');document.body.classList.remove('has-agenda')}
 function showAgenda(it){const evs=(it.meta&&it.meta.events)||[],G=$('agenda');
- G.innerHTML=`<span class="ai">${CI.cal}</span><div class="ag"><div class="at">วันนี้</div>`+(evs.length?evs.slice(0,3).map(e=>`<div class="ar"><b>${esc(e.time||'')}</b><span>${esc(e.title)}</span>${e.location?`<small>${esc(e.location)}</small>`:''}</div>`).join('')+(evs.length>3?`<div class="amore">+${evs.length-3}</div>`:'')+(evs.length>1?`<div class="amore-s">+${evs.length-1}</div>`:''):`<div class="ad">วันนี้ว่าง</div>`)+`</div>`;
+ G.innerHTML=`<span class="ai">${CI.cal}</span><div class="ag"><div class="at">${esc(it.title||'วันนี้')}</div>`+(evs.length?evs.slice(0,Number(it.meta&&it.meta.rows)||3).map(e=>`<div class="ar"><b>${esc(e.time||'')}</b><span>${esc(e.title)}</span>${e.location?`<small>${esc(e.location)}</small>`:''}</div>`).join('')+(evs.length>(Number(it.meta&&it.meta.rows)||3)?`<div class="amore">+${evs.length-(Number(it.meta&&it.meta.rows)||3)}</div>`:'')+(evs.length>1?`<div class="amore-s">+${evs.length-1}</div>`:''):`<div class="ad">วันนี้ว่าง</div>`)+`</div>`;
  G.classList.remove('in');void G.offsetWidth;G.classList.add('in');document.body.classList.add('has-agenda');
- clearTimeout(agT);agT=setTimeout(hideAgenda,15000);lastAct=Date.now();document.body.classList.remove('dim');perk();
+ clearTimeout(agT);agT=setTimeout(hideAgenda,Math.min(120000,Math.max(5000,Number(it.meta&&it.meta.hold_ms)||15000)));lastAct=Date.now();document.body.classList.remove('dim');perk();
  if(it.speak!==false)say({body:it.body})}
 $('agenda').addEventListener('click',e=>{e.stopPropagation();hideAgenda()});
 /* ---------- morning briefing (transient, once per day; server decides) ---------- */
